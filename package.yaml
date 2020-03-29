@@ -1,14 +1,14 @@
-name:                shogix-shogi
-version:             0.1.0.0
-github:              "JunKikuchi/shogix-shogi"
-license:             BSD3
-author:              "Jun Kikuchi"
-maintainer:          "kikuchi@bonnou.com"
-copyright:           "2020 Jun Kikuchi"
+name: shogix-shogi
+version: 0.1.0.0
+github: "JunKikuchi/shogix-shogi"
+license: BSD3
+author: "Jun Kikuchi"
+maintainer: "kikuchi@bonnou.com"
+copyright: "2020 Jun Kikuchi"
 
 extra-source-files:
-- README.md
-- ChangeLog.md
+  - README.md
+  - ChangeLog.md
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -17,32 +17,32 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/JunKikuchi/shogix-shogi#readme>
+description: Please see the README on GitHub at <https://github.com/JunKikuchi/shogix-shogi#readme>
 
 dependencies:
-- base >= 4.7 && < 5
+  - base >= 4.7 && < 5
 
 library:
   source-dirs: src
 
 executables:
   shogix-shogi-exe:
-    main:                Main.hs
-    source-dirs:         app
+    main: Main.hs
+    source-dirs: app
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
     dependencies:
-    - shogix-shogi
+      - shogix-shogi
 
 tests:
   shogix-shogi-test:
-    main:                Spec.hs
-    source-dirs:         test
+    main: Spec.hs
+    source-dirs: test
     ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
     dependencies:
-    - shogix-shogi
+      - shogix-shogi
