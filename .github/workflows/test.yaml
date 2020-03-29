@@ -5,5 +5,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        env:
+          cache-name: cache-stack-work
+        with:
+          path: .stack-work
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('package.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
       - uses: mstksg/setup-stack@v1
       - run: stack test
