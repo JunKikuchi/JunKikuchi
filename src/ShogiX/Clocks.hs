@@ -15,6 +15,7 @@ data Clock
   | Fischer Sec Sec   -- ^ フィッシャーモード (持ち時間 加算時間)
   deriving Show
 
+-- | 秒
 type Sec = Int
 
 -- | 無制限
