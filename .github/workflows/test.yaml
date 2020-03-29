@@ -6,6 +6,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v1
+        name: Cache stack
+        env:
+          cache-name: cache-stack
+        with:
+          path: ~/.stack
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('stack.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - uses: actions/cache@v1
+        name: Cache stack work
         env:
           cache-name: cache-stack-work
         with:
