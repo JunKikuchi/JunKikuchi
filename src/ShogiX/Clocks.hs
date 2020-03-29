@@ -3,12 +3,12 @@ module ShogiX.Clocks where
 -- | 対局時計
 data Clocks
   = Clocks
-  { blackClock :: Unit
-  , whiteClock :: Unit
+  { blackClock :: Clock
+  , whiteClock :: Clock
   } deriving Show
 
--- | 持ち時間設定
-data Unit
+-- | 持ち時間
+data Clock
   = Infinity          -- ^ 無制限
   | Guillotine Sec    -- ^ 差し切り
   | Countdown Sec Sec -- ^ 秒読み (持ち時間 秒読み)
