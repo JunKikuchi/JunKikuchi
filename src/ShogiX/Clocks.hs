@@ -13,12 +13,11 @@ guillotine sec = Clocks (Guillotine sec) (Guillotine sec)
 
 -- | 秒読み
 countdown :: Sec -> Sec -> Clocks
-countdown allotment sec =
-  Clocks (Countdown allotment sec) (Countdown allotment sec)
+countdown allot cdown = Clocks (Countdown allot cdown) (Countdown allot cdown)
 
 -- | フィッシャーモード
 fischer :: Sec -> Sec -> Clocks
-fischer allotment sec = Clocks (Fischer allotment sec) (Fischer allotment sec)
+fischer allot inc = Clocks (Fischer allot inc) (Fischer allot inc)
 
 -- | 持ち時間消費
 --
@@ -87,12 +86,11 @@ consumeClockSec _ Infinity = Infinity
 consumeClockSec sec (Guillotine allot) | a > 0     = Guillotine a
                                        | otherwise = Timeout
   where a = allot - sec
-consumeClockSec sec (Countdown allot countdown)
-  | a > 0 || c > 0 = Countdown a countdown
-  | otherwise      = Timeout
+consumeClockSec sec (Countdown allot cdown) | a > 0 || c > 0 = Countdown a cdown
+                                            | otherwise      = Timeout
  where
   a = if s >= 0 then s else 0
-  c = if s <= 0 then countdown + s else 0
+  c = if s <= 0 then cdown + s else 0
   s = allot - sec
 consumeClockSec sec (Fischer allot inc) | a > 0     = Fischer (a + inc) inc
                                         | otherwise = Timeout
