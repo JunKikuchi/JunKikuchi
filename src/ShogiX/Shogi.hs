@@ -1,7 +1,7 @@
 module ShogiX.Shogi where
 
 import           ShogiX.Shogi.Types
-import           ShogiX.Clocks                  ( Sec )
+import           ShogiX.Clocks.Types            ( Sec )
 
 -- | 平手作成
 hirate :: Shogi

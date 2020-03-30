@@ -4,7 +4,7 @@ import           Data.List.NonEmpty             ( NonEmpty )
 import qualified Data.List.NonEmpty            as NonEmpty
 import           Data.Map.Strict                ( Map )
 import qualified Data.Map.Strict               as Map
-import           ShogiX.Clocks                  ( Clocks )
+import           ShogiX.Clocks.Types            ( Clocks )
 
 -- | 将棋作成
 --
