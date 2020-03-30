@@ -1,4 +1,16 @@
-module ShogiX.Clocks where
+module ShogiX.Clocks
+  ( infinity
+  , guillotine
+  , countdown
+  , fischer
+  , consume
+  , getClock
+  , setClock
+  , consumeClockSec
+  , Color(..)
+  , module ShogiX.Clocks.Types
+  )
+where
 
 import           ShogiX.Clocks.Types
 import           ShogiX.Shogi.Types             ( Color(..) )
