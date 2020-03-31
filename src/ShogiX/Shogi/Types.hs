@@ -1,9 +1,6 @@
 module ShogiX.Shogi.Types where
 
 import           RIO
-import           RIO.Map                        ( Map )
-import           RIO.NonEmpty                   ( NonEmpty )
-import           RIO.Set                        ( Set )
 import           ShogiX.Clocks.Types            ( Clocks )
 
 -- | 将棋作成
