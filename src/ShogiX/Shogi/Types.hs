@@ -141,6 +141,9 @@ type Promotion = Bool
 -- | 駒の移動先
 newtype Movables = Movables { unMovables :: Map SrcSquare (Set (DestSquare, Promotable)) } deriving Show
 
+-- | 持ち駒の打ち先
+newtype Droppables = Droppables { unDroppables :: Map (Set DestSquare) (Set PieceType) } deriving Show
+
 -- | 駒成り可能状態
 data Promotable
   = No     -- ^ 不成のみ

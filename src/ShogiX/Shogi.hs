@@ -2,6 +2,7 @@ module ShogiX.Shogi
   ( hirate
   , move
   , movables
+  , droppables
   , module ShogiX.Shogi.Types
   , module ShogiX.Clocks
   )
@@ -36,3 +37,7 @@ move = undefined
 -- fromList [((F5,R5), fromList [((F5, R4),No)]]
 movables :: Shogi -> Movables
 movables = undefined
+
+-- | 持ち駒の打ち先範囲を取得
+droppables :: Shogi -> Droppables
+droppables = undefined
