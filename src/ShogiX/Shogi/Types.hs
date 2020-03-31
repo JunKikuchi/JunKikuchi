@@ -16,7 +16,7 @@ import           ShogiX.Clocks.Types            ( Clocks )
 -- >>> let shogi = fmap (Shogi Open . Positions) (NonEmpty.nonEmpty [position])
 -- >>>
 -- >>> shogi
--- Just (Shogi {shogiStauts = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = [], whiteStand = []}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}})
+-- Just (Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = [], whiteStand = []}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}})
 
 -- | 先手|後手
 data Color
@@ -27,7 +27,7 @@ data Color
 -- | 将棋
 data Shogi
   = Shogi
-  { shogiStauts    :: Status    -- ^ 対局状態
+  { shogiStatus    :: Status    -- ^ 対局状態
   , shogiPositions :: Positions -- ^ 局面
   } deriving Show
 

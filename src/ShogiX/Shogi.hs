@@ -42,7 +42,7 @@ movables :: Shogi -> Movables
 movables shogi | status == Open = Position.movables pos
                | otherwise      = empty
  where
-  status = shogiStauts shogi
+  status = shogiStatus shogi
   empty  = Movables Map.empty
   pos    = shogiPosition shogi
 
