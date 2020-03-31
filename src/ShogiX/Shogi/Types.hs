@@ -85,7 +85,7 @@ type Turn = Color
 newtype Board = Board { unBoard :: Map Square Piece } deriving Show
 
 -- | 将棋盤のマス目
-data Square = Square File Rank deriving Show
+type Square = (File, Rank)
 
 -- | 将棋盤の筋
 data File = F9 | F8 | F7 | F6 | F5 | F4 | F3 | F2 | F1 deriving Show
