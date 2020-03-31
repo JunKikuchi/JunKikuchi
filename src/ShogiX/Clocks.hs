@@ -12,6 +12,7 @@ module ShogiX.Clocks
   )
 where
 
+import           RIO
 import           ShogiX.Clocks.Types
 import           ShogiX.Shogi.Types             ( Color(..) )
 

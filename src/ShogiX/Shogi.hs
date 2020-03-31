@@ -7,6 +7,7 @@ module ShogiX.Shogi
   )
 where
 
+import           RIO
 import           ShogiX.Shogi.Types
 import           ShogiX.Clocks                  ( Sec )
 

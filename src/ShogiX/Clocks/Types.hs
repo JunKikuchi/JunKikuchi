@@ -1,5 +1,7 @@
 module ShogiX.Clocks.Types where
 
+import           RIO
+
 -- | 対局時計
 data Clocks
   = Clocks

@@ -1,3 +1,4 @@
+import           RIO
 import           Test.DocTest                   ( doctest )
 
 main :: IO ()

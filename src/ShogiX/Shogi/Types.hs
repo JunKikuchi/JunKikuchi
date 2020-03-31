@@ -1,23 +1,25 @@
 module ShogiX.Shogi.Types where
 
-import           Data.List.NonEmpty             ( NonEmpty )
-import           Data.Map.Strict                ( Map )
-import           Data.Set                       ( Set )
+import           RIO
+import           RIO.Map                        ( Map )
+import           RIO.NonEmpty                   ( NonEmpty )
+import           RIO.Set                        ( Set )
 import           ShogiX.Clocks.Types            ( Clocks )
 
 -- | 将棋作成
 --
--- >>> import qualified Data.Map.Strict as Map
--- >>> import qualified Data.List.NonEmpty as NonEmpty
+-- >>> import RIO
+-- >>> import qualified RIO.Map as Map
+-- >>> import qualified RIO.NonEmpty as NonEmpty
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
 -- >>> let board = Board Map.empty
 -- >>> let stands = Stands [] []
 -- >>> let position = Position Black board stands Clocks.infinity
--- >>> let positions = Positions (NonEmpty.fromList [position])
+-- >>> let shogi = fmap (Shogi Open . Positions) (NonEmpty.nonEmpty [position])
 -- >>>
--- >>> Shogi Open positions
--- Shogi {shogiStauts = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = [], whiteStand = []}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}}
+-- >>> shogi
+-- Just (Shogi {shogiStauts = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = [], whiteStand = []}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}})
 
 -- | 先手|後手
 data Color
