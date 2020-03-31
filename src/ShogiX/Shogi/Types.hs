@@ -88,10 +88,10 @@ newtype Board = Board { unBoard :: Map Square Piece } deriving Show
 type Square = (File, Rank)
 
 -- | 将棋盤の筋
-data File = F9 | F8 | F7 | F6 | F5 | F4 | F3 | F2 | F1 deriving Show
+data File = F9 | F8 | F7 | F6 | F5 | F4 | F3 | F2 | F1 deriving (Show, Eq, Ord)
 
 -- | 将棋盤の段
-data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 deriving Show
+data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 deriving (Show, Eq, Ord)
 
 -- | 駒台
 data Stands
@@ -147,4 +147,4 @@ data Promotable
   = No     -- ^ 不成のみ
   | Option -- ^ 成り,不成を選択可能
   | Must   -- ^ 成りのみ
-  deriving Show
+  deriving (Show, Eq, Ord)
