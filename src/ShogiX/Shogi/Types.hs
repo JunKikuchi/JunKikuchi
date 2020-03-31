@@ -7,7 +7,7 @@ import           ShogiX.Clocks.Types            ( Clocks )
 
 -- | 将棋作成
 --
--- >>> import qualified Data.Map as Map
+-- >>> import qualified Data.Map.Strict as Map
 -- >>> import qualified Data.List.NonEmpty as NonEmpty
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
