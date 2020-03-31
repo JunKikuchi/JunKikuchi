@@ -1,9 +1,7 @@
 module ShogiX.Shogi.Types where
 
 import           Data.List.NonEmpty             ( NonEmpty )
-import qualified Data.List.NonEmpty            as NonEmpty
 import           Data.Map.Strict                ( Map )
-import qualified Data.Map.Strict               as Map
 import           ShogiX.Clocks.Types            ( Clocks )
 
 -- | 将棋作成
@@ -141,7 +139,7 @@ type SrcSquare = Square
 type Promotion = Bool
 
 -- | 駒の移動先
-newtype Movables = Movables { unMovables :: Map.Map SrcSquare (DestSquare, Promotable) } deriving Show
+newtype Movables = Movables { unMovables :: Map SrcSquare (DestSquare, Promotable) } deriving Show
 
 -- | 駒成り可能状態
 data Promotable
