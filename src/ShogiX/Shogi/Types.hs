@@ -22,7 +22,7 @@ import           ShogiX.Clocks.Types            ( Clocks )
 data Color
   = Black -- ^ 先手
   | White -- ^ 後手
-  deriving Show
+  deriving (Show, Eq)
 
 -- | 将棋
 data Shogi
@@ -36,13 +36,13 @@ data Status
   = Open                      -- ^ 対局中
   | Draw DrawStatus           -- ^ 引き分け
   | Closed Winner CloseStatus -- ^ 対局終了
-  deriving Show
+  deriving (Show, Eq)
 
 -- | 引き分けの状態
 data DrawStatus
   = Repetition  -- ^ 千日手
   | ImpasseDraw -- ^ 持将棋
-  deriving Show
+  deriving (Show, Eq)
 
 -- | 勝者
 type Winner = Color
@@ -54,7 +54,7 @@ data CloseStatus
   | Resign                -- ^ 投了
   | Timeout               -- ^ 時間切れ
   | ImpasseClose          -- ^ 持将棋
-  deriving Show
+  deriving (Show, Eq)
 
 -- | 反則で対局終了の状態
 data IllegalStatus
@@ -63,7 +63,7 @@ data IllegalStatus
   | DroppedPawnMate       -- ^ 打ち歩詰め
   | RepetitionRepetedMate -- ^ 連続王手の千日手
   | AbandonCheck          -- ^ 王手放置
-  deriving Show
+  deriving (Show, Eq)
 
 -- | 局面ログ
 newtype Positions = Positions { unPositions :: NonEmpty Position } deriving Show
@@ -100,7 +100,11 @@ data Stands
   } deriving Show
 
 -- | 駒
-data Piece = Piece Color PieceType deriving Show
+data Piece
+  = Piece
+  { pieceColor :: Color     -- ^ 先手後手
+  , pieceType  :: PieceType -- ^ 駒の種類
+  } deriving Show
 
 -- | 駒の種類
 data PieceType
@@ -138,8 +142,11 @@ type SrcSquare = Square
 -- | 駒の成り指定
 type Promotion = Bool
 
+-- | 駒の移動元と移動先
+newtype Movables = Movables { unMovables :: Map SrcSquare Movable } deriving Show
+
 -- | 駒の移動先
-newtype Movables = Movables { unMovables :: Map SrcSquare (Set (DestSquare, Promotable)) } deriving Show
+type Movable = Map DestSquare Promotable
 
 -- | 持ち駒の打ち先
 newtype Droppables = Droppables { unDroppables :: Map (Set DestSquare) (Set PieceType) } deriving Show
