@@ -1,7 +1,14 @@
-module ShogiX.Shogi where
+module ShogiX.Shogi
+  ( hirate
+  , move
+  , movables
+  , module ShogiX.Shogi.Types
+  , module ShogiX.Clocks
+  )
+where
 
 import           ShogiX.Shogi.Types
-import           ShogiX.Clocks.Types            ( Sec )
+import           ShogiX.Clocks                  ( Sec )
 
 -- | 平手作成
 hirate :: Shogi
