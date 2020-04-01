@@ -127,6 +127,17 @@ forward :: Color -> Square -> Movement
 forward Black = up
 forward White = down
 
+-- | 左上へのマス目リスト生成
+--
+-- >>> leftUp (F5, R5)
+-- [(F6,R4),(F7,R3),(F8,R2),(F9,R1)]
+--
+-- >>> leftUp (F9, R1)
+-- []
+leftUp :: Square -> Movement
+leftUp (file, rank) = zip (drop 1 $ reverse [minBound .. file])
+                          (drop 1 $ reverse [minBound .. rank])
+
 -- | 上へのマス目リスト生成
 --
 -- >>> up (F1, R5)
@@ -137,6 +148,38 @@ forward White = down
 up :: Square -> Movement
 up (file, rank) = [ (file, r) | r <- drop 1 $ reverse [minBound .. rank] ]
 
+-- | 右上へのマス目リスト生成
+--
+-- >>> rightUp (F5, R5)
+-- [(F4,R4),(F3,R3),(F2,R2),(F1,R1)]
+--
+-- >>> rightUp (F1, R1)
+-- []
+rightUp :: Square -> Movement
+rightUp (file, rank) =
+  zip (drop 1 [file .. maxBound]) (drop 1 $ reverse [minBound .. rank])
+
+-- | 右へのマス目リスト生成
+--
+-- >>> right (F5, R5)
+-- [(F4,R5),(F3,R5),(F2,R5),(F1,R5)]
+--
+-- >>> right (F1, R5)
+-- []
+right :: Square -> Movement
+right (file, rank) = [ (f, rank) | f <- drop 1 [file .. maxBound] ]
+
+-- | 右下へのマス目リスト生成
+--
+-- >>> rightDown (F5, R5)
+-- [(F4,R6),(F3,R7),(F2,R8),(F1,R9)]
+--
+-- >>> rightDown (F1, R9)
+-- []
+rightDown :: Square -> Movement
+rightDown (file, rank) =
+  zip (drop 1 [file .. maxBound]) (drop 1 [rank .. maxBound])
+
 -- | 下へのマス目リスト生成
 --
 -- >>> down (F1, R5)
@@ -146,3 +189,24 @@ up (file, rank) = [ (file, r) | r <- drop 1 $ reverse [minBound .. rank] ]
 -- []
 down :: Square -> Movement
 down (file, rank) = [ (file, r) | r <- drop 1 [rank .. maxBound] ]
+
+-- | 左下へのマス目リスト生成
+--
+-- >>> leftDown (F5, R5)
+-- [(F6,R6),(F7,R7),(F8,R8),(F9,R9)]
+--
+-- >>> leftDown (F9, R9)
+-- []
+leftDown :: Square -> Movement
+leftDown (file, rank) =
+  zip (drop 1 $ reverse [minBound .. file]) (drop 1 [rank .. maxBound])
+
+-- | 左へのマス目リスト生成
+--
+-- >>> left (F5, R5)
+-- [(F6,R5),(F7,R5),(F8,R5),(F9,R5)]
+--
+-- >>> left (F9, R5)
+-- []
+left :: Square -> Movement
+left (file, rank) = [ (f, rank) | f <- drop 1 $ reverse [minBound .. file] ]
