@@ -79,7 +79,7 @@ pawn s = [one $ up s]
 --
 -- >>> one []
 -- []
-one :: [Square] -> [Square]
+one :: Movement -> Movement
 one = take 1
 
 -- | 上へのマス目リスト生成
@@ -89,5 +89,5 @@ one = take 1
 --
 -- >>> up (F1, R1)
 -- []
-up :: Square -> [Square]
+up :: Square -> Movement
 up (file, rank) = [ (file, r) | r <- drop 1 $ reverse [minBound .. rank] ]
