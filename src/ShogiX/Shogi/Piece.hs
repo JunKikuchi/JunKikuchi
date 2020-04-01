@@ -1,6 +1,9 @@
 module ShogiX.Shogi.Piece where
 
 import           RIO
+import           RIO.Partial                    ( succ
+                                                , pred
+                                                )
 import qualified RIO.Map                       as Map
 import           ShogiX.Shogi.Types
 
@@ -85,6 +88,23 @@ pawn c s = [one $ forward c s]
 -- | 香車の可動範囲
 lance :: Color -> SrcSquare -> Movements
 lance c s = [forward c s]
+
+-- | 桂馬の可動範囲
+knight :: Color -> SrcSquare -> Movements
+knight c (file, rank) = [lf c, rf c]
+ where
+  lf Black | rank < R3 || file < F8 = []
+           | otherwise              = [(l, u)]
+  lf White | rank > R7 || file > F2 = []
+           | otherwise              = [(r, d)]
+  rf Black | rank < R3 || file > F2 = []
+           | otherwise              = [(r, u)]
+  rf White | rank > R7 || file < F8 = []
+           | otherwise              = [(l, d)]
+  l = pred file
+  r = succ file
+  u = pred . pred $ rank
+  d = succ . succ $ rank
 
 -- | マス目リストから最初のひとつ取得
 --

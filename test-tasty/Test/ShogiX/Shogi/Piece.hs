@@ -28,3 +28,16 @@ spec_Lance = describe "香車の可動範囲" $ do
       $          Piece.lance White (F5, R5)
       `shouldBe` [[(F5, R6), (F5, R7), (F5, R8), (F5, R9)]]
     it "前なし" $ Piece.lance White (F5, R9) `shouldBe` [[]]
+
+spec_Knight :: Spec
+spec_Knight = describe "桂馬の可動範囲" $ do
+  describe "先手" $ do
+    it "前両方あり" $ Piece.knight Black (F5, R5) `shouldBe` [[(F6, R3)], [(F4, R3)]]
+    it "前右あり" $ Piece.knight Black (F9, R5) `shouldBe` [[], [(F8, R3)]]
+    it "前左あり" $ Piece.knight Black (F1, R5) `shouldBe` [[(F2, R3)], []]
+    it "前なし" $ Piece.knight Black (F5, R2) `shouldBe` [[], []]
+  describe "後手" $ do
+    it "前両方あり" $ Piece.knight White (F5, R5) `shouldBe` [[(F4, R7)], [(F6, R7)]]
+    it "前右あり" $ Piece.knight White (F9, R5) `shouldBe` [[(F8, R7)], []]
+    it "前左あり" $ Piece.knight White (F1, R5) `shouldBe` [[], [(F2, R7)]]
+    it "前なし" $ Piece.knight White (F5, R8) `shouldBe` [[], []]
