@@ -15,7 +15,7 @@ import           ShogiX.Shogi.Types
 movable :: Piece -> SrcSquare -> Map Square Color -> Movable
 movable piece s sc = case pieceType piece of
   Pawn           -> promoMovables $ pawn color s
-  Lance          -> undefined
+  Lance          -> promoMovables $ lance color s
   Knight         -> undefined
   Silver         -> undefined
   Gold           -> undefined
@@ -81,6 +81,10 @@ promo _       = No
 -- [[(F5,R6)]]
 pawn :: Color -> SrcSquare -> Movements
 pawn c s = [one $ forward c s]
+
+-- | 香車の可動範囲
+lance :: Color -> SrcSquare -> Movements
+lance c s = [forward c s]
 
 -- | マス目リストから最初のひとつ取得
 --
