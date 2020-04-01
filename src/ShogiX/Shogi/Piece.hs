@@ -1,4 +1,3 @@
-{-# LANGUAGE RankNTypes #-}
 module ShogiX.Shogi.Piece where
 
 import           RIO
