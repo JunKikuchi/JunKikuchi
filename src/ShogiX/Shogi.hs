@@ -37,7 +37,7 @@ move = undefined
 -- >>> let shogi = Shogi Open . Positions <$> NonEmpty.nonEmpty [position]
 -- >>>
 -- >>> movables <$> shogi
--- Just (Movables {unMovables = fromList [((F5,R5),fromList [((F5,R4),No)])]})
+-- Just (Movables {unMovables = fromList [((F5,R5),Movable {unMovable = fromList [((F5,R4),No)]})]})
 movables :: Shogi -> Movables
 movables shogi | status == Open = Position.movables pos
                | otherwise      = empty

@@ -146,7 +146,7 @@ type Promotion = Bool
 newtype Movables = Movables { unMovables :: Map SrcSquare Movable } deriving Show
 
 -- | 駒の移動先
-type Movable = Map DestSquare Promotable
+newtype Movable = Movable { unMovable :: Map DestSquare Promotable } deriving Show
 
 -- | 持ち駒の打ち先
 newtype Droppables = Droppables { unDroppables :: Map (Set DestSquare) (Set PieceType) } deriving Show

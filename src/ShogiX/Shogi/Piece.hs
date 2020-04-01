@@ -37,7 +37,7 @@ type Promo = Square -> Promotable
 -- | 駒の可動範囲を生成
 movables :: Promo -> Color -> Map Square Color -> Movements -> Movable
 movables p c sc mss =
-  Map.fromList [ (m, p m) | ms <- mss, m <- takeMovables c sc ms ]
+  Movable (Map.fromList [ (m, p m) | ms <- mss, m <- takeMovables c sc ms ])
 
 -- | 駒があるマス目まで可動範囲を刈り取る
 --
