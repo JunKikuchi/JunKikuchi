@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c0c41a33e4ece9ccabec4e94a09f3d3cb8252717dc274b036b281f8de15d5773
+-- hash: 5a0b9a2504c9130992c16381f84816c7f1b82f1ce7452c4f33d359b0b6783dd8
 
 name:           shogix-shogi
 version:        0.1.0.0
@@ -57,7 +57,6 @@ test-suite shogix-shogi-tasty
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , doctest
     , rio
     , shogix-shogi
     , tasty

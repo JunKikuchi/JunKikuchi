@@ -58,7 +58,6 @@ tests:
       - -with-rtsopts=-N
     dependencies:
       - shogix-shogi
-      - doctest
       - tasty
       - tasty-discover
       - tasty-hspec
