@@ -123,9 +123,12 @@ one = take 1
 --
 -- >>> forward White (F1, R5)
 -- [(F1,R6),(F1,R7),(F1,R8),(F1,R9)]
-forward :: Color -> Square -> Movement
+forward :: Color -> SquareMovement
 forward Black = up
 forward White = down
+
+-- | マス目リスト生成
+type SquareMovement = Square -> Movement
 
 -- | 左上へのマス目リスト生成
 --
@@ -134,7 +137,7 @@ forward White = down
 --
 -- >>> leftUp (F9, R1)
 -- []
-leftUp :: Square -> Movement
+leftUp :: SquareMovement
 leftUp (file, rank) = zip (drop 1 $ reverse [minBound .. file])
                           (drop 1 $ reverse [minBound .. rank])
 
@@ -145,7 +148,7 @@ leftUp (file, rank) = zip (drop 1 $ reverse [minBound .. file])
 --
 -- >>> up (F1, R1)
 -- []
-up :: Square -> Movement
+up :: SquareMovement
 up (file, rank) = [ (file, r) | r <- drop 1 $ reverse [minBound .. rank] ]
 
 -- | 右上へのマス目リスト生成
@@ -155,7 +158,7 @@ up (file, rank) = [ (file, r) | r <- drop 1 $ reverse [minBound .. rank] ]
 --
 -- >>> rightUp (F1, R1)
 -- []
-rightUp :: Square -> Movement
+rightUp :: SquareMovement
 rightUp (file, rank) =
   zip (drop 1 [file .. maxBound]) (drop 1 $ reverse [minBound .. rank])
 
@@ -166,7 +169,7 @@ rightUp (file, rank) =
 --
 -- >>> right (F1, R5)
 -- []
-right :: Square -> Movement
+right :: SquareMovement
 right (file, rank) = [ (f, rank) | f <- drop 1 [file .. maxBound] ]
 
 -- | 右下へのマス目リスト生成
@@ -176,7 +179,7 @@ right (file, rank) = [ (f, rank) | f <- drop 1 [file .. maxBound] ]
 --
 -- >>> rightDown (F1, R9)
 -- []
-rightDown :: Square -> Movement
+rightDown :: SquareMovement
 rightDown (file, rank) =
   zip (drop 1 [file .. maxBound]) (drop 1 [rank .. maxBound])
 
@@ -187,7 +190,7 @@ rightDown (file, rank) =
 --
 -- >>> down (F1, R9)
 -- []
-down :: Square -> Movement
+down :: SquareMovement
 down (file, rank) = [ (file, r) | r <- drop 1 [rank .. maxBound] ]
 
 -- | 左下へのマス目リスト生成
@@ -197,7 +200,7 @@ down (file, rank) = [ (file, r) | r <- drop 1 [rank .. maxBound] ]
 --
 -- >>> leftDown (F9, R9)
 -- []
-leftDown :: Square -> Movement
+leftDown :: SquareMovement
 leftDown (file, rank) =
   zip (drop 1 $ reverse [minBound .. file]) (drop 1 [rank .. maxBound])
 
@@ -208,5 +211,5 @@ leftDown (file, rank) =
 --
 -- >>> left (F9, R5)
 -- []
-left :: Square -> Movement
+left :: SquareMovement
 left (file, rank) = [ (f, rank) | f <- drop 1 $ reverse [minBound .. file] ]
