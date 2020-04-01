@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4423f621032f7be43224b9a81d48b5065146eaca60ced69163fcfdfdcae2d948
+-- hash: c0c41a33e4ece9ccabec4e94a09f3d3cb8252717dc274b036b281f8de15d5773
 
 name:           shogix-shogi
 version:        0.1.0.0
@@ -43,6 +43,26 @@ library
   build-depends:
       base >=4.7 && <5
     , rio
+  default-language: Haskell2010
+
+test-suite shogix-shogi-tasty
+  type: exitcode-stdio-1.0
+  main-is: Tasty.hs
+  other-modules:
+      Test.ShogiX.Shogi.Piece
+      Paths_shogix_shogi
+  hs-source-dirs:
+      test-tasty
+  default-extensions: NoImplicitPrelude
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , doctest
+    , rio
+    , shogix-shogi
+    , tasty
+    , tasty-discover
+    , tasty-hspec
   default-language: Haskell2010
 
 test-suite shogix-shogi-test
