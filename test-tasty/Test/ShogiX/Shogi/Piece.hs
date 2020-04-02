@@ -41,3 +41,14 @@ spec_Knight = describe "桂馬の可動範囲" $ do
     it "前右あり" $ Piece.knight White (F9, R5) `shouldBe` [[(F8, R7)], []]
     it "前左あり" $ Piece.knight White (F1, R5) `shouldBe` [[], [(F2, R7)]]
     it "前なし" $ Piece.knight White (F5, R8) `shouldBe` [[], []]
+
+spec_Silver :: Spec
+spec_Silver = describe "銀将の可動範囲" $ do
+  describe "先手"
+    $          it "左前-前-右前-右下-左下あり"
+    $          Piece.silver Black (F5, R5)
+    `shouldBe` [[(F6, R4)], [(F5, R4)], [(F4, R4)], [(F4, R6)], [(F6, R6)]]
+  describe "後手"
+    $          it "左前-前-右前-右下-左下あり"
+    $          Piece.silver White (F5, R5)
+    `shouldBe` [[(F4, R6)], [(F5, R6)], [(F6, R6)], [(F6, R4)], [(F4, R4)]]

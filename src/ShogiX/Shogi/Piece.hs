@@ -76,6 +76,9 @@ promo (_, R2) = Option
 promo (_, R3) = Option
 promo _       = No
 
+-- | 駒の可動範囲
+type PieceMovements = Color -> SrcSquare -> Movements
+
 -- | 歩兵の可動範囲
 --
 -- >>> pawn Black (F5, R5)
@@ -83,15 +86,15 @@ promo _       = No
 --
 -- >>> pawn White (F5, R5)
 -- [[(F5,R6)]]
-pawn :: Color -> SrcSquare -> Movements
+pawn :: PieceMovements
 pawn c s = [one $ forward c s]
 
 -- | 香車の可動範囲
-lance :: Color -> SrcSquare -> Movements
+lance :: PieceMovements
 lance c s = [forward c s]
 
 -- | 桂馬の可動範囲
-knight :: Color -> SrcSquare -> Movements
+knight :: PieceMovements
 knight c (file, rank) = [lf c, rf c]
  where
   lf Black | rank < R3 || file < F8 = []
@@ -106,6 +109,12 @@ knight c (file, rank) = [lf c, rf c]
   r = succ file
   u = pred . pred $ rank
   d = succ . succ $ rank
+
+-- | 銀将の可動範囲
+silver :: PieceMovements
+silver c s =
+  (\f -> one $ f c s)
+    <$> [leftForward, forward, rightForward, rightBackward, leftBackward]
 
 -- | マス目リストから最初のひとつ取得
 --
