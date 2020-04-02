@@ -1,3 +1,4 @@
+{-# LANGUAGE RankNTypes #-}
 module ShogiX.Shogi.Piece where
 
 import           RIO
@@ -138,8 +139,7 @@ type SquareMovement = Square -> Movement
 -- >>> leftUp (F9, R1)
 -- []
 leftUp :: SquareMovement
-leftUp (file, rank) = zip (drop 1 $ reverse [minBound .. file])
-                          (drop 1 $ reverse [minBound .. rank])
+leftUp (file, rank) = zip (preds file) (preds rank)
 
 -- | 上へのマス目リスト生成
 --
@@ -149,7 +149,7 @@ leftUp (file, rank) = zip (drop 1 $ reverse [minBound .. file])
 -- >>> up (F1, R1)
 -- []
 up :: SquareMovement
-up (file, rank) = [ (file, r) | r <- drop 1 $ reverse [minBound .. rank] ]
+up (file, rank) = [ (file, r) | r <- preds rank ]
 
 -- | 右上へのマス目リスト生成
 --
@@ -159,8 +159,7 @@ up (file, rank) = [ (file, r) | r <- drop 1 $ reverse [minBound .. rank] ]
 -- >>> rightUp (F1, R1)
 -- []
 rightUp :: SquareMovement
-rightUp (file, rank) =
-  zip (drop 1 [file .. maxBound]) (drop 1 $ reverse [minBound .. rank])
+rightUp (file, rank) = zip (succs file) (preds rank)
 
 -- | 右へのマス目リスト生成
 --
@@ -170,7 +169,7 @@ rightUp (file, rank) =
 -- >>> right (F1, R5)
 -- []
 right :: SquareMovement
-right (file, rank) = [ (f, rank) | f <- drop 1 [file .. maxBound] ]
+right (file, rank) = [ (f, rank) | f <- succs file ]
 
 -- | 右下へのマス目リスト生成
 --
@@ -180,8 +179,7 @@ right (file, rank) = [ (f, rank) | f <- drop 1 [file .. maxBound] ]
 -- >>> rightDown (F1, R9)
 -- []
 rightDown :: SquareMovement
-rightDown (file, rank) =
-  zip (drop 1 [file .. maxBound]) (drop 1 [rank .. maxBound])
+rightDown (file, rank) = zip (succs file) (succs rank)
 
 -- | 下へのマス目リスト生成
 --
@@ -191,7 +189,7 @@ rightDown (file, rank) =
 -- >>> down (F1, R9)
 -- []
 down :: SquareMovement
-down (file, rank) = [ (file, r) | r <- drop 1 [rank .. maxBound] ]
+down (file, rank) = [ (file, r) | r <- succs rank ]
 
 -- | 左下へのマス目リスト生成
 --
@@ -201,8 +199,7 @@ down (file, rank) = [ (file, r) | r <- drop 1 [rank .. maxBound] ]
 -- >>> leftDown (F9, R9)
 -- []
 leftDown :: SquareMovement
-leftDown (file, rank) =
-  zip (drop 1 $ reverse [minBound .. file]) (drop 1 [rank .. maxBound])
+leftDown (file, rank) = zip (preds file) (succs rank)
 
 -- | 左へのマス目リスト生成
 --
@@ -212,4 +209,18 @@ leftDown (file, rank) =
 -- >>> left (F9, R5)
 -- []
 left :: SquareMovement
-left (file, rank) = [ (f, rank) | f <- drop 1 $ reverse [minBound .. file] ]
+left (file, rank) = [ (f, rank) | f <- preds file ]
+
+-- | 減少リスト生成
+--
+-- >>> preds R5
+-- [R4,R3,R2,R1]
+preds :: forall a . (Enum a, Bounded a) => a -> [a]
+preds a = drop 1 $ reverse [minBound .. a]
+
+-- | 増加リスト生成
+--
+-- >>> succs R5
+-- [R6,R7,R8,R9]
+succs :: forall a . (Enum a, Bounded a) => a -> [a]
+succs a = drop 1 [a .. maxBound]
