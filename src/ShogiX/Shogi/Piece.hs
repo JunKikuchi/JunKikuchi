@@ -117,16 +117,71 @@ knight c (file, rank) = [lf c, rf c]
 one :: Movement -> Movement
 one = take 1
 
+-- | 左前方マス目リスト生成
+--
+-- >>> leftForward Black (F5, R5)
+-- [(F6,R4),(F7,R3),(F8,R2),(F9,R1)]
+--
+-- >>> leftForward White (F5, R5)
+-- [(F4,R6),(F3,R7),(F2,R8),(F1,R9)]
+leftForward :: Color -> SquareMovement
+leftForward Black = leftUp
+leftForward White = rightDown
+
 -- | 前方マス目リスト生成
 --
--- >>> forward Black (F1, R5)
--- [(F1,R4),(F1,R3),(F1,R2),(F1,R1)]
+-- >>> forward Black (F5, R5)
+-- [(F5,R4),(F5,R3),(F5,R2),(F5,R1)]
 --
--- >>> forward White (F1, R5)
--- [(F1,R6),(F1,R7),(F1,R8),(F1,R9)]
+-- >>> forward White (F5, R5)
+-- [(F5,R6),(F5,R7),(F5,R8),(F5,R9)]
 forward :: Color -> SquareMovement
 forward Black = up
 forward White = down
+
+-- | 右前方マス目リスト生成
+--
+-- >>> rightForward Black (F5, R5)
+-- [(F4,R4),(F3,R3),(F2,R2),(F1,R1)]
+--
+-- >>> rightForward White (F5, R5)
+-- [(F6,R6),(F7,R7),(F8,R8),(F9,R9)]
+rightForward :: Color -> SquareMovement
+rightForward Black = rightUp
+rightForward White = leftDown
+
+-- | 右後方マス目リスト生成
+--
+-- >>> rightBackward Black (F5, R5)
+-- [(F4,R6),(F3,R7),(F2,R8),(F1,R9)]
+--
+-- >>> rightBackward White (F5, R5)
+-- [(F6,R4),(F7,R3),(F8,R2),(F9,R1)]
+rightBackward :: Color -> SquareMovement
+rightBackward Black = rightDown
+rightBackward White = leftUp
+
+-- | 後方マス目リスト生成
+--
+-- >>> backward Black (F5, R5)
+-- [(F5,R6),(F5,R7),(F5,R8),(F5,R9)]
+--
+-- >>> backward White (F5, R5)
+-- [(F5,R4),(F5,R3),(F5,R2),(F5,R1)]
+backward :: Color -> SquareMovement
+backward Black = down
+backward White = up
+
+-- | 左後方マス目リスト生成
+--
+-- >>> leftBackward Black (F5, R5)
+-- [(F6,R6),(F7,R7),(F8,R8),(F9,R9)]
+--
+-- >>> leftBackward White (F5, R5)
+-- [(F4,R4),(F3,R3),(F2,R2),(F1,R1)]
+leftBackward :: Color -> SquareMovement
+leftBackward Black = leftDown
+leftBackward White = rightUp
 
 -- | マス目リスト生成
 type SquareMovement = Square -> Movement
