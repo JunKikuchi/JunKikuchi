@@ -116,6 +116,12 @@ silver c s =
   (\f -> one $ f c s)
     <$> [leftForward, forward, rightForward, rightBackward, leftBackward]
 
+-- | 金将の可動範囲
+gold :: PieceMovements
+gold c s =
+  (\f -> one $ f c s)
+    <$> [leftForward, forward, rightForward, const right, backward, const left]
+
 -- | マス目リストから最初のひとつ取得
 --
 -- >>> one [(F1, R1), (F2, R2), (F3, R3)]

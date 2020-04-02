@@ -52,3 +52,26 @@ spec_Silver = describe "銀将の可動範囲" $ do
     $          it "左前-前-右前-右下-左下あり"
     $          Piece.silver White (F5, R5)
     `shouldBe` [[(F4, R6)], [(F5, R6)], [(F6, R6)], [(F6, R4)], [(F4, R4)]]
+
+spec_Gold :: Spec
+spec_Gold = describe "金将の可動範囲" $ do
+  describe "先手"
+    $          it "左前-前-右前-右-下-左あり"
+    $          Piece.gold Black (F5, R5)
+    `shouldBe` [ [(F6, R4)]
+               , [(F5, R4)]
+               , [(F4, R4)]
+               , [(F4, R5)]
+               , [(F5, R6)]
+               , [(F6, R5)]
+               ]
+  describe "後手"
+    $          it "左前-前-右前-右-下-左あり"
+    $          Piece.gold White (F5, R5)
+    `shouldBe` [ [(F4, R6)]
+               , [(F5, R6)]
+               , [(F6, R6)]
+               , [(F4, R5)]
+               , [(F5, R4)]
+               , [(F6, R5)]
+               ]
