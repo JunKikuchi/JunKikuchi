@@ -138,10 +138,10 @@ one = take 1
 -- [(F6,R4),(F7,R3),(F8,R2),(F9,R1)]
 --
 -- >>> leftForward White (F5, R5)
--- [(F4,R6),(F3,R7),(F2,R8),(F1,R9)]
+-- [(F6,R6),(F7,R7),(F8,R8),(F9,R9)]
 leftForward :: Color -> SquareMovement
 leftForward Black = leftUp
-leftForward White = rightDown
+leftForward White = leftDown
 
 -- | 前方マス目リスト生成
 --
@@ -160,10 +160,10 @@ forward White = down
 -- [(F4,R4),(F3,R3),(F2,R2),(F1,R1)]
 --
 -- >>> rightForward White (F5, R5)
--- [(F6,R6),(F7,R7),(F8,R8),(F9,R9)]
+-- [(F4,R6),(F3,R7),(F2,R8),(F1,R9)]
 rightForward :: Color -> SquareMovement
 rightForward Black = rightUp
-rightForward White = leftDown
+rightForward White = rightDown
 
 -- | 右後方マス目リスト生成
 --
@@ -171,10 +171,10 @@ rightForward White = leftDown
 -- [(F4,R6),(F3,R7),(F2,R8),(F1,R9)]
 --
 -- >>> rightBackward White (F5, R5)
--- [(F6,R4),(F7,R3),(F8,R2),(F9,R1)]
+-- [(F4,R4),(F3,R3),(F2,R2),(F1,R1)]
 rightBackward :: Color -> SquareMovement
 rightBackward Black = rightDown
-rightBackward White = leftUp
+rightBackward White = rightUp
 
 -- | 後方マス目リスト生成
 --
@@ -193,10 +193,10 @@ backward White = up
 -- [(F6,R6),(F7,R7),(F8,R8),(F9,R9)]
 --
 -- >>> leftBackward White (F5, R5)
--- [(F4,R4),(F3,R3),(F2,R2),(F1,R1)]
+-- [(F6,R4),(F7,R3),(F8,R2),(F9,R1)]
 leftBackward :: Color -> SquareMovement
 leftBackward Black = leftDown
-leftBackward White = rightUp
+leftBackward White = leftUp
 
 -- | マス目リスト生成
 type SquareMovement = Square -> Movement
