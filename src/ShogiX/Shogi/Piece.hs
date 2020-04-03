@@ -43,12 +43,12 @@ type Movements = [Movement]
 type Movement  = [DestSquare]
 
 -- | 成り不成判定
-type Promo = Square -> Promotable
+type PromotionExam = Color -> Square -> Promotable
 
 -- | 駒の可動範囲を生成
-movables :: Promo -> Color -> Map Square Color -> Movements -> Movable
+movables :: PromotionExam -> Color -> Map Square Color -> Movements -> Movable
 movables p c sc mss =
-  Movable (Map.fromList [ (m, p m) | ms <- mss, m <- takeMovables c sc ms ])
+  Movable (Map.fromList [ (m, p c m) | ms <- mss, m <- takeMovables c sc ms ])
 
 -- | 駒があるマス目まで可動範囲を刈り取る
 --
@@ -70,11 +70,15 @@ takeMovables c sc (s : ss) = case Map.lookup s sc of
   Nothing    -> s : takeMovables c sc ss
 
 -- | 成り不成判定
-promo :: Promo
-promo (_, R1) = Must
-promo (_, R2) = Option
-promo (_, R3) = Option
-promo _       = No
+promo :: PromotionExam
+promo Black (_, R1) = Must
+promo Black (_, R2) = Option
+promo Black (_, R3) = Option
+promo Black _       = No
+promo White (_, R7) = Option
+promo White (_, R8) = Option
+promo White (_, R9) = Must
+promo White _       = No
 
 -- | 駒の可動範囲
 type PieceMovements = Color -> SrcSquare -> Movements
