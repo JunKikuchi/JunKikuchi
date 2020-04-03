@@ -76,6 +76,25 @@ spec_Gold = describe "金将の可動範囲" $ do
                , [(F6, R5)]
                ]
 
+spec_Bishop :: Spec
+spec_Bishop = describe "角行の可動範囲" $ do
+  describe "先手"
+    $          it "左前連続-右前連続-右下連続-左下連続"
+    $          Piece.bishop Black (F5, R5)
+    `shouldBe` [ [(F6, R4), (F7, R3), (F8, R2), (F9, R1)]
+               , [(F4, R4), (F3, R3), (F2, R2), (F1, R1)]
+               , [(F4, R6), (F3, R7), (F2, R8), (F1, R9)]
+               , [(F6, R6), (F7, R7), (F8, R8), (F9, R9)]
+               ]
+  describe "後手"
+    $          it "左前連続-右前連続-右下連続-左下連続"
+    $          Piece.bishop White (F5, R5)
+    `shouldBe` [ [(F6, R6), (F7, R7), (F8, R8), (F9, R9)]
+               , [(F4, R6), (F3, R7), (F2, R8), (F1, R9)]
+               , [(F4, R4), (F3, R3), (F2, R2), (F1, R1)]
+               , [(F6, R4), (F7, R3), (F8, R2), (F9, R1)]
+               ]
+
 spec_King :: Spec
 spec_King = describe "玉将の可動範囲" $ do
   describe "先手"

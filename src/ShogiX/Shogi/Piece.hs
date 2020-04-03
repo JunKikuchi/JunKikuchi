@@ -122,6 +122,11 @@ gold c s =
   (\f -> one $ f c s)
     <$> [leftForward, forward, rightForward, const right, backward, const left]
 
+-- | 角行の可動範囲
+bishop :: PieceMovements
+bishop c s =
+  (\f -> f c s) <$> [leftForward, rightForward, rightBackward, leftBackward]
+
 -- | 玉将の可動範囲
 king :: PieceMovements
 king c s =
