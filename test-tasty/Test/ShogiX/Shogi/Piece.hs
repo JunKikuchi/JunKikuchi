@@ -93,6 +93,52 @@ spec_movable = describe "movable" $ do
                      , ((F6, R5), No)
                      ]
                    )
+  describe "角行" $ do
+    it "先手"
+      $          Piece.movable (Piece Black Bishop) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F6, R4), No)
+                     , ((F7, R3), Option)
+                     , ((F8, R2), Option)
+                     , ((F9, R1), Option)
+                     , ((F4, R4), No)
+                     , ((F3, R3), Option)
+                     , ((F2, R2), Option)
+                     , ((F1, R1), Option)
+                     , ((F4, R6), No)
+                     , ((F3, R7), No)
+                     , ((F2, R8), No)
+                     , ((F1, R9), No)
+                     , ((F6, R6), No)
+                     , ((F7, R7), No)
+                     , ((F8, R8), No)
+                     , ((F9, R9), No)
+                     ]
+                   )
+    it "後手"
+      $          Piece.movable (Piece White Bishop) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F6, R4), No)
+                     , ((F7, R3), No)
+                     , ((F8, R2), No)
+                     , ((F9, R1), No)
+                     , ((F4, R4), No)
+                     , ((F3, R3), No)
+                     , ((F2, R2), No)
+                     , ((F1, R1), No)
+                     , ((F4, R6), No)
+                     , ((F3, R7), Option)
+                     , ((F2, R8), Option)
+                     , ((F1, R9), Option)
+                     , ((F6, R6), No)
+                     , ((F7, R7), Option)
+                     , ((F8, R8), Option)
+                     , ((F9, R9), Option)
+                     ]
+                   )
+
 
 spec_Pawn :: Spec
 spec_Pawn = describe "歩兵の可動範囲" $ do

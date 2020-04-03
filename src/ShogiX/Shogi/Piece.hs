@@ -17,13 +17,13 @@ import           ShogiX.Shogi.Types
 -- >>> movable (Piece White Pawn) (F5, R5) (Map.fromList [((F5, R5), Black)])
 -- Movable {unMovable = fromList [((F5,R6),No)]}
 movable :: Piece -> SrcSquare -> Map Square Color -> Movable
-movable piece s sc = case pieceType piece of
-  Pawn           -> promoMovables $ pawn color s
-  Lance          -> promoMovables $ lance color s
-  Knight         -> promoMovables $ knight color s
-  Silver         -> promoMovables $ silver color s
-  Gold           -> movables (const . const No) color sc $ gold color s
-  Bishop         -> undefined
+movable piece src sc = movables color pt src sc $ case pt of
+  Pawn           -> pawn
+  Lance          -> lance
+  Knight         -> knight
+  Silver         -> silver
+  Gold           -> gold
+  Bishop         -> bishop
   Rook           -> undefined
   King           -> undefined
   PromotedPawn   -> undefined
@@ -33,22 +33,24 @@ movable piece s sc = case pieceType piece of
   PromotedBishop -> undefined
   PromotedRook   -> undefined
  where
-  promoMovables = movables promo color sc
-  color         = pieceColor piece
-
--- | 駒の可動範囲リスト
-type Movements = [Movement]
-
--- | 駒の可動範囲
-type Movement  = [DestSquare]
-
--- | 成り不成判定
-type PromotionExam = Color -> Square -> Promotable
+  pt    = pieceType piece
+  color = pieceColor piece
 
 -- | 駒の可動範囲を生成
-movables :: PromotionExam -> Color -> Map Square Color -> Movements -> Movable
-movables p c sc mss =
-  Movable (Map.fromList [ (m, p c m) | ms <- mss, m <- takeMovables c sc ms ])
+movables
+  :: Color
+  -> PieceType
+  -> SrcSquare
+  -> Map Square Color
+  -> PieceMovements
+  -> Movable
+movables color pt src sc pm = Movable
+  (Map.fromList
+    [ (m, promoExam color pt m)
+    | ms <- pm color src
+    , m  <- takeMovables color sc ms
+    ]
+  )
 
 -- | 駒があるマス目まで可動範囲を刈り取る
 --
@@ -70,18 +72,36 @@ takeMovables c sc (s : ss) = case Map.lookup s sc of
   Nothing    -> s : takeMovables c sc ss
 
 -- | 成り不成判定
-promo :: PromotionExam
-promo Black (_, R1) = Must
-promo Black (_, R2) = Option
-promo Black (_, R3) = Option
-promo Black _       = No
-promo White (_, R7) = Option
-promo White (_, R8) = Option
-promo White (_, R9) = Must
-promo White _       = No
+promoExam :: Color -> PieceType -> Square -> Promotable
+promoExam _     King           _       = No
+promoExam _     Gold           _       = No
+promoExam _     PromotedRook   _       = No
+promoExam _     PromotedBishop _       = No
+promoExam _     PromotedSilver _       = No
+promoExam _     PromotedLance  _       = No
+promoExam _     PromotedKnight _       = No
+promoExam _     PromotedPawn   _       = No
+promoExam Black Bishop         (_, R1) = Option
+promoExam Black Rook           (_, R1) = Option
+promoExam Black _              (_, R1) = Must
+promoExam Black _              (_, R2) = Option
+promoExam Black _              (_, R3) = Option
+promoExam Black _              _       = No
+promoExam White Bishop         (_, R9) = Option
+promoExam White Rook           (_, R9) = Option
+promoExam White _              (_, R9) = Must
+promoExam White _              (_, R8) = Option
+promoExam White _              (_, R7) = Option
+promoExam White _              _       = No
 
 -- | 駒の可動範囲
 type PieceMovements = Color -> SrcSquare -> Movements
+
+-- | 駒の可動範囲リスト
+type Movements = [Movement]
+
+-- | 駒の可動範囲
+type Movement  = [DestSquare]
 
 -- | 歩兵の可動範囲
 --
