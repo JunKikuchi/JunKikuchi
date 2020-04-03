@@ -75,3 +75,30 @@ spec_Gold = describe "金将の可動範囲" $ do
                , [(F5, R4)]
                , [(F6, R5)]
                ]
+
+spec_King :: Spec
+spec_King = describe "玉将の可動範囲" $ do
+  describe "先手"
+    $          it "左前-前-右前-右-右下-下-左下-左"
+    $          Piece.king Black (F5, R5)
+    `shouldBe` [ [(F6, R4)]
+               , [(F5, R4)]
+               , [(F4, R4)]
+               , [(F4, R5)]
+               , [(F4, R6)]
+               , [(F5, R6)]
+               , [(F6, R6)]
+               , [(F6, R5)]
+               ]
+  describe "後手"
+    $          it "左前-前-右前-右-右下-下-左下-左"
+    $          Piece.king White (F5, R5)
+    `shouldBe` [ [(F6, R6)]
+               , [(F5, R6)]
+               , [(F4, R6)]
+               , [(F4, R5)]
+               , [(F4, R4)]
+               , [(F5, R4)]
+               , [(F6, R4)]
+               , [(F6, R5)]
+               ]
