@@ -22,7 +22,7 @@ movable piece s sc = case pieceType piece of
   Lance          -> promoMovables $ lance color s
   Knight         -> promoMovables $ knight color s
   Silver         -> promoMovables $ silver color s
-  Gold           -> undefined
+  Gold           -> movables (const . const No) color sc $ gold color s
   Bishop         -> undefined
   Rook           -> undefined
   King           -> undefined
