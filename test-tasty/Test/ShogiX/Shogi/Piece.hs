@@ -1,12 +1,22 @@
 module Test.ShogiX.Shogi.Piece where
 
 import           RIO
+import qualified RIO.Map                       as Map
 import           Test.Tasty
 import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Piece            as Piece
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
+spec_movable :: Spec
+spec_movable = describe "movable" $ describe "歩兵" $ do
+  it "先手"
+    $          Piece.movable (Piece Black Pawn) (F5, R5) Map.empty
+    `shouldBe` Movable (Map.fromList [((F5, R4), No)])
+  it "後手"
+    $          Piece.movable (Piece White Pawn) (F5, R5) Map.empty
+    `shouldBe` Movable (Map.fromList [((F5, R6), No)])
+
 spec_Pawn :: Spec
 spec_Pawn = describe "歩兵の可動範囲" $ do
   describe "先手" $ do
