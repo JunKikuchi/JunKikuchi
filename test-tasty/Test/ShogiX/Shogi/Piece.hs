@@ -9,13 +9,35 @@ import qualified ShogiX.Shogi.Piece            as Piece
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_movable :: Spec
-spec_movable = describe "movable" $ describe "歩兵" $ do
-  it "先手"
-    $          Piece.movable (Piece Black Pawn) (F5, R5) Map.empty
-    `shouldBe` Movable (Map.fromList [((F5, R4), No)])
-  it "後手"
-    $          Piece.movable (Piece White Pawn) (F5, R5) Map.empty
-    `shouldBe` Movable (Map.fromList [((F5, R6), No)])
+spec_movable = describe "movable" $ do
+  describe "歩兵" $ do
+    it "先手"
+      $          Piece.movable (Piece Black Pawn) (F5, R5) Map.empty
+      `shouldBe` Movable (Map.fromList [((F5, R4), No)])
+    it "後手"
+      $          Piece.movable (Piece White Pawn) (F5, R5) Map.empty
+      `shouldBe` Movable (Map.fromList [((F5, R6), No)])
+  describe "香車" $ do
+    it "先手"
+      $          Piece.movable (Piece Black Lance) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F5, R4), No)
+                     , ((F5, R3), Option)
+                     , ((F5, R2), Option)
+                     , ((F5, R1), Must)
+                     ]
+                   )
+    it "後手"
+      $          Piece.movable (Piece White Lance) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F5, R6), No)
+                     , ((F5, R7), Option)
+                     , ((F5, R8), Option)
+                     , ((F5, R9), Must)
+                     ]
+                   )
 
 spec_Pawn :: Spec
 spec_Pawn = describe "歩兵の可動範囲" $ do
