@@ -20,7 +20,7 @@ movable :: Piece -> SrcSquare -> Map Square Color -> Movable
 movable piece s sc = case pieceType piece of
   Pawn           -> promoMovables $ pawn color s
   Lance          -> promoMovables $ lance color s
-  Knight         -> undefined
+  Knight         -> promoMovables $ knight color s
   Silver         -> undefined
   Gold           -> undefined
   Bishop         -> undefined
