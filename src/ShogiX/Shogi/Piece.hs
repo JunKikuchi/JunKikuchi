@@ -125,7 +125,8 @@ gold c s =
 -- | 角行の可動範囲
 bishop :: PieceMovements
 bishop c s =
-  (\f -> f c s) <$> [leftForward, rightForward, rightBackward, leftBackward]
+  (\f -> f c s)
+    <$> [const leftUp, const rightUp, const rightDown, const leftDown]
 
 -- | 玉将の可動範囲
 king :: PieceMovements
