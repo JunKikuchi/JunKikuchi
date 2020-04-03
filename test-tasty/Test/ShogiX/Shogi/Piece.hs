@@ -91,6 +91,21 @@ spec_Bishop = describe "角行の可動範囲" $ do
     $          Piece.bishop White (F5, R5)
     `shouldBe` Piece.bishop Black (F5, R5)
 
+spec_Rook :: Spec
+spec_Rook = describe "飛車の可動範囲" $ do
+  describe "先手"
+    $          it "前連続-右連続-下連続-左連続"
+    $          Piece.rook Black (F5, R5)
+    `shouldBe` [ [(F5, R4), (F5, R3), (F5, R2), (F5, R1)]
+               , [(F4, R5), (F3, R5), (F2, R5), (F1, R5)]
+               , [(F5, R6), (F5, R7), (F5, R8), (F5, R9)]
+               , [(F6, R5), (F7, R5), (F8, R5), (F9, R5)]
+               ]
+  describe "後手"
+    $          it "前連続-右連続-下連続-左連続"
+    $          Piece.rook White (F5, R5)
+    `shouldBe` Piece.rook Black (F5, R5)
+
 spec_King :: Spec
 spec_King = describe "玉将の可動範囲" $ do
   describe "先手"
