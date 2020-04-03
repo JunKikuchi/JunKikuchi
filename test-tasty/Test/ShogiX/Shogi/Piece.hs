@@ -45,6 +45,29 @@ spec_movable = describe "movable" $ do
     it "後手"
       $          Piece.movable (Piece White Knight) (F5, R5) Map.empty
       `shouldBe` Movable (Map.fromList [((F6, R7), Option), ((F4, R7), Option)])
+  describe "銀将" $ do
+    it "先手"
+      $          Piece.movable (Piece Black Silver) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F6, R4), No)
+                     , ((F5, R4), No)
+                     , ((F4, R4), No)
+                     , ((F4, R6), No)
+                     , ((F6, R6), No)
+                     ]
+                   )
+    it "後手"
+      $          Piece.movable (Piece White Silver) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F6, R6), No)
+                     , ((F5, R6), No)
+                     , ((F4, R6), No)
+                     , ((F4, R4), No)
+                     , ((F6, R4), No)
+                     ]
+                   )
 
 spec_Pawn :: Spec
 spec_Pawn = describe "歩兵の可動範囲" $ do

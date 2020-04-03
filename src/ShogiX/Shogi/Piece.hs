@@ -21,7 +21,7 @@ movable piece s sc = case pieceType piece of
   Pawn           -> promoMovables $ pawn color s
   Lance          -> promoMovables $ lance color s
   Knight         -> promoMovables $ knight color s
-  Silver         -> undefined
+  Silver         -> promoMovables $ silver color s
   Gold           -> undefined
   Bishop         -> undefined
   Rook           -> undefined
