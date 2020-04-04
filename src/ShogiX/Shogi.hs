@@ -51,7 +51,6 @@ movables shogi | status == Open = Position.movables pos
 --
 -- >>> import RIO
 -- >>> import qualified RIO.Map as Map
--- >>> import qualified RIO.Set as Set
 -- >>> import qualified RIO.NonEmpty as NonEmpty
 -- >>> import qualified ShogiX.Shogi.Stand as Stand
 -- >>> import qualified ShogiX.Clocks as Clocks
