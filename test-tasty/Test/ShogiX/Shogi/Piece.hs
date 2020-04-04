@@ -138,6 +138,51 @@ spec_movable = describe "movable" $ do
                      , ((F9, R9), Option)
                      ]
                    )
+  describe "飛車" $ do
+    it "先手"
+      $          Piece.movable (Piece Black Rook) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F5, R4), No)
+                     , ((F5, R3), Option)
+                     , ((F5, R2), Option)
+                     , ((F5, R1), Option)
+                     , ((F4, R5), No)
+                     , ((F3, R5), No)
+                     , ((F2, R5), No)
+                     , ((F1, R5), No)
+                     , ((F5, R6), No)
+                     , ((F5, R7), No)
+                     , ((F5, R8), No)
+                     , ((F5, R9), No)
+                     , ((F6, R5), No)
+                     , ((F7, R5), No)
+                     , ((F8, R5), No)
+                     , ((F9, R5), No)
+                     ]
+                   )
+    it "後手"
+      $          Piece.movable (Piece White Rook) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F5, R4), No)
+                     , ((F5, R3), No)
+                     , ((F5, R2), No)
+                     , ((F5, R1), No)
+                     , ((F4, R5), No)
+                     , ((F3, R5), No)
+                     , ((F2, R5), No)
+                     , ((F1, R5), No)
+                     , ((F5, R6), No)
+                     , ((F5, R7), Option)
+                     , ((F5, R8), Option)
+                     , ((F5, R9), Option)
+                     , ((F6, R5), No)
+                     , ((F7, R5), No)
+                     , ((F8, R5), No)
+                     , ((F9, R5), No)
+                     ]
+                   )
 
 
 spec_Pawn :: Spec

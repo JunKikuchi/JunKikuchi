@@ -24,7 +24,7 @@ movable piece src sc = movables color pt src sc $ case pt of
   Silver         -> silver
   Gold           -> gold
   Bishop         -> bishop
-  Rook           -> undefined
+  Rook           -> rook
   King           -> undefined
   PromotedPawn   -> undefined
   PromotedLance  -> undefined
