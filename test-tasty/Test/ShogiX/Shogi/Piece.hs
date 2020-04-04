@@ -212,6 +212,13 @@ spec_movable = describe "movable" $ do
                      , ((F6, R5), No)
                      ]
                    )
+  describe "と金" $ do
+    it "先手"
+      $          Piece.movable (Piece Black PromotedPawn) (F5, R5) Map.empty
+      `shouldBe` Piece.movable (Piece Black Gold) (F5, R5) Map.empty
+    it "後手"
+      $          Piece.movable (Piece White PromotedPawn) (F5, R5) Map.empty
+      `shouldBe` Piece.movable (Piece White Gold) (F5, R5) Map.empty
 
 spec_Pawn :: Spec
 spec_Pawn = describe "歩兵の可動範囲" $ do

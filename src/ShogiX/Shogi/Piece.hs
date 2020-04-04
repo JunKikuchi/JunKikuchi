@@ -31,7 +31,7 @@ movable (Piece color pt) src sc = Movable mv
     Bishop         -> bishop
     Rook           -> rook
     King           -> king
-    PromotedPawn   -> undefined
+    PromotedPawn   -> gold
     PromotedLance  -> undefined
     PromotedKnight -> undefined
     PromotedSilver -> undefined
