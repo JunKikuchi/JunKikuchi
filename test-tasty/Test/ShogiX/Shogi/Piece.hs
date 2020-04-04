@@ -2,6 +2,7 @@ module Test.ShogiX.Shogi.Piece where
 
 import           RIO
 import qualified RIO.Map                       as Map
+import qualified RIO.Set                       as Set
 import           Test.Tasty
 import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
@@ -349,6 +350,45 @@ spec_movable = describe "movable" $ do
                      , ((F4, R6), No)
                      , ((F6, R6), No)
                      ]
+                   )
+
+spec_droppable :: Spec
+spec_droppable = describe "droppable" $ describe "歩兵" $ do
+  describe "先手" $ do
+    it "全マス目" $ Piece.droppable Black Pawn Map.empty `shouldBe` Droppable
+      (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R9] ])
+    it "二歩"
+      $          Piece.droppable
+                   Black
+                   Pawn
+                   (Map.fromList [ ((file, R5), Piece Black Pawn) | file <- [F9 .. F2] ])
+      `shouldBe` Droppable (Set.fromList [ (F1, rank) | rank <- [R2 .. R9] ])
+    it "後手の歩兵は二歩にならない"
+      $          Piece.droppable
+                   Black
+                   Pawn
+                   (Map.fromList [ ((file, R9), Piece White Pawn) | file <- [F9 .. F1] ])
+      `shouldBe` Droppable
+                   (Set.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R8] ]
+                   )
+  describe "後手" $ do
+    it "全マス目" $ Piece.droppable White Pawn Map.empty `shouldBe` Droppable
+      (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R8] ])
+    it "二歩"
+      $          Piece.droppable
+                   White
+                   Pawn
+                   (Map.fromList [ ((file, R5), Piece White Pawn) | file <- [F9 .. F2] ])
+      `shouldBe` Droppable (Set.fromList [ (F1, rank) | rank <- [R1 .. R8] ])
+    it "先手の歩兵は二歩にならない"
+      $          Piece.droppable
+                   White
+                   Pawn
+                   (Map.fromList [ ((file, R1), Piece Black Pawn) | file <- [F9 .. F1] ])
+      `shouldBe` Droppable
+                   (Set.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R8] ]
                    )
 
 spec_Pawn :: Spec

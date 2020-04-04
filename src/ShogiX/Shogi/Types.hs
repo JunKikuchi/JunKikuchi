@@ -8,15 +8,16 @@ import           ShogiX.Clocks.Types            ( Clocks )
 -- >>> import RIO
 -- >>> import qualified RIO.Map as Map
 -- >>> import qualified RIO.NonEmpty as NonEmpty
+-- >>> import qualified ShogiX.Shogi.Stand as Stand
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
 -- >>> let board = Board Map.empty
--- >>> let stands = Stands [] []
+-- >>> let stands = Stands Stand.empty Stand.empty
 -- >>> let position = Position Black board stands Clocks.infinity
 -- >>> let shogi = fmap (Shogi Open . Positions) (NonEmpty.nonEmpty [position])
 -- >>>
 -- >>> shogi
--- Just (Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = [], whiteStand = []}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}})
+-- Just (Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList []}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}})
 
 -- | 先手|後手
 data Color
@@ -92,12 +93,15 @@ data File = F9 | F8 | F7 | F6 | F5 | F4 | F3 | F2 | F1 deriving (Show, Eq, Ord, 
 -- | 将棋盤の段
 data Rank = R1 | R2 | R3 | R4 | R5 | R6 | R7 | R8 | R9 deriving (Show, Eq, Ord, Enum, Bounded)
 
--- | 駒台
+-- | 先手後手の駒台
 data Stands
   = Stands
-  { blackStand :: [PieceType] -- ^ 先手の駒台
-  , whiteStand :: [PieceType] -- ^ 後手の駒台
+  { blackStand :: Stand -- ^ 先手の駒台
+  , whiteStand :: Stand -- ^ 後手の駒台
   } deriving Show
+
+-- | 駒台
+newtype Stand = Stand { unStand :: Map PieceType Int } deriving Show
 
 -- | 駒
 data Piece
@@ -149,7 +153,10 @@ newtype Movables = Movables { unMovables :: Map SrcSquare Movable } deriving Sho
 newtype Movable = Movable { unMovable :: Map DestSquare Promotable } deriving (Show, Eq)
 
 -- | 持ち駒の打ち先
-newtype Droppables = Droppables { unDroppables :: Map (Set DestSquare) (Set PieceType) } deriving Show
+newtype Droppables = Droppables { unDroppables :: Map Droppable (Set PieceType) } deriving Show
+
+-- | 駒の打ち先
+newtype Droppable = Droppable { unDroppable :: Set DestSquare } deriving (Show, Eq, Ord)
 
 -- | 駒成り可能状態
 data Promotable

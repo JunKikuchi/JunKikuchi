@@ -6,6 +6,7 @@ import           RIO.Partial                    ( succ
                                                 , pred
                                                 )
 import qualified RIO.Map                       as Map
+import qualified RIO.Set                       as Set
 import           ShogiX.Shogi.Types
 
 -- | 駒の移動先を取得
@@ -354,3 +355,36 @@ preds a = drop 1 $ reverse [minBound .. a]
 -- [R6,R7,R8,R9]
 succs :: forall a . (Enum a, Bounded a) => a -> [a]
 succs a = drop 1 [a .. maxBound]
+
+-- | 駒の打ち先を取得
+droppable :: Color -> PieceType -> Map Square Piece -> Droppable
+droppable color Pawn sp = Droppable (Set.difference ss (Map.keysSet sp))
+ where
+  ss = Set.fromList
+    [ (file, rank)
+    | file <- Set.toList $ withoutPawnFiles color sp
+    , rank <- if color == Black then [R2 .. R9] else [R1 .. R8]
+    ]
+droppable _ Lance  _  = undefined
+droppable _ Knight _  = undefined
+droppable _ _      sp = Droppable (Set.difference squares (Map.keysSet sp))
+
+-- | 歩兵の居ない筋セット
+withoutPawnFiles :: Color -> Map Square Piece -> Set File
+withoutPawnFiles color = Set.difference files . pawnFiles color
+
+-- | 歩兵の筋セット
+pawnFiles :: Color -> Map Square Piece -> Set File
+pawnFiles color sp = Set.fromList $ fst <$> Map.keys pawns
+ where
+  pawns =
+    Map.filterWithKey (\_ p -> pieceColor p == color && pieceType p == Pawn) sp
+
+-- | 全ての筋セット
+files :: Set File
+files = Set.fromList [F9 .. F1]
+
+-- | 全てのマス目セット
+squares :: Set Square
+squares =
+  Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
