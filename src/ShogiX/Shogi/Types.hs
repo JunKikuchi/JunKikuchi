@@ -74,7 +74,7 @@ data Position
   { positionTurn   :: Turn   -- ^ 手番
   , positionBoard  :: Board  -- ^ 将棋盤
   , positionStands :: Stands -- ^ 駒台
-  , positionClocks :: Clocks  -- ^ 時計
+  , positionClocks :: Clocks -- ^ 時計
   } deriving Show
 
 -- | 手番
