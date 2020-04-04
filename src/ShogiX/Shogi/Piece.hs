@@ -358,26 +358,17 @@ succs a = drop 1 [a .. maxBound]
 
 -- | 駒の打ち先を取得
 droppable :: Color -> PieceType -> Map Square Piece -> Droppable
-droppable color Pawn sp = Droppable (Set.difference ss (Map.keysSet sp))
+droppable color pt sp = Droppable (Set.difference squares (Map.keysSet sp))
  where
-  ss = Set.fromList
-    [ (file, rank)
-    | file <- Set.toList $ withoutPawnFiles color sp
-    , rank <- if color == Black then [R2 .. R9] else [R1 .. R8]
-    ]
-droppable color Lance sp = Droppable (Set.difference ss (Map.keysSet sp))
- where
-  ss = Set.fromList
-    [ (file, rank)
-    | file <- [F9 .. F1]
-    , rank <- if color == Black then [R2 .. R9] else [R1 .. R8]
-    ]
-droppable _ Knight _  = undefined
-droppable _ _      sp = Droppable (Set.difference squares (Map.keysSet sp))
+  squares = Set.fromList [ (file, rank) | file <- fs, rank <- rs ]
+  fs =
+    if pt == Pawn then Set.toList $ withoutPawnFiles color sp else [F9 .. F1]
+  rs = ranks color pt
 
 -- | 歩兵の居ない筋セット
 withoutPawnFiles :: Color -> Map Square Piece -> Set File
 withoutPawnFiles color = Set.difference files . pawnFiles color
+  where files = Set.fromList [F9 .. F1]
 
 -- | 歩兵の筋セット
 pawnFiles :: Color -> Map Square Piece -> Set File
@@ -386,11 +377,12 @@ pawnFiles color sp = Set.fromList $ fst <$> Map.keys pawns
   pawns =
     Map.filterWithKey (\_ p -> pieceColor p == color && pieceType p == Pawn) sp
 
--- | 全ての筋セット
-files :: Set File
-files = Set.fromList [F9 .. F1]
-
--- | 全てのマス目セット
-squares :: Set Square
-squares =
-  Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
+-- | 駒の打ち先段リスト
+ranks :: Color -> PieceType -> [Rank]
+ranks Black Pawn   = [R2 .. R9]
+ranks Black Lance  = [R2 .. R9]
+ranks Black Knight = [R3 .. R9]
+ranks White Pawn   = [R1 .. R8]
+ranks White Lance  = [R1 .. R8]
+ranks White Knight = [R1 .. R7]
+ranks _     _      = [R1 .. R9]
