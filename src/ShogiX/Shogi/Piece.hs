@@ -17,40 +17,26 @@ import           ShogiX.Shogi.Types
 -- >>> movable (Piece White Pawn) (F5, R5) (Map.fromList [((F5, R5), Black)])
 -- Movable {unMovable = fromList [((F5,R6),No)]}
 movable :: Piece -> SrcSquare -> Map Square Color -> Movable
-movable piece src sc = movables color pt src sc $ case pt of
-  Pawn           -> pawn
-  Lance          -> lance
-  Knight         -> knight
-  Silver         -> silver
-  Gold           -> gold
-  Bishop         -> bishop
-  Rook           -> rook
-  King           -> undefined
-  PromotedPawn   -> undefined
-  PromotedLance  -> undefined
-  PromotedKnight -> undefined
-  PromotedSilver -> undefined
-  PromotedBishop -> undefined
-  PromotedRook   -> undefined
+movable (Piece color pt) src sc = Movable mv
  where
-  pt    = pieceType piece
-  color = pieceColor piece
-
--- | 駒の可動範囲を生成
-movables
-  :: Color
-  -> PieceType
-  -> SrcSquare
-  -> Map Square Color
-  -> PieceMovements
-  -> Movable
-movables color pt src sc pm = Movable
-  (Map.fromList
-    [ (m, promoExam color pt m)
-    | ms <- pm color src
-    , m  <- takeMovables color sc ms
-    ]
-  )
+  mv = Map.fromList
+    [ (m, promoExam color pt m) | ms <- mss, m <- takeMovables color sc ms ]
+  mss            = pieceMovements color src
+  pieceMovements = case pt of
+    Pawn           -> pawn
+    Lance          -> lance
+    Knight         -> knight
+    Silver         -> silver
+    Gold           -> gold
+    Bishop         -> bishop
+    Rook           -> rook
+    King           -> undefined
+    PromotedPawn   -> undefined
+    PromotedLance  -> undefined
+    PromotedKnight -> undefined
+    PromotedSilver -> undefined
+    PromotedBishop -> undefined
+    PromotedRook   -> undefined
 
 -- | 駒があるマス目まで可動範囲を刈り取る
 --
