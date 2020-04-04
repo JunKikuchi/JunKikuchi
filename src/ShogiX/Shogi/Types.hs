@@ -122,7 +122,7 @@ data PieceType
   | Rook           -- ^ 飛車
   | PromotedRook   -- ^ 龍王
   | King           -- ^ 玉将
-  deriving Show
+  deriving (Show, Eq, Ord)
 
 -- | 駒の移動
 data Move

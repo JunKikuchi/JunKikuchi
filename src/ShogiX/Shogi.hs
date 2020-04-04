@@ -47,6 +47,19 @@ movables shogi | status == Open = Position.movables pos
   pos    = shogiPosition shogi
 
 -- | 持ち駒の打ち先範囲を取得
+--
+-- >>> import RIO
+-- >>> import qualified RIO.Map as Map
+-- >>> import qualified RIO.NonEmpty as NonEmpty
+-- >>> import qualified ShogiX.Clocks as Clocks
+-- >>>
+-- >>> let board = Board (Map.fromList [((file, R3), Piece Black Pawn) | file <- [F9 .. F2]])
+-- >>> let stands = Stands [Pawn] []
+-- >>> let position = Position Black board stands Clocks.infinity
+-- >>> let shogi = Shogi Open . Positions <$> NonEmpty.nonEmpty [position]
+-- >>>
+-- >>> droppables <$> shogi
+-- Droppables {unDroppables = fromList [(fromList [(F1,R2),(F1,R3),(F1,R4),(F1,R5),(F1,R6),(F1,R7),(F1,R8),(F1,R9)],fromList [Pawn])]}
 droppables :: Shogi -> Droppables
 droppables = undefined
 
