@@ -35,7 +35,7 @@ movable (Piece color pt) src sc = Movable mv
     PromotedLance  -> gold
     PromotedKnight -> gold
     PromotedSilver -> gold
-    PromotedBishop -> undefined
+    PromotedBishop -> promotedBishop
     PromotedRook   -> undefined
 
 -- | 駒があるマス目まで可動範囲を刈り取る
@@ -154,6 +154,20 @@ king c s =
         , backward
         , leftBackward
         , const left
+        ]
+
+-- | 龍馬の可動範囲
+promotedBishop :: PieceMovements
+promotedBishop _ s =
+  (\f -> f s)
+    <$> [ leftUp
+        , rightUp
+        , rightDown
+        , leftDown
+        , one . up
+        , one . right
+        , one . down
+        , one . left
         ]
 
 -- | マス目リストから最初のひとつ取得

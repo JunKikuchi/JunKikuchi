@@ -240,6 +240,63 @@ spec_movable = describe "movable" $ do
     it "後手"
       $          Piece.movable (Piece White PromotedSilver) (F5, R5) Map.empty
       `shouldBe` Piece.movable (Piece White Gold) (F5, R5) Map.empty
+  describe "龍馬" $ do
+    it "先手"
+      $          Piece.movable (Piece Black PromotedBishop) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F6, R4), No)
+                     , ((F7, R3), No)
+                     , ((F8, R2), No)
+                     , ((F9, R1), No)
+                     , ((F4, R4), No)
+                     , ((F3, R3), No)
+                     , ((F2, R2), No)
+                     , ((F1, R1), No)
+                     , ((F4, R6), No)
+                     , ((F3, R7), No)
+                     , ((F2, R8), No)
+                     , ((F1, R9), No)
+                     , ((F6, R6), No)
+                     , ((F7, R7), No)
+                     , ((F8, R8), No)
+                     , ((F9, R9), No)
+                     , ((F5, R4), No)
+                     , ((F4, R5), No)
+                     , ((F5, R6), No)
+                     , ((F6, R5), No)
+                     ]
+                   )
+    it "後手"
+      $          Piece.movable (Piece White PromotedBishop) (F5, R5) Map.empty
+      `shouldBe` Movable
+                   (Map.fromList
+                     [ ((F6, R4), No)
+                     , ((F7, R3), No)
+                     , ((F8, R2), No)
+                     , ((F9, R1), No)
+                     , ((F4, R4), No)
+                     , ((F3, R3), No)
+                     , ((F2, R2), No)
+                     , ((F1, R1), No)
+                     , ((F4, R6), No)
+                     , ((F3, R7), No)
+                     , ((F2, R8), No)
+                     , ((F1, R9), No)
+                     , ((F6, R6), No)
+                     , ((F7, R7), No)
+                     , ((F8, R8), No)
+                     , ((F9, R9), No)
+                     , ((F6, R6), No)
+                     , ((F7, R7), No)
+                     , ((F8, R8), No)
+                     , ((F9, R9), No)
+                     , ((F5, R4), No)
+                     , ((F4, R5), No)
+                     , ((F5, R6), No)
+                     , ((F6, R5), No)
+                     ]
+                   )
 
 spec_Pawn :: Spec
 spec_Pawn = describe "歩兵の可動範囲" $ do
