@@ -365,7 +365,13 @@ droppable color Pawn sp = Droppable (Set.difference ss (Map.keysSet sp))
     | file <- Set.toList $ withoutPawnFiles color sp
     , rank <- if color == Black then [R2 .. R9] else [R1 .. R8]
     ]
-droppable _ Lance  _  = undefined
+droppable color Lance sp = Droppable (Set.difference ss (Map.keysSet sp))
+ where
+  ss = Set.fromList
+    [ (file, rank)
+    | file <- [F9 .. F1]
+    , rank <- if color == Black then [R2 .. R9] else [R1 .. R8]
+    ]
 droppable _ Knight _  = undefined
 droppable _ _      sp = Droppable (Set.difference squares (Map.keysSet sp))
 
