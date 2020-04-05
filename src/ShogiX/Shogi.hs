@@ -60,7 +60,7 @@ movables shogi | status == Open = Position.movables pos
 -- >>> let shogi = Shogi Open (Positions (position :| []))
 -- >>>
 -- >>> droppables shogi
--- Droppables {unDroppables = fromList [(Droppable {unDroppable = fromList [(F1,R2),(F1,R3),(F1,R4),(F1,R5),(F1,R6),(F1,R7),(F1,R8),(F1,R9)]},fromList [Pawn])]}
+-- Droppables {unDroppables = fromList [(Pawn,Droppable {unDroppable = fromList [(F1,R2),(F1,R3),(F1,R4),(F1,R5),(F1,R6),(F1,R7),(F1,R8),(F1,R9)]})]}
 droppables :: Shogi -> Droppables
 droppables shogi | status == Open = Position.droppables pos
                  | otherwise      = empty

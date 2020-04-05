@@ -152,7 +152,7 @@ newtype Movables = Movables { unMovables :: Map SrcSquare Movable } deriving Sho
 newtype Movable = Movable { unMovable :: Map DestSquare Promotable } deriving (Show, Eq)
 
 -- | 持ち駒の打ち先
-newtype Droppables = Droppables { unDroppables :: Map Droppable (Set PieceType) } deriving Show
+newtype Droppables = Droppables { unDroppables :: Map PieceType Droppable } deriving (Show, Eq, Ord)
 
 -- | 駒の打ち先
 newtype Droppable = Droppable { unDroppable :: Set DestSquare } deriving (Show, Eq, Ord)

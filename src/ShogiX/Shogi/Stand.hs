@@ -2,7 +2,6 @@ module ShogiX.Shogi.Stand where
 
 import           RIO
 import qualified RIO.Map                       as Map
-import qualified RIO.Set                       as Set
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Piece            as Piece
 
@@ -10,7 +9,7 @@ import qualified ShogiX.Shogi.Piece            as Piece
 droppables :: Color -> Board -> Stands -> Droppables
 droppables color board stands = Droppables (Map.fromList ds)
  where
-  ds  = [ (Piece.droppable color pt b, Set.singleton pt) | pt <- pts ]
+  ds  = [ (pt, Piece.droppable color pt b) | pt <- pts ]
   b   = unBoard board
   pts = Map.keys . unStand $ stand color stands
 
