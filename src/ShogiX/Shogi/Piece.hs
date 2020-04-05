@@ -357,25 +357,27 @@ succs :: forall a . (Enum a, Bounded a) => a -> [a]
 succs a = drop 1 [a .. maxBound]
 
 -- | 駒の打ち先を取得
-droppable :: Color -> PieceType -> Map Square Piece -> Droppable
-droppable color pt sp = Droppable (Set.difference squares (Map.keysSet sp))
+droppable :: Color -> PieceType -> Board -> Droppable
+droppable color pt board = Droppable
+  (Set.difference squares (Map.keysSet (unBoard board)))
  where
   squares = Set.fromList [ (file, rank) | file <- fs, rank <- rs ]
   fs =
-    if pt == Pawn then Set.toList $ withoutPawnFiles color sp else [F9 .. F1]
+    if pt == Pawn then Set.toList $ withoutPawnFiles color board else [F9 .. F1]
   rs = ranks color pt
 
 -- | 歩兵の居ない筋セット
-withoutPawnFiles :: Color -> Map Square Piece -> Set File
+withoutPawnFiles :: Color -> Board -> Set File
 withoutPawnFiles color = Set.difference files . pawnFiles color
   where files = Set.fromList [F9 .. F1]
 
 -- | 歩兵の筋セット
-pawnFiles :: Color -> Map Square Piece -> Set File
-pawnFiles color sp = Set.fromList $ fst <$> Map.keys pawns
+pawnFiles :: Color -> Board -> Set File
+pawnFiles color board = Set.fromList $ fst <$> Map.keys pawns
  where
-  pawns =
-    Map.filterWithKey (\_ p -> pieceColor p == color && pieceType p == Pawn) sp
+  pawns = Map.filterWithKey
+    (\_ p -> pieceColor p == color && pieceType p == Pawn)
+    (unBoard board)
 
 -- | 駒の打ち先段リスト
 ranks :: Color -> PieceType -> [Rank]

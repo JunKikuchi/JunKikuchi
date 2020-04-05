@@ -9,8 +9,7 @@ import qualified ShogiX.Shogi.Piece            as Piece
 droppables :: Color -> Board -> Stands -> Droppables
 droppables color board stands = Droppables (Map.fromList ds)
  where
-  ds  = [ (pt, Piece.droppable color pt b) | pt <- pts ]
-  b   = unBoard board
+  ds  = [ (pt, Piece.droppable color pt board) | pt <- pts ]
   pts = Map.keys . unStand $ stand color stands
 
 -- | 先手後手の駒台から駒台取得
