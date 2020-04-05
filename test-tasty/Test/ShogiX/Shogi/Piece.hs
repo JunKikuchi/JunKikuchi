@@ -356,7 +356,7 @@ spec_droppable :: Spec
 spec_droppable = describe "droppable" $ do
   describe "歩兵" $ do
     describe "先手" $ do
-      it "全マス目" $ Piece.droppable Black Pawn Map.empty `shouldBe` Droppable
+      it "二段より下" $ Piece.droppable Black Pawn Map.empty `shouldBe` Droppable
         (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R9] ])
       it "二歩"
         $          Piece.droppable
@@ -378,7 +378,7 @@ spec_droppable = describe "droppable" $ do
                        [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R8] ]
                      )
     describe "後手" $ do
-      it "全マス目" $ Piece.droppable White Pawn Map.empty `shouldBe` Droppable
+      it "八段より上" $ Piece.droppable White Pawn Map.empty `shouldBe` Droppable
         (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R8] ])
       it "二歩"
         $          Piece.droppable
@@ -401,7 +401,7 @@ spec_droppable = describe "droppable" $ do
                      )
   describe "香車" $ do
     describe "先手" $ do
-      it "全マス目" $ Piece.droppable Black Lance Map.empty `shouldBe` Droppable
+      it "二段より下" $ Piece.droppable Black Lance Map.empty `shouldBe` Droppable
         (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R9] ])
       it "駒のあるマス目以外"
         $          Piece.droppable
@@ -421,7 +421,7 @@ spec_droppable = describe "droppable" $ do
                        (Set.fromList [(F1, R9), (F1, R1)])
                      )
     describe "後手" $ do
-      it "全マス目" $ Piece.droppable White Lance Map.empty `shouldBe` Droppable
+      it "八段より上" $ Piece.droppable White Lance Map.empty `shouldBe` Droppable
         (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R8] ])
       it "駒のあるマス目以外"
         $          Piece.droppable
