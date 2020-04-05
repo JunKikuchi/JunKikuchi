@@ -11,7 +11,7 @@ where
 
 import           RIO
 import qualified RIO.Map                       as Map
-import qualified RIO.NonEmpty                  as NonEmpty
+import qualified RIO.NonEmpty                  as NE
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Position         as Position
 import           ShogiX.Clocks                  ( Sec )
@@ -71,4 +71,4 @@ droppables shogi | status == Open = Position.droppables pos
 
 -- | 最新の局面取得
 shogiPosition :: Shogi -> Position
-shogiPosition = NonEmpty.head . unPositions . shogiPositions
+shogiPosition = NE.head . unPositions . shogiPositions
