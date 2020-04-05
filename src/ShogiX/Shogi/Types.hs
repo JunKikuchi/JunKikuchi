@@ -146,20 +146,20 @@ type SrcSquare = Square
 type Promotion = Bool
 
 -- | 駒の移動元と移動先
-newtype Movables = Movables { unMovables :: Map SrcSquare Movable } deriving Show
+newtype Movables = Movables { unMovables :: Map SrcSquare Movable } deriving (Show, Eq)
 
 -- | 駒の移動先
 newtype Movable = Movable { unMovable :: Map DestSquare Promotable } deriving (Show, Eq)
 
 -- | 持ち駒の打ち先
-newtype Droppables = Droppables { unDroppables :: Map PieceType Droppable } deriving (Show, Eq, Ord)
+newtype Droppables = Droppables { unDroppables :: Map PieceType Droppable } deriving (Show, Eq)
 
 -- | 駒の打ち先
-newtype Droppable = Droppable { unDroppable :: Set DestSquare } deriving (Show, Eq, Ord)
+newtype Droppable = Droppable { unDroppable :: Set DestSquare } deriving (Show, Eq)
 
 -- | 駒成り可能状態
 data Promotable
   = No     -- ^ 不成のみ
   | Option -- ^ 成り,不成を選択可能
   | Must   -- ^ 成りのみ
-  deriving (Show, Eq, Ord)
+  deriving (Show, Eq)
