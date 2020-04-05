@@ -7,17 +7,16 @@ import           ShogiX.Clocks.Types            ( Clocks )
 --
 -- >>> import RIO
 -- >>> import qualified RIO.Map as Map
--- >>> import qualified RIO.NonEmpty as NonEmpty
 -- >>> import qualified ShogiX.Shogi.Stand as Stand
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
 -- >>> let board = Board Map.empty
 -- >>> let stands = Stands Stand.empty Stand.empty
 -- >>> let position = Position Black board stands Clocks.infinity
--- >>> let shogi = fmap (Shogi Open . Positions) (NonEmpty.nonEmpty [position])
+-- >>> let shogi = Shogi Open (Positions (position :|[]))
 -- >>>
 -- >>> shogi
--- Just (Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList []}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}})
+-- Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList []}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}}
 
 -- | 先手|後手
 data Color

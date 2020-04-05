@@ -28,17 +28,16 @@ move = undefined
 --
 -- >>> import RIO
 -- >>> import qualified RIO.Map as Map
--- >>> import qualified RIO.NonEmpty as NonEmpty
 -- >>> import qualified ShogiX.Shogi.Stand as Stand
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
 -- >>> let board = Board (Map.fromList [((F5, R5), Piece Black Pawn)])
 -- >>> let stands = Stands Stand.empty Stand.empty
 -- >>> let position = Position Black board stands Clocks.infinity
--- >>> let shogi = Shogi Open . Positions <$> NonEmpty.nonEmpty [position]
+-- >>> let shogi = Shogi Open (Positions (position :| []))
 -- >>>
--- >>> movables <$> shogi
--- Just (Movables {unMovables = fromList [((F5,R5),Movable {unMovable = fromList [((F5,R4),No)]})]})
+-- >>> movables shogi
+-- Movables {unMovables = fromList [((F5,R5),Movable {unMovable = fromList [((F5,R4),No)]})]}
 movables :: Shogi -> Movables
 movables shogi | status == Open = Position.movables pos
                | otherwise      = empty
@@ -51,7 +50,6 @@ movables shogi | status == Open = Position.movables pos
 --
 -- >>> import RIO
 -- >>> import qualified RIO.Map as Map
--- >>> import qualified RIO.NonEmpty as NonEmpty
 -- >>> import qualified ShogiX.Shogi.Stand as Stand
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
@@ -59,10 +57,10 @@ movables shogi | status == Open = Position.movables pos
 -- >>> let bs = Stand (Map.singleton Pawn 1)
 -- >>> let stands = Stands bs Stand.empty
 -- >>> let position = Position Black board stands Clocks.infinity
--- >>> let shogi = Shogi Open . Positions <$> NonEmpty.nonEmpty [position]
+-- >>> let shogi = Shogi Open (Positions (position :| []))
 -- >>>
--- >>> droppables <$> shogi
--- Just (Droppables {unDroppables = fromList [(Droppable {unDroppable = fromList [(F1,R2),(F1,R3),(F1,R4),(F1,R5),(F1,R6),(F1,R7),(F1,R8),(F1,R9)]},fromList [Pawn])]})
+-- >>> droppables shogi
+-- Droppables {unDroppables = fromList [(Droppable {unDroppable = fromList [(F1,R2),(F1,R3),(F1,R4),(F1,R5),(F1,R6),(F1,R7),(F1,R8),(F1,R9)]},fromList [Pawn])]}
 droppables :: Shogi -> Droppables
 droppables shogi | status == Open = Position.droppables pos
                  | otherwise      = empty
