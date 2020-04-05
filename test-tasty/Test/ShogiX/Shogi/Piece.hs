@@ -441,6 +441,21 @@ spec_droppable = describe "droppable" $ do
                        )
                        (Set.fromList [(F1, R9), (F1, R1)])
                      )
+  describe "桂馬" $ do
+    describe "先手"
+      $          it "三段より下"
+      $          Piece.droppable Black Knight Map.empty
+      `shouldBe` Droppable
+                   (Set.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R3 .. R9] ]
+                   )
+    describe "後手"
+      $          it "七段より上"
+      $          Piece.droppable White Knight Map.empty
+      `shouldBe` Droppable
+                   (Set.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R7] ]
+                   )
 
 spec_Pawn :: Spec
 spec_Pawn = describe "歩兵の可動範囲" $ do
