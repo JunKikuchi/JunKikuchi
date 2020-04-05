@@ -14,7 +14,7 @@ data Clock
   = Infinity                            -- ^ 無制限
   | Guillotine AllotmentSec             -- ^ 差し切り
   | Countdown AllotmentSec CountdownSec -- ^ 秒読み (持ち時間 秒読み)
-  | Fischer AllotmentSec IncrementSec   -- ^ フィッシャーモード (持ち時間 加算時間
+  | Fischer AllotmentSec IncrementSec   -- ^ フィッシャーモード (持ち時間 加算時間)
   | Timeout                             -- ^ 時間切れ
   deriving Show
 
