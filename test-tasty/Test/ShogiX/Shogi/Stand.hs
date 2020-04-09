@@ -43,3 +43,58 @@ spec_droppables = describe "droppables" $ do
                      )
                    ]
                  )
+  describe "王手されている場合" $ do
+    describe "先手"
+      $          it "王手回避する打ち込み先を返さない"
+      $          Stand.droppables
+                   Black
+                   (Board
+                     (Map.fromList
+                       [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
+                     )
+                   )
+                   (Stands (Stand (Map.fromList [(Pawn, 1)])) Stand.empty)
+      `shouldBe` Droppables
+                   (Map.fromList
+                     [ ( Pawn
+                       , Droppable
+                         (Set.fromList
+                           [ (file, rank)
+                           | file <- [F9 .. F1]
+                           , rank <- [R2 .. R9]
+                           , (F5, R9)
+                             /= (file, rank)
+                             && (F5  , R5)
+                             /= (file, rank)
+                           ]
+                         )
+                       )
+                     ]
+                   )
+    describe "後手"
+      $          it "王手回避する打ち込み先を返さない"
+      $          Stand.droppables
+                   White
+                   (Board
+                     (Map.fromList
+                       [((F5, R1), Piece White King), ((F5, R5), Piece Black Lance)]
+                     )
+                   )
+                   (Stands Stand.empty (Stand (Map.fromList [(Pawn, 1)])))
+      `shouldBe` Droppables
+                   (Map.fromList
+                     [ ( Pawn
+                       , Droppable
+                         (Set.fromList
+                           [ (file, rank)
+                           | file <- [F9 .. F1]
+                           , rank <- [R1 .. R8]
+                           , (F5, R1)
+                             /= (file, rank)
+                             && (F5  , R5)
+                             /= (file, rank)
+                           ]
+                         )
+                       )
+                     ]
+                   )
