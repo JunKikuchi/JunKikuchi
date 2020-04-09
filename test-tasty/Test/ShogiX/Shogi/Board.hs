@@ -87,3 +87,60 @@ spec_movables = describe "movables" $ do
                      )
                    ]
                  )
+  describe "王手されている場合" $ do
+    describe "先手"
+      $          it "王手回避する可動範囲を返さない"
+      $          Board.movables
+                   Black
+                   (Board
+                     (Map.fromList
+                       [ ((F5, R9), Piece Black King)
+                       , ((F5, R5), Piece Black Pawn)
+                       , ((F5, R8), Piece White Gold)
+                       ]
+                     )
+                   )
+      `shouldBe` Movables
+                   (Map.fromList
+                     [ ( (F5, R9)
+                       , Movable
+                         (Map.fromList
+                           [ ((F6, R8), No)
+                           , ((F5, R8), No)
+                           , ((F4, R8), No)
+                           , ((F4, R9), No)
+                           , ((F6, R9), No)
+                           ]
+                         )
+                       )
+                     , ((F5, R5), Movable (Map.fromList [((F5, R4), No)]))
+                     ]
+                   )
+    describe "後手"
+      $          it "王手回避する可動範囲を返さない"
+      $          Board.movables
+                   White
+                   (Board
+                     (Map.fromList
+                       [ ((F5, R1), Piece White King)
+                       , ((F5, R5), Piece White Pawn)
+                       , ((F5, R2), Piece Black Gold)
+                       ]
+                     )
+                   )
+      `shouldBe` Movables
+                   (Map.fromList
+                     [ ( (F5, R1)
+                       , Movable
+                         (Map.fromList
+                           [ ((F6, R2), No)
+                           , ((F5, R2), No)
+                           , ((F4, R2), No)
+                           , ((F6, R1), No)
+                           , ((F4, R1), No)
+                           ]
+                         )
+                       )
+                     , ((F5, R5), Movable (Map.fromList [((F5, R6), No)]))
+                     ]
+                   )
