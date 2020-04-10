@@ -8,6 +8,231 @@ import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Board            as Board
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
+spec_move :: Spec
+spec_move = describe "move" $ do
+  describe "移動元あり" $ do
+    describe "移動先が可動範囲内" $ do
+      describe "駒" $ do
+        describe "不成" $ do
+          describe "そのまま" $ do
+            describe "移動先が空" $ do
+              describe "先手"
+                $          it "駒を移動する"
+                $          Board.move
+                             (F5, R5)
+                             False
+                             (F5, R4)
+                             (Board (Map.fromList [((F5, R5), Piece Black Pawn)]))
+                `shouldBe` Just
+                             ( Board
+                               (Map.fromList [((F5, R4), Piece Black Pawn)])
+                             , Nothing
+                             )
+              describe "後手"
+                $          it "駒を移動する"
+                $          Board.move
+                             (F5, R5)
+                             False
+                             (F5, R6)
+                             (Board (Map.fromList [((F5, R5), Piece White Pawn)]))
+                `shouldBe` Just
+                             ( Board
+                               (Map.fromList [((F5, R6), Piece White Pawn)])
+                             , Nothing
+                             )
+            describe "移動先に相手の駒がある" $ do
+              describe "先手"
+                $          it "相手の駒をとって駒を移動する"
+                $          Board.move
+                             (F5, R5)
+                             False
+                             (F5, R4)
+                             (Board
+                               (Map.fromList
+                                 [ ((F5, R5), Piece Black Pawn)
+                                 , ((F5, R4), Piece White Gold)
+                                 ]
+                               )
+                             )
+                `shouldBe` Just
+                             ( Board
+                               (Map.fromList [((F5, R4), Piece Black Pawn)])
+                             , Just Gold
+                             )
+              describe "後手"
+                $          it "相手の駒をとって駒を移動する"
+                $          Board.move
+                             (F5, R5)
+                             False
+                             (F5, R6)
+                             (Board
+                               (Map.fromList
+                                 [ ((F5, R5), Piece White Pawn)
+                                 , ((F5, R6), Piece Black Gold)
+                                 ]
+                               )
+                             )
+                `shouldBe` Just
+                             ( Board
+                               (Map.fromList [((F5, R6), Piece White Pawn)])
+                             , Just Gold
+                             )
+            describe "移動先に味方の駒がある" $ do
+              describe "先手"
+                $          it "Nothing"
+                $          Board.move
+                             (F5, R5)
+                             False
+                             (F5, R4)
+                             (Board
+                               (Map.fromList
+                                 [ ((F5, R5), Piece Black Pawn)
+                                 , ((F5, R4), Piece Black Gold)
+                                 ]
+                               )
+                             )
+                `shouldBe` Nothing
+              describe "後手"
+                $          it "Nothing"
+                $          Board.move
+                             (F5, R5)
+                             False
+                             (F5, R6)
+                             (Board
+                               (Map.fromList
+                                 [ ((F5, R5), Piece White Pawn)
+                                 , ((F5, R6), Piece White Gold)
+                                 ]
+                               )
+                             )
+                `shouldBe` Nothing
+          describe "成り必須" $ do
+            describe "先手"
+              $          it "Nothing"
+              $          Board.move
+                           (F5, R2)
+                           False
+                           (F5, R1)
+                           (Board (Map.fromList [((F5, R2), Piece Black Pawn)]))
+              `shouldBe` Nothing
+            describe "後手"
+              $          it "Nothing"
+              $          Board.move
+                           (F5, R8)
+                           False
+                           (F5, R9)
+                           (Board (Map.fromList [((F5, R8), Piece White Pawn)]))
+              `shouldBe` Nothing
+        describe "成り" $ do
+          describe "成り可" $ do
+            describe "先手"
+              $          it "駒を移動する"
+              $          Board.move
+                           (F5, R4)
+                           True
+                           (F5, R3)
+                           (Board (Map.fromList [((F5, R4), Piece Black Pawn)]))
+              `shouldBe` Just
+                           ( Board
+                             (Map.fromList
+                               [((F5, R3), Piece Black PromotedPawn)]
+                             )
+                           , Nothing
+                           )
+            describe "後手"
+              $          it "駒を移動する"
+              $          Board.move
+                           (F5, R6)
+                           True
+                           (F5, R7)
+                           (Board (Map.fromList [((F5, R6), Piece White Pawn)]))
+              `shouldBe` Just
+                           ( Board
+                             (Map.fromList
+                               [((F5, R7), Piece White PromotedPawn)]
+                             )
+                           , Nothing
+                           )
+          describe "成り不可" $ do
+            describe "先手"
+              $          it "Nothing"
+              $          Board.move
+                           (F5, R5)
+                           True
+                           (F5, R4)
+                           (Board (Map.fromList [((F5, R5), Piece Black Pawn)]))
+              `shouldBe` Nothing
+            describe "後手"
+              $          it "Nothing"
+              $          Board.move
+                           (F5, R5)
+                           True
+                           (F5, R6)
+                           (Board (Map.fromList [((F5, R5), Piece White Pawn)]))
+              `shouldBe` Nothing
+      describe "成り駒" $ do
+        describe "そのまま" $ do
+          describe "先手"
+            $          it "駒を移動する"
+            $          Board.move
+                         (F5, R4)
+                         False
+                         (F5, R3)
+                         (Board (Map.fromList [((F5, R4), Piece Black PromotedPawn)]))
+            `shouldBe` Just
+                         ( Board
+                           (Map.fromList [((F5, R3), Piece Black PromotedPawn)])
+                         , Nothing
+                         )
+          describe "後手"
+            $          it "駒を移動する"
+            $          Board.move
+                         (F5, R7)
+                         False
+                         (F5, R8)
+                         (Board (Map.fromList [((F5, R7), Piece White PromotedPawn)]))
+            `shouldBe` Just
+                         ( Board
+                           (Map.fromList [((F5, R8), Piece White PromotedPawn)])
+                         , Nothing
+                         )
+        describe "成り不可" $ do
+          describe "先手"
+            $          it "Nothing"
+            $          Board.move
+                         (F5, R4)
+                         True
+                         (F5, R3)
+                         (Board (Map.fromList [((F5, R4), Piece Black PromotedPawn)]))
+            `shouldBe` Nothing
+          describe "後手"
+            $          it "Nothing"
+            $          Board.move
+                         (F5, R7)
+                         True
+                         (F5, R8)
+                         (Board (Map.fromList [((F5, R7), Piece White PromotedPawn)]))
+            `shouldBe` Nothing
+    describe "移動先が可動範囲外" $ do
+      describe "先手"
+        $ it "Nothing"
+        $ Board.move (F5, R5)
+                     False
+                     (F5, R3)
+                     (Board (Map.fromList [((F5, R5), Piece Black Pawn)]))
+        `shouldBe` Nothing
+      describe "後手"
+        $ it "Nothing"
+        $ Board.move (F5, R5)
+                     False
+                     (F5, R7)
+                     (Board (Map.fromList [((F5, R5), Piece White Pawn)]))
+        `shouldBe` Nothing
+  describe "移動元なし"
+    $          it "Nothing"
+    $          Board.move (F5, R5) False (F5, R4) (Board Map.empty)
+    `shouldBe` Nothing
+
 spec_check :: Spec
 spec_check = describe "check" $ do
   describe "王手されていない場合" $ do

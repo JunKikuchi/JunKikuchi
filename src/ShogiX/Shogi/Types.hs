@@ -81,7 +81,7 @@ data Position
 type Turn = Color
 
 -- | 将棋盤
-newtype Board = Board { unBoard :: Map Square Piece } deriving Show
+newtype Board = Board { unBoard :: Map Square Piece } deriving (Show, Eq)
 
 -- | 将棋盤のマス目
 type Square = (File, Rank)
@@ -107,7 +107,7 @@ data Piece
   = Piece
   { pieceColor :: Color     -- ^ 先手後手
   , pieceType  :: PieceType -- ^ 駒の種類
-  } deriving Show
+  } deriving (Show, Eq)
 
 -- | 駒の種類
 data PieceType

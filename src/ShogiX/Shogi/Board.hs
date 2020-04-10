@@ -11,6 +11,15 @@ import qualified ShogiX.Shogi.Piece            as Piece
 empty :: Board
 empty = Board Map.empty
 
+-- | 駒の移動
+move
+  :: SrcSquare
+  -> Promotion
+  -> DestSquare
+  -> Board
+  -> Maybe (Board, Maybe PieceType)
+move = undefined
+
 -- | 王手判定
 checked :: Color -> Board -> Bool
 checked color board = Set.intersection ms ks == ks
