@@ -1,4 +1,10 @@
-module ShogiX.Shogi.Board where
+module ShogiX.Shogi.Board
+  ( empty
+  , move
+  , checked
+  , movables
+  )
+where
 
 import           RIO
 import qualified RIO.Map                       as Map

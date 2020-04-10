@@ -1,4 +1,8 @@
-module ShogiX.Shogi.Position where
+module ShogiX.Shogi.Position
+  ( movables
+  , droppables
+  )
+where
 
 import           RIO
 import qualified RIO.Map                       as Map

@@ -1,9 +1,17 @@
-module ShogiX.Shogi.Stand where
+module ShogiX.Shogi.Stand
+  ( empty
+  , droppables
+  )
+where
 
 import           RIO
 import qualified RIO.Map                       as Map
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Piece            as Piece
+
+-- | 空の駒台
+empty :: Stand
+empty = Stand Map.empty
 
 -- | 持ち駒の打ち先範囲を取得
 droppables :: Color -> Board -> Stands -> Droppables
@@ -16,7 +24,3 @@ droppables color board stands = Droppables (Map.fromList ds)
 stand :: Color -> Stands -> Stand
 stand Black = blackStand
 stand White = whiteStand
-
--- | 空の駒台
-empty :: Stand
-empty = Stand Map.empty

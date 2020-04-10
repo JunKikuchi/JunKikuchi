@@ -1,5 +1,18 @@
 {-# LANGUAGE RankNTypes #-}
-module ShogiX.Shogi.Piece where
+module ShogiX.Shogi.Piece
+  ( movable
+  , droppable
+  , promote
+  , pawn
+  , lance
+  , knight
+  , silver
+  , gold
+  , bishop
+  , rook
+  , king
+  )
+where
 
 import           RIO
 import           RIO.Partial                    ( succ
