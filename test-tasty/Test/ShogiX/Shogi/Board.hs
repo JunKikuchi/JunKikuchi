@@ -233,8 +233,29 @@ spec_move = describe "move" $ do
     $          Board.move (F5, R5) False (F5, R4) (Board Map.empty)
     `shouldBe` Nothing
 
-spec_check :: Spec
-spec_check = describe "check" $ do
+spec_checked :: Spec
+spec_checked = describe "checked" $ do
+  describe "玉将がない場合" $ do
+    describe "先手"
+      $          it "王手判定 False"
+      $          Board.checked
+                   Black
+                   (Board
+                     (Map.fromList
+                       [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
+                     )
+                   )
+      `shouldBe` False
+    describe "後手"
+      $          it "王手判定 False"
+      $          Board.checked
+                   White
+                   (Board
+                     (Map.fromList
+                       [((F5, R1), Piece White Pawn), ((F5, R9), Piece Black Pawn)]
+                     )
+                   )
+      `shouldBe` False
   describe "王手されていない場合" $ do
     describe "先手"
       $          it "王手判定 False"

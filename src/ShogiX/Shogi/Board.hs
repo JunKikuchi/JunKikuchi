@@ -36,7 +36,7 @@ move src promo dest board = do
 
 -- | 王手判定
 checked :: Color -> Board -> Bool
-checked color board = Set.intersection ms ks == ks
+checked color board = ks /= Set.empty && Set.intersection ms ks == ks
  where
   ms = Set.unions $ (Set.fromList . Map.keys . unMovable) <$> Map.elems
     (unMovables $ movables (turnColor color) board)
