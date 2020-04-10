@@ -18,7 +18,21 @@ move
   -> DestSquare
   -> Board
   -> Maybe (Board, Maybe PieceType)
-move = undefined
+move src promo dest board = do
+  piece      <- Map.lookup src b
+  promotable <- Map.lookup dest $ unMovable $ Piece.movable piece src ss
+  guard
+    $  (promotable == No && not promo)
+    || (promotable == Option)
+    || (promotable == Must && promo)
+  let deleted  = Map.delete src b
+  let p        = Piece.promote promo piece
+  let inserted = Map.insert dest p deleted
+  pure (Board inserted, capture)
+ where
+  b       = unBoard board
+  ss      = Map.map pieceColor b
+  capture = pieceType <$> Map.lookup dest b
 
 -- | 王手判定
 checked :: Color -> Board -> Bool

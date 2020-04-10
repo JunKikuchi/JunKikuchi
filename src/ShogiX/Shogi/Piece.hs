@@ -388,3 +388,21 @@ ranks White Pawn   = [R1 .. R8]
 ranks White Lance  = [R1 .. R8]
 ranks White Knight = [R1 .. R7]
 ranks _     _      = [R1 .. R9]
+
+-- | 駒成り
+promote :: Promotion -> Piece -> Piece
+promote promo piece = Piece color ppt
+ where
+  color = pieceColor piece
+  ppt   = promotePieceType promo pt
+  pt    = pieceType piece
+
+-- | 成り駒の種類
+promotePieceType :: Promotion -> PieceType -> PieceType
+promotePieceType True Pawn   = PromotedPawn
+promotePieceType True Lance  = PromotedLance
+promotePieceType True Knight = PromotedKnight
+promotePieceType True Silver = PromotedSilver
+promotePieceType True Bishop = PromotedBishop
+promotePieceType True Rook   = PromotedRook
+promotePieceType _    piece  = piece
