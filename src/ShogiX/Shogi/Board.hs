@@ -19,6 +19,7 @@ checked color board = Set.intersection ms ks == ks
     (unMovables $ movables (turnColor color) board)
   ks = kingSquares color board
 
+{--
 -- | 玉の可動範囲
 -- let kings = kingSquares Color ...
 -- let ms  = kingMovableSquares Color ... kings
@@ -31,6 +32,7 @@ kingMovableSquares color board = Set.unions . Set.map fs
       . unMovable
       . flip (Piece.movable (Piece color King)) ss
   ss = Map.map pieceColor (unBoard board)
+--}
 
 -- | 玉のマス目取得
 kingSquares :: Color -> Board -> Set Square
