@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fb766d47aec51035186a813e1790a478a5008b559f73fb3bb84b31716f1c3c86
+-- hash: 6c2e78798e0042b23e70f9980ef0ac029521d00c0f4e6611ca29f0ede57d2aab
 
 name:           shogix-shogi
 version:        0.1.0.0
@@ -53,6 +53,7 @@ test-suite shogix-shogi-tasty
   other-modules:
       Test.ShogiX.Shogi.Board
       Test.ShogiX.Shogi.Piece
+      Test.ShogiX.Shogi.Position
       Test.ShogiX.Shogi.Stand
       Paths_shogix_shogi
   hs-source-dirs:
