@@ -7,21 +7,21 @@ import           Test.Tasty
 import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Board            as Board
+import qualified ShogiX.Shogi.Stands           as Stands
 import qualified ShogiX.Shogi.Stand            as Stand
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_droppables :: Spec
 spec_droppables = describe "droppables" $ do
   describe "将棋盤も駒台も空の場合"
-    $ it "空を返す"
-    $ Stand.droppables Black (Board Map.empty) (Stands Stand.empty Stand.empty)
+    $          it "空を返す"
+    $          Stand.droppables Black (Board Map.empty) Stands.empty
     `shouldBe` Droppables Map.empty
   describe "打ち込める駒がある場合"
     $          it "駒ごとの打ち込み先を返す"
-    $          Stand.droppables
-                 Black
-                 (Board Map.empty)
-                 (Stands (Stand.fromList [(Pawn, 1), (Gold, 1)]) Stand.empty)
+    $          Stand.droppables Black
+                                (Board Map.empty)
+                                (Stands.fromList [(Pawn, 1), (Gold, 1)] [])
     `shouldBe` Droppables
                  (Map.fromList
                    [ ( Pawn
@@ -52,7 +52,7 @@ spec_droppables = describe "droppables" $ do
                    (Board.fromList
                      [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
                    )
-                   (Stands (Stand.fromList [(Pawn, 1)]) Stand.empty)
+                   (Stands.fromList [(Pawn, 1)] [])
       `shouldBe` Droppables
                    (Map.fromList
                      [ ( Pawn
@@ -77,7 +77,7 @@ spec_droppables = describe "droppables" $ do
                    (Board.fromList
                      [((F5, R1), Piece White King), ((F5, R5), Piece Black Lance)]
                    )
-                   (Stands Stand.empty (Stand.fromList [(Pawn, 1)]))
+                   (Stands.fromList [] [(Pawn, 1)])
       `shouldBe` Droppables
                    (Map.fromList
                      [ ( Pawn

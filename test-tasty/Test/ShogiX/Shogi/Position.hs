@@ -8,7 +8,6 @@ import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Position         as Position
 import qualified ShogiX.Shogi.Board            as Board
-import qualified ShogiX.Shogi.Stand            as Stand
 import qualified ShogiX.Shogi.Stands           as Stands
 import           ShogiX.Clocks                 as Clocks
 
@@ -142,7 +141,7 @@ spec_droppables = describe "droppables" $ do
                      (Board.fromList
                        [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
-                     (Stands (Stand.fromList [(Pawn, 1)]) Stand.empty)
+                     (Stands.fromList [(Pawn, 1)] [])
                      Clocks.infinity
                    )
       `shouldBe` Droppables
@@ -170,7 +169,7 @@ spec_droppables = describe "droppables" $ do
                      (Board.fromList
                        [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
-                     (Stands Stand.empty (Stand.fromList [(Pawn, 1)]))
+                     (Stands.fromList [] [(Pawn, 1)])
                      Clocks.infinity
                    )
       `shouldBe` Droppables
@@ -202,7 +201,7 @@ spec_droppables = describe "droppables" $ do
                        , ((F5, R1), Piece White King)
                        ]
                      )
-                     (Stands (Stand.fromList [(Pawn, 1)]) Stand.empty)
+                     (Stands.fromList [(Pawn, 1)] [])
                      Clocks.infinity
                    )
       `shouldBe` Droppables
@@ -224,7 +223,7 @@ spec_droppables = describe "droppables" $ do
                        , ((F5, R1), Piece White King)
                        ]
                      )
-                     (Stands Stand.empty (Stand.fromList [(Pawn, 1)]))
+                     (Stands.fromList [] [(Pawn, 1)])
                      Clocks.infinity
                    )
       `shouldBe` Droppables
