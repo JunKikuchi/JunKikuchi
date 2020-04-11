@@ -8,6 +8,7 @@ import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Piece            as Piece
+import qualified ShogiX.Shogi.Movable          as Movable
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_movable :: Spec
@@ -15,205 +16,181 @@ spec_movable = describe "movable" $ do
   describe "歩兵" $ do
     it "先手"
       $          Piece.movable (Piece Black Pawn) (F5, R5) Map.empty
-      `shouldBe` Movable (Map.fromList [((F5, R4), No)])
+      `shouldBe` Movable.fromList [((F5, R4), No)]
     it "後手"
       $          Piece.movable (Piece White Pawn) (F5, R5) Map.empty
-      `shouldBe` Movable (Map.fromList [((F5, R6), No)])
+      `shouldBe` Movable.fromList [((F5, R6), No)]
   describe "香車" $ do
     it "先手"
       $          Piece.movable (Piece Black Lance) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F5, R4), No)
-                     , ((F5, R3), Option)
-                     , ((F5, R2), Option)
-                     , ((F5, R1), Must)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F5, R4), No)
+                   , ((F5, R3), Option)
+                   , ((F5, R2), Option)
+                   , ((F5, R1), Must)
+                   ]
     it "後手"
       $          Piece.movable (Piece White Lance) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F5, R6), No)
-                     , ((F5, R7), Option)
-                     , ((F5, R8), Option)
-                     , ((F5, R9), Must)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F5, R6), No)
+                   , ((F5, R7), Option)
+                   , ((F5, R8), Option)
+                   , ((F5, R9), Must)
+                   ]
   describe "桂馬" $ do
     it "先手"
       $          Piece.movable (Piece Black Knight) (F5, R5) Map.empty
-      `shouldBe` Movable (Map.fromList [((F6, R3), Option), ((F4, R3), Option)])
+      `shouldBe` Movable.fromList [((F6, R3), Option), ((F4, R3), Option)]
     it "後手"
       $          Piece.movable (Piece White Knight) (F5, R5) Map.empty
-      `shouldBe` Movable (Map.fromList [((F6, R7), Option), ((F4, R7), Option)])
+      `shouldBe` Movable.fromList [((F6, R7), Option), ((F4, R7), Option)]
   describe "銀将" $ do
     it "先手"
       $          Piece.movable (Piece Black Silver) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R4), No)
-                     , ((F5, R4), No)
-                     , ((F4, R4), No)
-                     , ((F4, R6), No)
-                     , ((F6, R6), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R4), No)
+                   , ((F5, R4), No)
+                   , ((F4, R4), No)
+                   , ((F4, R6), No)
+                   , ((F6, R6), No)
+                   ]
     it "後手"
       $          Piece.movable (Piece White Silver) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R6), No)
-                     , ((F5, R6), No)
-                     , ((F4, R6), No)
-                     , ((F4, R4), No)
-                     , ((F6, R4), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R6), No)
+                   , ((F5, R6), No)
+                   , ((F4, R6), No)
+                   , ((F4, R4), No)
+                   , ((F6, R4), No)
+                   ]
   describe "金将" $ do
     it "先手"
       $          Piece.movable (Piece Black Gold) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R4), No)
-                     , ((F5, R4), No)
-                     , ((F4, R4), No)
-                     , ((F4, R5), No)
-                     , ((F5, R6), No)
-                     , ((F6, R5), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R4), No)
+                   , ((F5, R4), No)
+                   , ((F4, R4), No)
+                   , ((F4, R5), No)
+                   , ((F5, R6), No)
+                   , ((F6, R5), No)
+                   ]
     it "後手"
       $          Piece.movable (Piece White Gold) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R6), No)
-                     , ((F5, R6), No)
-                     , ((F4, R6), No)
-                     , ((F4, R5), No)
-                     , ((F5, R4), No)
-                     , ((F6, R5), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R6), No)
+                   , ((F5, R6), No)
+                   , ((F4, R6), No)
+                   , ((F4, R5), No)
+                   , ((F5, R4), No)
+                   , ((F6, R5), No)
+                   ]
   describe "角行" $ do
     it "先手"
       $          Piece.movable (Piece Black Bishop) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R4), No)
-                     , ((F7, R3), Option)
-                     , ((F8, R2), Option)
-                     , ((F9, R1), Option)
-                     , ((F4, R4), No)
-                     , ((F3, R3), Option)
-                     , ((F2, R2), Option)
-                     , ((F1, R1), Option)
-                     , ((F4, R6), No)
-                     , ((F3, R7), No)
-                     , ((F2, R8), No)
-                     , ((F1, R9), No)
-                     , ((F6, R6), No)
-                     , ((F7, R7), No)
-                     , ((F8, R8), No)
-                     , ((F9, R9), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R4), No)
+                   , ((F7, R3), Option)
+                   , ((F8, R2), Option)
+                   , ((F9, R1), Option)
+                   , ((F4, R4), No)
+                   , ((F3, R3), Option)
+                   , ((F2, R2), Option)
+                   , ((F1, R1), Option)
+                   , ((F4, R6), No)
+                   , ((F3, R7), No)
+                   , ((F2, R8), No)
+                   , ((F1, R9), No)
+                   , ((F6, R6), No)
+                   , ((F7, R7), No)
+                   , ((F8, R8), No)
+                   , ((F9, R9), No)
+                   ]
     it "後手"
       $          Piece.movable (Piece White Bishop) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R4), No)
-                     , ((F7, R3), No)
-                     , ((F8, R2), No)
-                     , ((F9, R1), No)
-                     , ((F4, R4), No)
-                     , ((F3, R3), No)
-                     , ((F2, R2), No)
-                     , ((F1, R1), No)
-                     , ((F4, R6), No)
-                     , ((F3, R7), Option)
-                     , ((F2, R8), Option)
-                     , ((F1, R9), Option)
-                     , ((F6, R6), No)
-                     , ((F7, R7), Option)
-                     , ((F8, R8), Option)
-                     , ((F9, R9), Option)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R4), No)
+                   , ((F7, R3), No)
+                   , ((F8, R2), No)
+                   , ((F9, R1), No)
+                   , ((F4, R4), No)
+                   , ((F3, R3), No)
+                   , ((F2, R2), No)
+                   , ((F1, R1), No)
+                   , ((F4, R6), No)
+                   , ((F3, R7), Option)
+                   , ((F2, R8), Option)
+                   , ((F1, R9), Option)
+                   , ((F6, R6), No)
+                   , ((F7, R7), Option)
+                   , ((F8, R8), Option)
+                   , ((F9, R9), Option)
+                   ]
   describe "飛車" $ do
     it "先手"
       $          Piece.movable (Piece Black Rook) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F5, R4), No)
-                     , ((F5, R3), Option)
-                     , ((F5, R2), Option)
-                     , ((F5, R1), Option)
-                     , ((F4, R5), No)
-                     , ((F3, R5), No)
-                     , ((F2, R5), No)
-                     , ((F1, R5), No)
-                     , ((F5, R6), No)
-                     , ((F5, R7), No)
-                     , ((F5, R8), No)
-                     , ((F5, R9), No)
-                     , ((F6, R5), No)
-                     , ((F7, R5), No)
-                     , ((F8, R5), No)
-                     , ((F9, R5), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F5, R4), No)
+                   , ((F5, R3), Option)
+                   , ((F5, R2), Option)
+                   , ((F5, R1), Option)
+                   , ((F4, R5), No)
+                   , ((F3, R5), No)
+                   , ((F2, R5), No)
+                   , ((F1, R5), No)
+                   , ((F5, R6), No)
+                   , ((F5, R7), No)
+                   , ((F5, R8), No)
+                   , ((F5, R9), No)
+                   , ((F6, R5), No)
+                   , ((F7, R5), No)
+                   , ((F8, R5), No)
+                   , ((F9, R5), No)
+                   ]
     it "後手"
       $          Piece.movable (Piece White Rook) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F5, R4), No)
-                     , ((F5, R3), No)
-                     , ((F5, R2), No)
-                     , ((F5, R1), No)
-                     , ((F4, R5), No)
-                     , ((F3, R5), No)
-                     , ((F2, R5), No)
-                     , ((F1, R5), No)
-                     , ((F5, R6), No)
-                     , ((F5, R7), Option)
-                     , ((F5, R8), Option)
-                     , ((F5, R9), Option)
-                     , ((F6, R5), No)
-                     , ((F7, R5), No)
-                     , ((F8, R5), No)
-                     , ((F9, R5), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F5, R4), No)
+                   , ((F5, R3), No)
+                   , ((F5, R2), No)
+                   , ((F5, R1), No)
+                   , ((F4, R5), No)
+                   , ((F3, R5), No)
+                   , ((F2, R5), No)
+                   , ((F1, R5), No)
+                   , ((F5, R6), No)
+                   , ((F5, R7), Option)
+                   , ((F5, R8), Option)
+                   , ((F5, R9), Option)
+                   , ((F6, R5), No)
+                   , ((F7, R5), No)
+                   , ((F8, R5), No)
+                   , ((F9, R5), No)
+                   ]
   describe "玉将" $ do
     it "先手"
       $          Piece.movable (Piece Black King) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R4), No)
-                     , ((F5, R4), No)
-                     , ((F4, R4), No)
-                     , ((F4, R5), No)
-                     , ((F4, R6), No)
-                     , ((F5, R6), No)
-                     , ((F6, R6), No)
-                     , ((F6, R5), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R4), No)
+                   , ((F5, R4), No)
+                   , ((F4, R4), No)
+                   , ((F4, R5), No)
+                   , ((F4, R6), No)
+                   , ((F5, R6), No)
+                   , ((F6, R6), No)
+                   , ((F6, R5), No)
+                   ]
     it "後手"
       $          Piece.movable (Piece White King) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R6), No)
-                     , ((F5, R6), No)
-                     , ((F4, R6), No)
-                     , ((F4, R5), No)
-                     , ((F4, R4), No)
-                     , ((F5, R4), No)
-                     , ((F6, R4), No)
-                     , ((F6, R5), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R6), No)
+                   , ((F5, R6), No)
+                   , ((F4, R6), No)
+                   , ((F4, R5), No)
+                   , ((F4, R4), No)
+                   , ((F5, R4), No)
+                   , ((F6, R4), No)
+                   , ((F6, R5), No)
+                   ]
   describe "と金" $ do
     it "先手"
       $          Piece.movable (Piece Black PromotedPawn) (F5, R5) Map.empty
@@ -245,113 +222,105 @@ spec_movable = describe "movable" $ do
   describe "龍馬" $ do
     it "先手"
       $          Piece.movable (Piece Black PromotedBishop) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R4), No)
-                     , ((F7, R3), No)
-                     , ((F8, R2), No)
-                     , ((F9, R1), No)
-                     , ((F4, R4), No)
-                     , ((F3, R3), No)
-                     , ((F2, R2), No)
-                     , ((F1, R1), No)
-                     , ((F4, R6), No)
-                     , ((F3, R7), No)
-                     , ((F2, R8), No)
-                     , ((F1, R9), No)
-                     , ((F6, R6), No)
-                     , ((F7, R7), No)
-                     , ((F8, R8), No)
-                     , ((F9, R9), No)
-                     , ((F5, R4), No)
-                     , ((F4, R5), No)
-                     , ((F5, R6), No)
-                     , ((F6, R5), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R4), No)
+                   , ((F7, R3), No)
+                   , ((F8, R2), No)
+                   , ((F9, R1), No)
+                   , ((F4, R4), No)
+                   , ((F3, R3), No)
+                   , ((F2, R2), No)
+                   , ((F1, R1), No)
+                   , ((F4, R6), No)
+                   , ((F3, R7), No)
+                   , ((F2, R8), No)
+                   , ((F1, R9), No)
+                   , ((F6, R6), No)
+                   , ((F7, R7), No)
+                   , ((F8, R8), No)
+                   , ((F9, R9), No)
+                   , ((F5, R4), No)
+                   , ((F4, R5), No)
+                   , ((F5, R6), No)
+                   , ((F6, R5), No)
+                   ]
     it "後手"
       $          Piece.movable (Piece White PromotedBishop) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F6, R4), No)
-                     , ((F7, R3), No)
-                     , ((F8, R2), No)
-                     , ((F9, R1), No)
-                     , ((F4, R4), No)
-                     , ((F3, R3), No)
-                     , ((F2, R2), No)
-                     , ((F1, R1), No)
-                     , ((F4, R6), No)
-                     , ((F3, R7), No)
-                     , ((F2, R8), No)
-                     , ((F1, R9), No)
-                     , ((F6, R6), No)
-                     , ((F7, R7), No)
-                     , ((F8, R8), No)
-                     , ((F9, R9), No)
-                     , ((F6, R6), No)
-                     , ((F7, R7), No)
-                     , ((F8, R8), No)
-                     , ((F9, R9), No)
-                     , ((F5, R4), No)
-                     , ((F4, R5), No)
-                     , ((F5, R6), No)
-                     , ((F6, R5), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F6, R4), No)
+                   , ((F7, R3), No)
+                   , ((F8, R2), No)
+                   , ((F9, R1), No)
+                   , ((F4, R4), No)
+                   , ((F3, R3), No)
+                   , ((F2, R2), No)
+                   , ((F1, R1), No)
+                   , ((F4, R6), No)
+                   , ((F3, R7), No)
+                   , ((F2, R8), No)
+                   , ((F1, R9), No)
+                   , ((F6, R6), No)
+                   , ((F7, R7), No)
+                   , ((F8, R8), No)
+                   , ((F9, R9), No)
+                   , ((F6, R6), No)
+                   , ((F7, R7), No)
+                   , ((F8, R8), No)
+                   , ((F9, R9), No)
+                   , ((F5, R4), No)
+                   , ((F4, R5), No)
+                   , ((F5, R6), No)
+                   , ((F6, R5), No)
+                   ]
   describe "龍王" $ do
     it "先手"
       $          Piece.movable (Piece Black PromotedRook) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F5, R4), No)
-                     , ((F5, R3), No)
-                     , ((F5, R2), No)
-                     , ((F5, R1), No)
-                     , ((F4, R5), No)
-                     , ((F3, R5), No)
-                     , ((F2, R5), No)
-                     , ((F1, R5), No)
-                     , ((F5, R6), No)
-                     , ((F5, R7), No)
-                     , ((F5, R8), No)
-                     , ((F5, R9), No)
-                     , ((F6, R5), No)
-                     , ((F7, R5), No)
-                     , ((F8, R5), No)
-                     , ((F9, R5), No)
-                     , ((F6, R4), No)
-                     , ((F4, R4), No)
-                     , ((F4, R6), No)
-                     , ((F6, R6), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F5, R4), No)
+                   , ((F5, R3), No)
+                   , ((F5, R2), No)
+                   , ((F5, R1), No)
+                   , ((F4, R5), No)
+                   , ((F3, R5), No)
+                   , ((F2, R5), No)
+                   , ((F1, R5), No)
+                   , ((F5, R6), No)
+                   , ((F5, R7), No)
+                   , ((F5, R8), No)
+                   , ((F5, R9), No)
+                   , ((F6, R5), No)
+                   , ((F7, R5), No)
+                   , ((F8, R5), No)
+                   , ((F9, R5), No)
+                   , ((F6, R4), No)
+                   , ((F4, R4), No)
+                   , ((F4, R6), No)
+                   , ((F6, R6), No)
+                   ]
     it "後手"
       $          Piece.movable (Piece White PromotedRook) (F5, R5) Map.empty
-      `shouldBe` Movable
-                   (Map.fromList
-                     [ ((F5, R4), No)
-                     , ((F5, R3), No)
-                     , ((F5, R2), No)
-                     , ((F5, R1), No)
-                     , ((F4, R5), No)
-                     , ((F3, R5), No)
-                     , ((F2, R5), No)
-                     , ((F1, R5), No)
-                     , ((F5, R6), No)
-                     , ((F5, R7), No)
-                     , ((F5, R8), No)
-                     , ((F5, R9), No)
-                     , ((F6, R5), No)
-                     , ((F7, R5), No)
-                     , ((F8, R5), No)
-                     , ((F9, R5), No)
-                     , ((F6, R4), No)
-                     , ((F4, R4), No)
-                     , ((F4, R6), No)
-                     , ((F6, R6), No)
-                     ]
-                   )
+      `shouldBe` Movable.fromList
+                   [ ((F5, R4), No)
+                   , ((F5, R3), No)
+                   , ((F5, R2), No)
+                   , ((F5, R1), No)
+                   , ((F4, R5), No)
+                   , ((F3, R5), No)
+                   , ((F2, R5), No)
+                   , ((F1, R5), No)
+                   , ((F5, R6), No)
+                   , ((F5, R7), No)
+                   , ((F5, R8), No)
+                   , ((F5, R9), No)
+                   , ((F6, R5), No)
+                   , ((F7, R5), No)
+                   , ((F8, R5), No)
+                   , ((F9, R5), No)
+                   , ((F6, R4), No)
+                   , ((F4, R4), No)
+                   , ((F4, R6), No)
+                   , ((F6, R6), No)
+                   ]
 
 spec_droppable :: Spec
 spec_droppable = describe "droppable" $ do

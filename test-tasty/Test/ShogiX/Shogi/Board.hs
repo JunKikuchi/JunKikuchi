@@ -6,6 +6,7 @@ import           Test.Tasty
 import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Board            as Board
+import qualified ShogiX.Shogi.Movables         as Movables
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_move :: Spec
@@ -281,22 +282,17 @@ spec_movables = describe "movables" $ do
                    , ((F5, R1), Piece White Pawn)
                    ]
                  )
-    `shouldBe` Movables
-                 (Map.fromList
-                   [ ((F5, R5), Movable (Map.fromList [((F5, R4), No)]))
-                   , ( (F5, R9)
-                     , Movable
-                       (Map.fromList
-                         [ ((F6, R8), No)
-                         , ((F5, R8), No)
-                         , ((F4, R8), No)
-                         , ((F4, R9), No)
-                         , ((F6, R9), No)
-                         ]
-                       )
-                     )
-                   ]
-                 )
+    `shouldBe` Movables.fromList
+                 [ ((F5, R5), [((F5, R4), No)])
+                 , ( (F5, R9)
+                   , [ ((F6, R8), No)
+                     , ((F5, R8), No)
+                     , ((F4, R8), No)
+                     , ((F4, R9), No)
+                     , ((F6, R9), No)
+                     ]
+                   )
+                 ]
   describe "王手されている場合" $ do
     describe "先手"
       $          it "王手回避する可動範囲を返さない"
@@ -308,22 +304,17 @@ spec_movables = describe "movables" $ do
                      , ((F5, R8), Piece White Gold)
                      ]
                    )
-      `shouldBe` Movables
-                   (Map.fromList
-                     [ ( (F5, R9)
-                       , Movable
-                         (Map.fromList
-                           [ ((F6, R8), No)
-                           , ((F5, R8), No)
-                           , ((F4, R8), No)
-                           , ((F4, R9), No)
-                           , ((F6, R9), No)
-                           ]
-                         )
-                       )
-                     , ((F5, R5), Movable (Map.fromList [((F5, R4), No)]))
-                     ]
-                   )
+      `shouldBe` Movables.fromList
+                   [ ( (F5, R9)
+                     , [ ((F6, R8), No)
+                       , ((F5, R8), No)
+                       , ((F4, R8), No)
+                       , ((F4, R9), No)
+                       , ((F6, R9), No)
+                       ]
+                     )
+                   , ((F5, R5), [((F5, R4), No)])
+                   ]
     describe "後手"
       $          it "王手回避する可動範囲を返さない"
       $          Board.movables
@@ -334,19 +325,14 @@ spec_movables = describe "movables" $ do
                      , ((F5, R2), Piece Black Gold)
                      ]
                    )
-      `shouldBe` Movables
-                   (Map.fromList
-                     [ ( (F5, R1)
-                       , Movable
-                         (Map.fromList
-                           [ ((F6, R2), No)
-                           , ((F5, R2), No)
-                           , ((F4, R2), No)
-                           , ((F6, R1), No)
-                           , ((F4, R1), No)
-                           ]
-                         )
-                       )
-                     , ((F5, R5), Movable (Map.fromList [((F5, R6), No)]))
-                     ]
-                   )
+      `shouldBe` Movables.fromList
+                   [ ( (F5, R1)
+                     , [ ((F6, R2), No)
+                       , ((F5, R2), No)
+                       , ((F4, R2), No)
+                       , ((F6, R1), No)
+                       , ((F4, R1), No)
+                       ]
+                     )
+                   , ((F5, R5), [((F5, R6), No)])
+                   ]

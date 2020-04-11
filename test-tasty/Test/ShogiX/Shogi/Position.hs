@@ -9,6 +9,7 @@ import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Position         as Position
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stands           as Stands
+import qualified ShogiX.Shogi.Movables         as Movables
 import           ShogiX.Clocks                 as Clocks
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
@@ -27,10 +28,7 @@ spec_movables = describe "movables" $ do
                        Stands.empty
                        Clocks.infinity
                      )
-        `shouldBe` Movables
-                     (Map.fromList
-                       [((F5, R9), Movable (Map.fromList [((F5, R8), No)]))]
-                     )
+        `shouldBe` Movables.fromList [((F5, R9), [((F5, R8), No)])]
       describe "後手"
         $          it "可動範囲を返す"
         $          Position.movables
@@ -42,10 +40,7 @@ spec_movables = describe "movables" $ do
                        Stands.empty
                        Clocks.infinity
                      )
-        `shouldBe` Movables
-                     (Map.fromList
-                       [((F5, R1), Movable (Map.fromList [((F5, R2), No)]))]
-                     )
+        `shouldBe` Movables.fromList [((F5, R1), [((F5, R2), No)])]
     describe "先手"
       $          it "可動範囲を返す"
       $          Position.movables
@@ -57,21 +52,16 @@ spec_movables = describe "movables" $ do
                      Stands.empty
                      Clocks.infinity
                    )
-      `shouldBe` Movables
-                   (Map.fromList
-                     [ ( (F5, R9)
-                       , Movable
-                         (Map.fromList
-                           [ ((F6, R8), No)
-                           , ((F5, R8), No)
-                           , ((F4, R8), No)
-                           , ((F6, R9), No)
-                           , ((F4, R9), No)
-                           ]
-                         )
-                       )
-                     ]
-                   )
+      `shouldBe` Movables.fromList
+                   [ ( (F5, R9)
+                     , [ ((F6, R8), No)
+                       , ((F5, R8), No)
+                       , ((F4, R8), No)
+                       , ((F6, R9), No)
+                       , ((F4, R9), No)
+                       ]
+                     )
+                   ]
     describe "後手"
       $          it "可動範囲を返す"
       $          Position.movables
@@ -83,21 +73,16 @@ spec_movables = describe "movables" $ do
                      Stands.empty
                      Clocks.infinity
                    )
-      `shouldBe` Movables
-                   (Map.fromList
-                     [ ( (F5, R1)
-                       , Movable
-                         (Map.fromList
-                           [ ((F6, R2), No)
-                           , ((F5, R2), No)
-                           , ((F4, R2), No)
-                           , ((F6, R1), No)
-                           , ((F4, R1), No)
-                           ]
-                         )
-                       )
-                     ]
-                   )
+      `shouldBe` Movables.fromList
+                   [ ( (F5, R1)
+                     , [ ((F6, R2), No)
+                       , ((F5, R2), No)
+                       , ((F4, R2), No)
+                       , ((F6, R1), No)
+                       , ((F4, R1), No)
+                       ]
+                     )
+                   ]
   describe "王手されている場合" $ do
     describe "先手"
       $          it "王手回避する可動範囲を返す"
@@ -110,10 +95,7 @@ spec_movables = describe "movables" $ do
                      Stands.empty
                      Clocks.infinity
                    )
-      `shouldBe` Movables
-                   (Map.fromList
-                     [((F5, R9), Movable (Map.fromList [((F5, R8), No)]))]
-                   )
+      `shouldBe` Movables.fromList [((F5, R9), [((F5, R8), No)])]
     describe "後手"
       $          it "王手回避する可動範囲を返す"
       $          Position.movables
@@ -125,10 +107,7 @@ spec_movables = describe "movables" $ do
                      Stands.empty
                      Clocks.infinity
                    )
-      `shouldBe` Movables
-                   (Map.fromList
-                     [((F5, R1), Movable (Map.fromList [((F5, R2), No)]))]
-                   )
+      `shouldBe` Movables.fromList [((F5, R1), [((F5, R2), No)])]
 
 spec_droppables :: Spec
 spec_droppables = describe "droppables" $ do
