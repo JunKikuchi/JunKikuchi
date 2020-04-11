@@ -9,6 +9,7 @@ import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Piece            as Piece
 import qualified ShogiX.Shogi.Movable          as Movable
+import qualified ShogiX.Shogi.Droppable        as Droppable
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_movable :: Spec
@@ -326,8 +327,10 @@ spec_droppable :: Spec
 spec_droppable = describe "droppable" $ do
   describe "歩兵" $ do
     describe "先手" $ do
-      it "二段より下" $ Piece.droppable Black Pawn Board.empty `shouldBe` Droppable
-        (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R9] ])
+      it "二段より下"
+        $          Piece.droppable Black Pawn Board.empty
+        `shouldBe` Droppable.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R9] ]
       it "二歩"
         $          Piece.droppable
                      Black
@@ -335,7 +338,7 @@ spec_droppable = describe "droppable" $ do
                      (Board.fromList
                        [ ((file, R5), Piece Black Pawn) | file <- [F9 .. F2] ]
                      )
-        `shouldBe` Droppable (Set.fromList [ (F1, rank) | rank <- [R2 .. R9] ])
+        `shouldBe` Droppable.fromList [ (F1, rank) | rank <- [R2 .. R9] ]
       it "後手の歩兵は二歩にならない"
         $          Piece.droppable
                      Black
@@ -343,13 +346,13 @@ spec_droppable = describe "droppable" $ do
                      (Board.fromList
                        [ ((file, R9), Piece White Pawn) | file <- [F9 .. F1] ]
                      )
-        `shouldBe` Droppable
-                     (Set.fromList
-                       [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R8] ]
-                     )
+        `shouldBe` Droppable.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R8] ]
     describe "後手" $ do
-      it "八段より上" $ Piece.droppable White Pawn Board.empty `shouldBe` Droppable
-        (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R8] ])
+      it "八段より上"
+        $          Piece.droppable White Pawn Board.empty
+        `shouldBe` Droppable.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R8] ]
       it "二歩"
         $          Piece.droppable
                      White
@@ -357,7 +360,7 @@ spec_droppable = describe "droppable" $ do
                      (Board.fromList
                        [ ((file, R5), Piece White Pawn) | file <- [F9 .. F2] ]
                      )
-        `shouldBe` Droppable (Set.fromList [ (F1, rank) | rank <- [R1 .. R8] ])
+        `shouldBe` Droppable.fromList [ (F1, rank) | rank <- [R1 .. R8] ]
       it "先手の歩兵は二歩にならない"
         $          Piece.droppable
                      White
@@ -365,14 +368,14 @@ spec_droppable = describe "droppable" $ do
                      (Board.fromList
                        [ ((file, R1), Piece Black Pawn) | file <- [F9 .. F1] ]
                      )
-        `shouldBe` Droppable
-                     (Set.fromList
-                       [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R8] ]
-                     )
+        `shouldBe` Droppable.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R8] ]
   describe "香車" $ do
     describe "先手" $ do
-      it "二段より下" $ Piece.droppable Black Lance Board.empty `shouldBe` Droppable
-        (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R9] ])
+      it "二段より下"
+        $          Piece.droppable Black Lance Board.empty
+        `shouldBe` Droppable.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R9] ]
       it "駒のあるマス目以外"
         $          Piece.droppable
                      Black
@@ -391,8 +394,10 @@ spec_droppable = describe "droppable" $ do
                        (Set.fromList [(F1, R9), (F1, R1)])
                      )
     describe "後手" $ do
-      it "八段より上" $ Piece.droppable White Lance Board.empty `shouldBe` Droppable
-        (Set.fromList [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R8] ])
+      it "八段より上"
+        $          Piece.droppable White Lance Board.empty
+        `shouldBe` Droppable.fromList
+                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R8] ]
       it "駒のあるマス目以外"
         $          Piece.droppable
                      White
@@ -415,77 +420,57 @@ spec_droppable = describe "droppable" $ do
     describe "先手"
       $          it "三段より下"
       $          Piece.droppable Black Knight Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R3 .. R9] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R3 .. R9] ]
     describe "後手"
       $          it "七段より上"
       $          Piece.droppable White Knight Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R7] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R7] ]
   describe "銀将" $ do
     describe "先手"
       $          it "全マス目"
       $          Piece.droppable Black Silver Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
     describe "後手"
       $          it "全マス目"
       $          Piece.droppable White Silver Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
   describe "金将" $ do
     describe "先手"
       $          it "全マス目"
       $          Piece.droppable Black Gold Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
     describe "後手"
       $          it "全マス目"
       $          Piece.droppable White Gold Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
   describe "角行" $ do
     describe "先手"
       $          it "全マス目"
       $          Piece.droppable Black Bishop Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
     describe "後手"
       $          it "全マス目"
       $          Piece.droppable White Bishop Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
   describe "飛車" $ do
     describe "先手"
       $          it "全マス目"
       $          Piece.droppable Black Rook Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
     describe "後手"
       $          it "全マス目"
       $          Piece.droppable White Rook Board.empty
-      `shouldBe` Droppable
-                   (Set.fromList
-                     [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
-                   )
+      `shouldBe` Droppable.fromList
+                   [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
 
 spec_Pawn :: Spec
 spec_Pawn = describe "歩兵の可動範囲" $ do

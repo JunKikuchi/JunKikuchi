@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 63340517fa2b37760a38d930cea369f48e3937b59acdd246f22068e1b0597aeb
+-- hash: 9fc021a4d93291abbd00d6a41d1d364f0d807670ad563ee792f8f55f02e85c39
 
 name:           shogix-shogi
 version:        0.1.0.0
@@ -32,6 +32,8 @@ library
       ShogiX.Shogi
       ShogiX.Shogi.Board
       ShogiX.Shogi.Color
+      ShogiX.Shogi.Droppable
+      ShogiX.Shogi.Droppables
       ShogiX.Shogi.Movable
       ShogiX.Shogi.Movables
       ShogiX.Shogi.Piece

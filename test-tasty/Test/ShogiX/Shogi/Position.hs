@@ -1,8 +1,6 @@
 module Test.ShogiX.Shogi.Position where
 
 import           RIO
-import qualified RIO.Map                       as Map
-import qualified RIO.Set                       as Set
 import           Test.Tasty
 import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
@@ -10,6 +8,7 @@ import qualified ShogiX.Shogi.Position         as Position
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stands           as Stands
 import qualified ShogiX.Shogi.Movables         as Movables
+import qualified ShogiX.Shogi.Droppables       as Droppables
 import           ShogiX.Clocks                 as Clocks
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
@@ -123,23 +122,15 @@ spec_droppables = describe "droppables" $ do
                      (Stands.fromList [(Pawn, 1)] [])
                      Clocks.infinity
                    )
-      `shouldBe` Droppables
-                   (Map.fromList
-                     [ ( Pawn
-                       , Droppable
-                         (Set.fromList
-                           [ (file, rank)
-                           | file <- [F9 .. F1]
-                           , rank <- [R2 .. R9]
-                           , (file, rank)
-                             /= (F5  , R9)
-                             && (file, rank)
-                             /= (F5  , R1)
-                           ]
-                         )
-                       )
-                     ]
-                   )
+      `shouldBe` Droppables.fromList
+                   [ ( Pawn
+                     , [ (file, rank)
+                       | file <- [F9 .. F1]
+                       , rank <- [R2 .. R9]
+                       , (file, rank) /= (F5, R9) && (file, rank) /= (F5, R1)
+                       ]
+                     )
+                   ]
     describe "後手"
       $          it "打ち先範囲を返す"
       $          Position.droppables
@@ -151,23 +142,15 @@ spec_droppables = describe "droppables" $ do
                      (Stands.fromList [] [(Pawn, 1)])
                      Clocks.infinity
                    )
-      `shouldBe` Droppables
-                   (Map.fromList
-                     [ ( Pawn
-                       , Droppable
-                         (Set.fromList
-                           [ (file, rank)
-                           | file <- [F9 .. F1]
-                           , rank <- [R1 .. R8]
-                           , (file, rank)
-                             /= (F5  , R9)
-                             && (file, rank)
-                             /= (F5  , R1)
-                           ]
-                         )
-                       )
-                     ]
-                   )
+      `shouldBe` Droppables.fromList
+                   [ ( Pawn
+                     , [ (file, rank)
+                       | file <- [F9 .. F1]
+                       , rank <- [R1 .. R8]
+                       , (file, rank) /= (F5, R9) && (file, rank) /= (F5, R1)
+                       ]
+                     )
+                   ]
   describe "王手されている場合" $ do
     describe "先手"
       $          it "打ち先範囲を返す"
@@ -183,14 +166,8 @@ spec_droppables = describe "droppables" $ do
                      (Stands.fromList [(Pawn, 1)] [])
                      Clocks.infinity
                    )
-      `shouldBe` Droppables
-                   (Map.fromList
-                     [ ( Pawn
-                       , Droppable
-                         (Set.fromList [ (F5, rank) | rank <- [R6 .. R8] ])
-                       )
-                     ]
-                   )
+      `shouldBe` Droppables.fromList
+                   [(Pawn, [ (F5, rank) | rank <- [R6 .. R8] ])]
     describe "後手"
       $          it "打ち先範囲を返す"
       $          Position.droppables
@@ -205,11 +182,5 @@ spec_droppables = describe "droppables" $ do
                      (Stands.fromList [] [(Pawn, 1)])
                      Clocks.infinity
                    )
-      `shouldBe` Droppables
-                   (Map.fromList
-                     [ ( Pawn
-                       , Droppable
-                         (Set.fromList [ (F5, rank) | rank <- [R2 .. R4] ])
-                       )
-                     ]
-                   )
+      `shouldBe` Droppables.fromList
+                   [(Pawn, [ (F5, rank) | rank <- [R2 .. R4] ])]

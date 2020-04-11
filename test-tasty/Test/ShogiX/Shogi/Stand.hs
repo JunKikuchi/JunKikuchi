@@ -2,13 +2,13 @@ module Test.ShogiX.Shogi.Stand where
 
 import           RIO
 import qualified RIO.Map                       as Map
-import qualified RIO.Set                       as Set
 import           Test.Tasty
 import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stands           as Stands
 import qualified ShogiX.Shogi.Stand            as Stand
+import qualified ShogiX.Shogi.Droppables       as Droppables
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_droppables :: Spec
@@ -22,28 +22,14 @@ spec_droppables = describe "droppables" $ do
     $          Stand.droppables Black
                                 (Board Map.empty)
                                 (Stands.fromList [(Pawn, 1), (Gold, 1)] [])
-    `shouldBe` Droppables
-                 (Map.fromList
-                   [ ( Pawn
-                     , Droppable
-                       (Set.fromList
-                         [ (file, rank)
-                         | file <- [F9 .. F1]
-                         , rank <- [R2 .. R9]
-                         ]
-                       )
-                     )
-                   , ( Gold
-                     , Droppable
-                       (Set.fromList
-                         [ (file, rank)
-                         | file <- [F9 .. F1]
-                         , rank <- [R1 .. R9]
-                         ]
-                       )
-                     )
-                   ]
-                 )
+    `shouldBe` Droppables.fromList
+                 [ ( Pawn
+                   , [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R9] ]
+                   )
+                 , ( Gold
+                   , [ (file, rank) | file <- [F9 .. F1], rank <- [R1 .. R9] ]
+                   )
+                 ]
   describe "王手されている場合" $ do
     describe "先手"
       $          it "王手回避する打ち込み先を返さない"
@@ -53,23 +39,15 @@ spec_droppables = describe "droppables" $ do
                      [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
                    )
                    (Stands.fromList [(Pawn, 1)] [])
-      `shouldBe` Droppables
-                   (Map.fromList
-                     [ ( Pawn
-                       , Droppable
-                         (Set.fromList
-                           [ (file, rank)
-                           | file <- [F9 .. F1]
-                           , rank <- [R2 .. R9]
-                           , (F5, R9)
-                             /= (file, rank)
-                             && (F5  , R5)
-                             /= (file, rank)
-                           ]
-                         )
-                       )
-                     ]
-                   )
+      `shouldBe` Droppables.fromList
+                   [ ( Pawn
+                     , [ (file, rank)
+                       | file <- [F9 .. F1]
+                       , rank <- [R2 .. R9]
+                       , (F5, R9) /= (file, rank) && (F5, R5) /= (file, rank)
+                       ]
+                     )
+                   ]
     describe "後手"
       $          it "王手回避する打ち込み先を返さない"
       $          Stand.droppables
@@ -78,20 +56,12 @@ spec_droppables = describe "droppables" $ do
                      [((F5, R1), Piece White King), ((F5, R5), Piece Black Lance)]
                    )
                    (Stands.fromList [] [(Pawn, 1)])
-      `shouldBe` Droppables
-                   (Map.fromList
-                     [ ( Pawn
-                       , Droppable
-                         (Set.fromList
-                           [ (file, rank)
-                           | file <- [F9 .. F1]
-                           , rank <- [R1 .. R8]
-                           , (F5, R1)
-                             /= (file, rank)
-                             && (F5  , R5)
-                             /= (file, rank)
-                           ]
-                         )
-                       )
-                     ]
-                   )
+      `shouldBe` Droppables.fromList
+                   [ ( Pawn
+                     , [ (file, rank)
+                       | file <- [F9 .. F1]
+                       , rank <- [R1 .. R8]
+                       , (F5, R1) /= (file, rank) && (F5, R5) /= (file, rank)
+                       ]
+                     )
+                   ]
