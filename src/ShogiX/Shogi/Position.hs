@@ -20,7 +20,10 @@ movables pos = removeCheckedMovables turn board ms
   ms    = Board.movables turn board
 
 -- | 駒の可動範囲から王手になるものを除く
--- >>> removeCheckedMovables Black (Board.fromList [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]) (Movables (Map.fromList [((F5, R9), Movable (Map.fromList [((F5, R8), No), ((F4, R9), No)]))]))
+-- >>> import qualified ShogiX.Shogi.Movables as Movables
+-- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
+-- >>> let ms = Movables.fromList [((F5, R9), [((F5, R8), No), ((F4, R9), No)])]
+-- >>> removeCheckedMovables Black board ms
 -- Movables {unMovables = fromList [((F5,R9),Movable {unMovable = fromList [((F5,R8),No)]})]}
 removeCheckedMovables :: Color -> Board -> Movables -> Movables
 removeCheckedMovables turn board =
@@ -30,7 +33,10 @@ removeCheckedMovables turn board =
     . unMovables
 
 -- | 駒の可動範囲から王手になるものを除く
--- >>> removeCheckedMovable Black (Board.fromList [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]) (F5, R9) (Movable (Map.fromList [((F5, R8), No), ((F4, R9), No)]))
+-- >>> import qualified ShogiX.Shogi.Movable as Movable
+-- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
+-- >>> let m = Movable.fromList [((F5, R8), No), ((F4, R9), No)]
+-- >>> removeCheckedMovable Black board (F5, R9) m
 -- Movable {unMovable = fromList [((F5,R8),No)]}
 removeCheckedMovable :: Color -> Board -> SrcSquare -> Movable -> Movable
 removeCheckedMovable turn board src =
@@ -50,8 +56,9 @@ droppables pos = removeCheckedDroppables turn board ds
   ds     = Stand.droppables turn board stands
 
 -- | 持ち駒の打ち先範囲から王手になるものを除く
+-- >>> import qualified ShogiX.Shogi.Droppables as Droppables
 -- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
--- >>> let ds = Droppables (Map.fromList [(Pawn, Droppable (Set.fromList [(F5, R8), (F5, R4)]))])
+-- >>> let ds = Droppables.fromList [(Pawn, [(F5, R8), (F5, R4)])]
 -- >>> removeCheckedDroppables Black board ds
 -- Droppables {unDroppables = fromList [(Pawn,Droppable {unDroppable = fromList [(F5,R8)]})]}
 removeCheckedDroppables :: Color -> Board -> Droppables -> Droppables

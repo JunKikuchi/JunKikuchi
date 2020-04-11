@@ -28,12 +28,11 @@ move = undefined
 --
 -- >>> import RIO
 -- >>> import qualified ShogiX.Shogi.Board as Board
--- >>> import qualified ShogiX.Shogi.Stand as Stand
+-- >>> import qualified ShogiX.Shogi.Stands as Stands
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
 -- >>> let board = Board.fromList [((F5, R5), Piece Black Pawn)]
--- >>> let stands = Stands Stand.empty Stand.empty
--- >>> let position = Position Black board stands Clocks.infinity
+-- >>> let position = Position Black board Stands.empty Clocks.infinity
 -- >>> let shogi = Shogi Open (Positions (position :| []))
 -- >>>
 -- >>> movables shogi
@@ -51,12 +50,11 @@ movables shogi | status == Open = Position.movables pos
 -- >>> import RIO
 -- >>> import qualified RIO.Map as Map
 -- >>> import qualified ShogiX.Shogi.Board as Board
--- >>> import qualified ShogiX.Shogi.Stand as Stand
+-- >>> import qualified ShogiX.Shogi.Stands as Stands
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
 -- >>> let board = Board.fromList [((file, R3), Piece Black Pawn) | file <- [F9 .. F2]]
--- >>> let bs = Stand (Map.singleton Pawn 1)
--- >>> let stands = Stands bs Stand.empty
+-- >>> let stands = Stands.fromList [(Pawn, 1)] []
 -- >>> let position = Position Black board stands Clocks.infinity
 -- >>> let shogi = Shogi Open (Positions (position :| []))
 -- >>>
