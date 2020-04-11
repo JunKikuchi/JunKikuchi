@@ -1,6 +1,7 @@
 module ShogiX.Shogi.Board
   ( empty
   , move
+  , ShogiX.Shogi.Board.drop
   , checked
   , movables
   )
@@ -39,6 +40,19 @@ move src promo dest board = do
   b       = unBoard board
   ss      = Map.map pieceColor b
   capture = pieceType <$> Map.lookup dest b
+
+-- | 駒の打ち込み
+drop :: Color -> PieceType -> DestSquare -> Board -> Maybe Board
+drop _ PromotedPawn   _ _ = Nothing
+drop _ PromotedLance  _ _ = Nothing
+drop _ PromotedKnight _ _ = Nothing
+drop _ PromotedSilver _ _ = Nothing
+drop _ PromotedBishop _ _ = Nothing
+drop _ PromotedRook   _ _ = Nothing
+drop color pt dest board
+  | Map.member dest b = Nothing
+  | otherwise         = Just (Board (Map.insert dest (Piece color pt) b))
+  where b = unBoard board
 
 -- | 王手判定
 checked :: Color -> Board -> Bool

@@ -2,6 +2,7 @@ module Test.ShogiX.Shogi.Position where
 
 import           RIO
 import qualified RIO.Map                       as Map
+import qualified RIO.Set                       as Set
 import           Test.Tasty
 import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
@@ -16,21 +17,21 @@ spec_movables = describe "movables" $ do
     describe "玉将が無い場合" $ do
       describe "先手"
         $          it "可動範囲を返す"
-      $          Position.movables
-                   (Position
-                     Black
-                     (Board
-                       (Map.fromList
-                         [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
+        $          Position.movables
+                     (Position
+                       Black
+                       (Board
+                         (Map.fromList
+                           [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
+                         )
                        )
+                       (Stands Stand.empty Stand.empty)
+                       Clocks.infinity
                      )
-                     (Stands Stand.empty Stand.empty)
-                     Clocks.infinity
-                   )
-      `shouldBe` Movables
-                   (Map.fromList
-                     [((F5, R9), Movable (Map.fromList [((F5, R8), No)]))]
-                   )
+        `shouldBe` Movables
+                     (Map.fromList
+                       [((F5, R9), Movable (Map.fromList [((F5, R8), No)]))]
+                     )
       describe "後手"
         $          it "可動範囲を返す"
         $          Position.movables
@@ -138,4 +139,117 @@ spec_movables = describe "movables" $ do
       `shouldBe` Movables
                    (Map.fromList
                      [((F5, R1), Movable (Map.fromList [((F5, R2), No)]))]
+                   )
+
+spec_droppables :: Spec
+spec_droppables = describe "droppables" $ do
+  describe "王手されていない場合" $ do
+    describe "先手"
+      $          it "打ち先範囲を返す"
+      $          Position.droppables
+                   (Position
+                     Black
+                     (Board
+                       (Map.fromList
+                         [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
+                       )
+                     )
+                     (Stands (Stand (Map.fromList [(Pawn, 1)])) Stand.empty)
+                     Clocks.infinity
+                   )
+      `shouldBe` Droppables
+                   (Map.fromList
+                     [ ( Pawn
+                       , Droppable
+                         (Set.fromList
+                           [ (file, rank)
+                           | file <- [F9 .. F1]
+                           , rank <- [R2 .. R9]
+                           , (file, rank)
+                             /= (F5  , R9)
+                             && (file, rank)
+                             /= (F5  , R1)
+                           ]
+                         )
+                       )
+                     ]
+                   )
+    describe "後手"
+      $          it "打ち先範囲を返す"
+      $          Position.droppables
+                   (Position
+                     White
+                     (Board
+                       (Map.fromList
+                         [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
+                       )
+                     )
+                     (Stands Stand.empty (Stand (Map.fromList [(Pawn, 1)])))
+                     Clocks.infinity
+                   )
+      `shouldBe` Droppables
+                   (Map.fromList
+                     [ ( Pawn
+                       , Droppable
+                         (Set.fromList
+                           [ (file, rank)
+                           | file <- [F9 .. F1]
+                           , rank <- [R1 .. R8]
+                           , (file, rank)
+                             /= (F5  , R9)
+                             && (file, rank)
+                             /= (F5  , R1)
+                           ]
+                         )
+                       )
+                     ]
+                   )
+  describe "王手されている場合" $ do
+    describe "先手"
+      $          it "打ち先範囲を返す"
+      $          Position.droppables
+                   (Position
+                     Black
+                     (Board
+                       (Map.fromList
+                         [ ((F5, R9), Piece Black King)
+                         , ((F5, R5), Piece White Lance)
+                         , ((F5, R1), Piece White King)
+                         ]
+                       )
+                     )
+                     (Stands (Stand (Map.fromList [(Pawn, 1)])) Stand.empty)
+                     Clocks.infinity
+                   )
+      `shouldBe` Droppables
+                   (Map.fromList
+                     [ ( Pawn
+                       , Droppable
+                         (Set.fromList [ (F5, rank) | rank <- [R6 .. R8] ])
+                       )
+                     ]
+                   )
+    describe "後手"
+      $          it "打ち先範囲を返す"
+      $          Position.droppables
+                   (Position
+                     White
+                     (Board
+                       (Map.fromList
+                         [ ((F5, R9), Piece Black King)
+                         , ((F5, R5), Piece Black Lance)
+                         , ((F5, R1), Piece White King)
+                         ]
+                       )
+                     )
+                     (Stands Stand.empty (Stand (Map.fromList [(Pawn, 1)])))
+                     Clocks.infinity
+                   )
+      `shouldBe` Droppables
+                   (Map.fromList
+                     [ ( Pawn
+                       , Droppable
+                         (Set.fromList [ (F5, rank) | rank <- [R2 .. R4] ])
+                       )
+                     ]
                    )

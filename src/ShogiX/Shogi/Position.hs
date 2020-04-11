@@ -6,6 +6,7 @@ where
 
 import           RIO
 import qualified RIO.Map                       as Map
+import qualified RIO.Set                       as Set
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stand            as Stand
@@ -41,8 +42,33 @@ removeCheckedMovable turn board src =
 
 -- | 持ち駒の打ち先範囲を取得
 droppables :: Position -> Droppables
-droppables pos = Stand.droppables turn board stands
+droppables pos = removeCheckedDroppables turn board ds
  where
   turn   = positionTurn pos
   board  = positionBoard pos
   stands = positionStands pos
+  ds     = Stand.droppables turn board stands
+
+-- | 持ち駒の打ち先範囲から王手になるものを除く
+-- >>> let board = Board (Map.fromList [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)])
+-- >>> let ds = Droppables (Map.fromList [(Pawn, Droppable (Set.fromList [(F5, R8), (F5, R4)]))])
+-- >>> removeCheckedDroppables Black board ds
+-- Droppables {unDroppables = fromList [(Pawn,Droppable {unDroppable = fromList [(F5,R8)]})]}
+removeCheckedDroppables :: Color -> Board -> Droppables -> Droppables
+removeCheckedDroppables turn board ds =
+  Droppables $ Droppable . Set.intersection ss . unDroppable <$> d
+ where
+  ss = Set.filter (removeCheckedDroppable turn board)
+    $ Map.foldr (Set.union . unDroppable) Set.empty d
+  d = unDroppables ds
+
+-- | 持ち駒の打ち先範囲から王手になるものを除く
+-- >>> let board = Board (Map.fromList [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)])
+-- >>> removeCheckedDroppable Black board (F5, R8)
+-- True
+-- >>> removeCheckedDroppable Black board (F5, R4)
+-- False
+removeCheckedDroppable :: Color -> Board -> DestSquare -> Bool
+removeCheckedDroppable turn board dest = isJust $ do
+  bd <- Board.drop turn Pawn dest board
+  guard $ not $ Board.checked turn bd
