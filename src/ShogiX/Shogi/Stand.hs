@@ -1,5 +1,6 @@
 module ShogiX.Shogi.Stand
   ( empty
+  , fromList
   , droppables
   )
 where
@@ -12,6 +13,10 @@ import qualified ShogiX.Shogi.Piece            as Piece
 -- | 空の駒台
 empty :: Stand
 empty = Stand Map.empty
+
+-- | リストから駒台を作成
+fromList :: [(PieceType, Int)] -> Stand
+fromList = Stand . Map.fromList
 
 -- | 持ち駒の打ち先範囲を取得
 droppables :: Color -> Board -> Stands -> Droppables

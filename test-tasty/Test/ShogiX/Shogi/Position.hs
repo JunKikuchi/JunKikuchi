@@ -9,6 +9,7 @@ import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Position         as Position
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stand            as Stand
+import qualified ShogiX.Shogi.Stands           as Stands
 import           ShogiX.Clocks                 as Clocks
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
@@ -24,7 +25,7 @@ spec_movables = describe "movables" $ do
                        (Board.fromList
                          [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
                        )
-                       (Stands Stand.empty Stand.empty)
+                       Stands.empty
                        Clocks.infinity
                      )
         `shouldBe` Movables
@@ -39,7 +40,7 @@ spec_movables = describe "movables" $ do
                        (Board.fromList
                          [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
                        )
-                       (Stands Stand.empty Stand.empty)
+                       Stands.empty
                        Clocks.infinity
                      )
         `shouldBe` Movables
@@ -54,7 +55,7 @@ spec_movables = describe "movables" $ do
                      (Board.fromList
                        [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
-                     (Stands Stand.empty Stand.empty)
+                     Stands.empty
                      Clocks.infinity
                    )
       `shouldBe` Movables
@@ -80,7 +81,7 @@ spec_movables = describe "movables" $ do
                      (Board.fromList
                        [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
-                     (Stands Stand.empty Stand.empty)
+                     Stands.empty
                      Clocks.infinity
                    )
       `shouldBe` Movables
@@ -107,7 +108,7 @@ spec_movables = describe "movables" $ do
                      (Board.fromList
                        [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
                      )
-                     (Stands Stand.empty Stand.empty)
+                     Stands.empty
                      Clocks.infinity
                    )
       `shouldBe` Movables
@@ -122,7 +123,7 @@ spec_movables = describe "movables" $ do
                      (Board.fromList
                        [((F5, R1), Piece White King), ((F5, R2), Piece Black Gold)]
                      )
-                     (Stands Stand.empty Stand.empty)
+                     Stands.empty
                      Clocks.infinity
                    )
       `shouldBe` Movables
@@ -141,7 +142,7 @@ spec_droppables = describe "droppables" $ do
                      (Board.fromList
                        [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
-                     (Stands (Stand (Map.fromList [(Pawn, 1)])) Stand.empty)
+                     (Stands (Stand.fromList [(Pawn, 1)]) Stand.empty)
                      Clocks.infinity
                    )
       `shouldBe` Droppables
@@ -169,7 +170,7 @@ spec_droppables = describe "droppables" $ do
                      (Board.fromList
                        [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
-                     (Stands Stand.empty (Stand (Map.fromList [(Pawn, 1)])))
+                     (Stands Stand.empty (Stand.fromList [(Pawn, 1)]))
                      Clocks.infinity
                    )
       `shouldBe` Droppables
@@ -201,7 +202,7 @@ spec_droppables = describe "droppables" $ do
                        , ((F5, R1), Piece White King)
                        ]
                      )
-                     (Stands (Stand (Map.fromList [(Pawn, 1)])) Stand.empty)
+                     (Stands (Stand.fromList [(Pawn, 1)]) Stand.empty)
                      Clocks.infinity
                    )
       `shouldBe` Droppables
@@ -223,7 +224,7 @@ spec_droppables = describe "droppables" $ do
                        , ((F5, R1), Piece White King)
                        ]
                      )
-                     (Stands Stand.empty (Stand (Map.fromList [(Pawn, 1)])))
+                     (Stands Stand.empty (Stand.fromList [(Pawn, 1)]))
                      Clocks.infinity
                    )
       `shouldBe` Droppables

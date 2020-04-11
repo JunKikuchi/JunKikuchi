@@ -21,7 +21,7 @@ spec_droppables = describe "droppables" $ do
     $          Stand.droppables
                  Black
                  (Board Map.empty)
-                 (Stands (Stand (Map.fromList [(Pawn, 1), (Gold, 1)])) Stand.empty)
+                 (Stands (Stand.fromList [(Pawn, 1), (Gold, 1)]) Stand.empty)
     `shouldBe` Droppables
                  (Map.fromList
                    [ ( Pawn
@@ -52,7 +52,7 @@ spec_droppables = describe "droppables" $ do
                    (Board.fromList
                      [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
                    )
-                   (Stands (Stand (Map.fromList [(Pawn, 1)])) Stand.empty)
+                   (Stands (Stand.fromList [(Pawn, 1)]) Stand.empty)
       `shouldBe` Droppables
                    (Map.fromList
                      [ ( Pawn
@@ -77,7 +77,7 @@ spec_droppables = describe "droppables" $ do
                    (Board.fromList
                      [((F5, R1), Piece White King), ((F5, R5), Piece Black Lance)]
                    )
-                   (Stands Stand.empty (Stand (Map.fromList [(Pawn, 1)])))
+                   (Stands Stand.empty (Stand.fromList [(Pawn, 1)]))
       `shouldBe` Droppables
                    (Map.fromList
                      [ ( Pawn
