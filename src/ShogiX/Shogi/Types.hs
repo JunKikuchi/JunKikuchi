@@ -1,4 +1,33 @@
-module ShogiX.Shogi.Types where
+module ShogiX.Shogi.Types
+  ( Color(..)
+  , Shogi(..)
+  , Status(..)
+  , DrawStatus(..)
+  , Winner
+  , CloseStatus(..)
+  , IllegalStatus(..)
+  , Positions(..)
+  , Position(..)
+  , Turn
+  , Board(..)
+  , Square
+  , File(..)
+  , Rank(..)
+  , Stands(..)
+  , Stand(..)
+  , Piece(..)
+  , PieceType(..)
+  , Move(..)
+  , DestSquare
+  , SrcSquare
+  , Promotion
+  , Movables(..)
+  , Movable(..)
+  , Droppables(..)
+  , Droppable(..)
+  , Promotable(..)
+  )
+where
 
 import           RIO
 import           ShogiX.Clocks.Types            ( Clocks )
