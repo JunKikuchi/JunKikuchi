@@ -13,7 +13,9 @@ import           ShogiX.Clocks                 as Clocks
 spec_movables :: Spec
 spec_movables = describe "movables" $ do
   describe "王手されていない場合" $ do
-    it "可動範囲を返す"
+    describe "玉将が無い場合" $ do
+      describe "先手"
+        $          it "可動範囲を返す"
       $          Position.movables
                    (Position
                      Black
@@ -29,6 +31,23 @@ spec_movables = describe "movables" $ do
                    (Map.fromList
                      [((F5, R9), Movable (Map.fromList [((F5, R8), No)]))]
                    )
+      describe "後手"
+        $          it "可動範囲を返す"
+        $          Position.movables
+                     (Position
+                       White
+                       (Board
+                         (Map.fromList
+                           [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
+                         )
+                       )
+                       (Stands Stand.empty Stand.empty)
+                       Clocks.infinity
+                     )
+        `shouldBe` Movables
+                     (Map.fromList
+                       [((F5, R1), Movable (Map.fromList [((F5, R2), No)]))]
+                     )
     describe "先手"
       $          it "可動範囲を返す"
       $          Position.movables
