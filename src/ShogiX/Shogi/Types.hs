@@ -35,11 +35,11 @@ import           ShogiX.Clocks.Types            ( Clocks )
 -- | 将棋作成
 --
 -- >>> import RIO
--- >>> import qualified RIO.Map as Map
+-- >>> import qualified ShogiX.Shogi.Board as Board
 -- >>> import qualified ShogiX.Shogi.Stand as Stand
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
--- >>> let board = Board Map.empty
+-- >>> let board = Board.empty
 -- >>> let stands = Stands Stand.empty Stand.empty
 -- >>> let position = Position Black board stands Clocks.infinity
 -- >>> let shogi = Shogi Open (Positions (position :|[]))

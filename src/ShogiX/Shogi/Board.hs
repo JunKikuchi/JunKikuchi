@@ -1,5 +1,6 @@
 module ShogiX.Shogi.Board
   ( empty
+  , fromList
   , move
   , ShogiX.Shogi.Board.drop
   , checked
@@ -17,6 +18,10 @@ import qualified ShogiX.Shogi.Piece            as Piece
 -- | 空の将棋盤
 empty :: Board
 empty = Board Map.empty
+
+-- | リストから将棋盤を作成
+fromList :: [(Square, Piece)] -> Board
+fromList = Board . Map.fromList
 
 -- | 駒の移動
 move

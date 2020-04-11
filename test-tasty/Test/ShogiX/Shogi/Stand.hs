@@ -6,6 +6,7 @@ import qualified RIO.Set                       as Set
 import           Test.Tasty
 import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
+import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stand            as Stand
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
@@ -48,10 +49,8 @@ spec_droppables = describe "droppables" $ do
       $          it "王手回避する打ち込み先を返さない"
       $          Stand.droppables
                    Black
-                   (Board
-                     (Map.fromList
-                       [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
-                     )
+                   (Board.fromList
+                     [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
                    )
                    (Stands (Stand (Map.fromList [(Pawn, 1)])) Stand.empty)
       `shouldBe` Droppables
@@ -75,10 +74,8 @@ spec_droppables = describe "droppables" $ do
       $          it "王手回避する打ち込み先を返さない"
       $          Stand.droppables
                    White
-                   (Board
-                     (Map.fromList
-                       [((F5, R1), Piece White King), ((F5, R5), Piece Black Lance)]
-                     )
+                   (Board.fromList
+                     [((F5, R1), Piece White King), ((F5, R5), Piece Black Lance)]
                    )
                    (Stands Stand.empty (Stand (Map.fromList [(Pawn, 1)])))
       `shouldBe` Droppables

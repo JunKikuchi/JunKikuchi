@@ -7,6 +7,7 @@ import           Test.Tasty
 import           Test.Tasty.Hspec
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Position         as Position
+import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stand            as Stand
 import           ShogiX.Clocks                 as Clocks
 
@@ -20,10 +21,8 @@ spec_movables = describe "movables" $ do
         $          Position.movables
                      (Position
                        Black
-                       (Board
-                         (Map.fromList
-                           [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
-                         )
+                       (Board.fromList
+                         [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
                        )
                        (Stands Stand.empty Stand.empty)
                        Clocks.infinity
@@ -37,10 +36,8 @@ spec_movables = describe "movables" $ do
         $          Position.movables
                      (Position
                        White
-                       (Board
-                         (Map.fromList
-                           [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
-                         )
+                       (Board.fromList
+                         [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
                        )
                        (Stands Stand.empty Stand.empty)
                        Clocks.infinity
@@ -54,10 +51,8 @@ spec_movables = describe "movables" $ do
       $          Position.movables
                    (Position
                      Black
-                     (Board
-                       (Map.fromList
-                         [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
-                       )
+                     (Board.fromList
+                       [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
                      (Stands Stand.empty Stand.empty)
                      Clocks.infinity
@@ -82,10 +77,8 @@ spec_movables = describe "movables" $ do
       $          Position.movables
                    (Position
                      White
-                     (Board
-                       (Map.fromList
-                         [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
-                       )
+                     (Board.fromList
+                       [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
                      (Stands Stand.empty Stand.empty)
                      Clocks.infinity
@@ -111,10 +104,8 @@ spec_movables = describe "movables" $ do
       $          Position.movables
                    (Position
                      Black
-                     (Board
-                       (Map.fromList
-                         [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
-                       )
+                     (Board.fromList
+                       [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
                      )
                      (Stands Stand.empty Stand.empty)
                      Clocks.infinity
@@ -128,10 +119,8 @@ spec_movables = describe "movables" $ do
       $          Position.movables
                    (Position
                      White
-                     (Board
-                       (Map.fromList
-                         [((F5, R1), Piece White King), ((F5, R2), Piece Black Gold)]
-                       )
+                     (Board.fromList
+                       [((F5, R1), Piece White King), ((F5, R2), Piece Black Gold)]
                      )
                      (Stands Stand.empty Stand.empty)
                      Clocks.infinity
@@ -149,10 +138,8 @@ spec_droppables = describe "droppables" $ do
       $          Position.droppables
                    (Position
                      Black
-                     (Board
-                       (Map.fromList
-                         [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
-                       )
+                     (Board.fromList
+                       [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
                      (Stands (Stand (Map.fromList [(Pawn, 1)])) Stand.empty)
                      Clocks.infinity
@@ -179,10 +166,8 @@ spec_droppables = describe "droppables" $ do
       $          Position.droppables
                    (Position
                      White
-                     (Board
-                       (Map.fromList
-                         [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
-                       )
+                     (Board.fromList
+                       [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                      )
                      (Stands Stand.empty (Stand (Map.fromList [(Pawn, 1)])))
                      Clocks.infinity
@@ -210,13 +195,11 @@ spec_droppables = describe "droppables" $ do
       $          Position.droppables
                    (Position
                      Black
-                     (Board
-                       (Map.fromList
-                         [ ((F5, R9), Piece Black King)
-                         , ((F5, R5), Piece White Lance)
-                         , ((F5, R1), Piece White King)
-                         ]
-                       )
+                     (Board.fromList
+                       [ ((F5, R9), Piece Black King)
+                       , ((F5, R5), Piece White Lance)
+                       , ((F5, R1), Piece White King)
+                       ]
                      )
                      (Stands (Stand (Map.fromList [(Pawn, 1)])) Stand.empty)
                      Clocks.infinity
@@ -234,13 +217,11 @@ spec_droppables = describe "droppables" $ do
       $          Position.droppables
                    (Position
                      White
-                     (Board
-                       (Map.fromList
-                         [ ((F5, R9), Piece Black King)
-                         , ((F5, R5), Piece Black Lance)
-                         , ((F5, R1), Piece White King)
-                         ]
-                       )
+                     (Board.fromList
+                       [ ((F5, R9), Piece Black King)
+                       , ((F5, R5), Piece Black Lance)
+                       , ((F5, R1), Piece White King)
+                       ]
                      )
                      (Stands Stand.empty (Stand (Map.fromList [(Pawn, 1)])))
                      Clocks.infinity

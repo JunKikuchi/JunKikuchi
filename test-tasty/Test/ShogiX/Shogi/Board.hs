@@ -17,27 +17,23 @@ spec_move = describe "move" $ do
           describe "そのまま" $ do
             describe "移動先が空" $ do
               describe "先手"
-                $          it "駒を移動する"
-                $          Board.move
-                             (F5, R5)
+                $ it "駒を移動する"
+                $ Board.move (F5, R5)
                              False
                              (F5, R4)
-                             (Board (Map.fromList [((F5, R5), Piece Black Pawn)]))
+                             (Board.fromList [((F5, R5), Piece Black Pawn)])
                 `shouldBe` Just
-                             ( Board
-                               (Map.fromList [((F5, R4), Piece Black Pawn)])
+                             ( Board.fromList [((F5, R4), Piece Black Pawn)]
                              , Nothing
                              )
               describe "後手"
-                $          it "駒を移動する"
-                $          Board.move
-                             (F5, R5)
+                $ it "駒を移動する"
+                $ Board.move (F5, R5)
                              False
                              (F5, R6)
-                             (Board (Map.fromList [((F5, R5), Piece White Pawn)]))
+                             (Board.fromList [((F5, R5), Piece White Pawn)])
                 `shouldBe` Just
-                             ( Board
-                               (Map.fromList [((F5, R6), Piece White Pawn)])
+                             ( Board.fromList [((F5, R6), Piece White Pawn)]
                              , Nothing
                              )
             describe "移動先に相手の駒がある" $ do
@@ -47,16 +43,13 @@ spec_move = describe "move" $ do
                              (F5, R5)
                              False
                              (F5, R4)
-                             (Board
-                               (Map.fromList
-                                 [ ((F5, R5), Piece Black Pawn)
-                                 , ((F5, R4), Piece White Gold)
-                                 ]
-                               )
+                             (Board.fromList
+                               [ ((F5, R5), Piece Black Pawn)
+                               , ((F5, R4), Piece White Gold)
+                               ]
                              )
                 `shouldBe` Just
-                             ( Board
-                               (Map.fromList [((F5, R4), Piece Black Pawn)])
+                             ( Board.fromList [((F5, R4), Piece Black Pawn)]
                              , Just Gold
                              )
               describe "後手"
@@ -65,16 +58,13 @@ spec_move = describe "move" $ do
                              (F5, R5)
                              False
                              (F5, R6)
-                             (Board
-                               (Map.fromList
-                                 [ ((F5, R5), Piece White Pawn)
-                                 , ((F5, R6), Piece Black Gold)
-                                 ]
-                               )
+                             (Board.fromList
+                               [ ((F5, R5), Piece White Pawn)
+                               , ((F5, R6), Piece Black Gold)
+                               ]
                              )
                 `shouldBe` Just
-                             ( Board
-                               (Map.fromList [((F5, R6), Piece White Pawn)])
+                             ( Board.fromList [((F5, R6), Piece White Pawn)]
                              , Just Gold
                              )
             describe "移動先に味方の駒がある" $ do
@@ -84,12 +74,10 @@ spec_move = describe "move" $ do
                              (F5, R5)
                              False
                              (F5, R4)
-                             (Board
-                               (Map.fromList
-                                 [ ((F5, R5), Piece Black Pawn)
-                                 , ((F5, R4), Piece Black Gold)
-                                 ]
-                               )
+                             (Board.fromList
+                               [ ((F5, R5), Piece Black Pawn)
+                               , ((F5, R4), Piece Black Gold)
+                               ]
                              )
                 `shouldBe` Nothing
               describe "後手"
@@ -98,40 +86,35 @@ spec_move = describe "move" $ do
                              (F5, R5)
                              False
                              (F5, R6)
-                             (Board
-                               (Map.fromList
-                                 [ ((F5, R5), Piece White Pawn)
-                                 , ((F5, R6), Piece White Gold)
-                                 ]
-                               )
+                             (Board.fromList
+                               [ ((F5, R5), Piece White Pawn)
+                               , ((F5, R6), Piece White Gold)
+                               ]
                              )
                 `shouldBe` Nothing
           describe "成り必須" $ do
             describe "先手"
-              $          it "Nothing"
-              $          Board.move
-                           (F5, R2)
+              $ it "Nothing"
+              $ Board.move (F5, R2)
                            False
                            (F5, R1)
-                           (Board (Map.fromList [((F5, R2), Piece Black Pawn)]))
+                           (Board.fromList [((F5, R2), Piece Black Pawn)])
               `shouldBe` Nothing
             describe "後手"
-              $          it "Nothing"
-              $          Board.move
-                           (F5, R8)
+              $ it "Nothing"
+              $ Board.move (F5, R8)
                            False
                            (F5, R9)
-                           (Board (Map.fromList [((F5, R8), Piece White Pawn)]))
+                           (Board.fromList [((F5, R8), Piece White Pawn)])
               `shouldBe` Nothing
         describe "成り" $ do
           describe "成り可" $ do
             describe "先手"
-              $          it "駒を移動する"
-              $          Board.move
-                           (F5, R4)
+              $ it "駒を移動する"
+              $ Board.move (F5, R4)
                            True
                            (F5, R3)
-                           (Board (Map.fromList [((F5, R4), Piece Black Pawn)]))
+                           (Board.fromList [((F5, R4), Piece Black Pawn)])
               `shouldBe` Just
                            ( Board
                              (Map.fromList
@@ -140,12 +123,11 @@ spec_move = describe "move" $ do
                            , Nothing
                            )
             describe "後手"
-              $          it "駒を移動する"
-              $          Board.move
-                           (F5, R6)
+              $ it "駒を移動する"
+              $ Board.move (F5, R6)
                            True
                            (F5, R7)
-                           (Board (Map.fromList [((F5, R6), Piece White Pawn)]))
+                           (Board.fromList [((F5, R6), Piece White Pawn)])
               `shouldBe` Just
                            ( Board
                              (Map.fromList
@@ -155,20 +137,18 @@ spec_move = describe "move" $ do
                            )
           describe "成り不可" $ do
             describe "先手"
-              $          it "Nothing"
-              $          Board.move
-                           (F5, R5)
+              $ it "Nothing"
+              $ Board.move (F5, R5)
                            True
                            (F5, R4)
-                           (Board (Map.fromList [((F5, R5), Piece Black Pawn)]))
+                           (Board.fromList [((F5, R5), Piece Black Pawn)])
               `shouldBe` Nothing
             describe "後手"
-              $          it "Nothing"
-              $          Board.move
-                           (F5, R5)
+              $ it "Nothing"
+              $ Board.move (F5, R5)
                            True
                            (F5, R6)
-                           (Board (Map.fromList [((F5, R5), Piece White Pawn)]))
+                           (Board.fromList [((F5, R5), Piece White Pawn)])
               `shouldBe` Nothing
       describe "成り駒" $ do
         describe "そのまま" $ do
@@ -178,10 +158,9 @@ spec_move = describe "move" $ do
                          (F5, R4)
                          False
                          (F5, R3)
-                         (Board (Map.fromList [((F5, R4), Piece Black PromotedPawn)]))
+                         (Board.fromList [((F5, R4), Piece Black PromotedPawn)])
             `shouldBe` Just
-                         ( Board
-                           (Map.fromList [((F5, R3), Piece Black PromotedPawn)])
+                         ( Board.fromList [((F5, R3), Piece Black PromotedPawn)]
                          , Nothing
                          )
           describe "後手"
@@ -190,10 +169,9 @@ spec_move = describe "move" $ do
                          (F5, R7)
                          False
                          (F5, R8)
-                         (Board (Map.fromList [((F5, R7), Piece White PromotedPawn)]))
+                         (Board.fromList [((F5, R7), Piece White PromotedPawn)])
             `shouldBe` Just
-                         ( Board
-                           (Map.fromList [((F5, R8), Piece White PromotedPawn)])
+                         ( Board.fromList [((F5, R8), Piece White PromotedPawn)]
                          , Nothing
                          )
         describe "成り不可" $ do
@@ -203,7 +181,7 @@ spec_move = describe "move" $ do
                          (F5, R4)
                          True
                          (F5, R3)
-                         (Board (Map.fromList [((F5, R4), Piece Black PromotedPawn)]))
+                         (Board.fromList [((F5, R4), Piece Black PromotedPawn)])
             `shouldBe` Nothing
           describe "後手"
             $          it "Nothing"
@@ -211,22 +189,22 @@ spec_move = describe "move" $ do
                          (F5, R7)
                          True
                          (F5, R8)
-                         (Board (Map.fromList [((F5, R7), Piece White PromotedPawn)]))
+                         (Board.fromList [((F5, R7), Piece White PromotedPawn)])
             `shouldBe` Nothing
     describe "移動先が可動範囲外" $ do
       describe "先手"
-        $ it "Nothing"
-        $ Board.move (F5, R5)
-                     False
-                     (F5, R3)
-                     (Board (Map.fromList [((F5, R5), Piece Black Pawn)]))
+        $          it "Nothing"
+        $          Board.move (F5, R5)
+                              False
+                              (F5, R3)
+                              (Board.fromList [((F5, R5), Piece Black Pawn)])
         `shouldBe` Nothing
       describe "後手"
-        $ it "Nothing"
-        $ Board.move (F5, R5)
-                     False
-                     (F5, R7)
-                     (Board (Map.fromList [((F5, R5), Piece White Pawn)]))
+        $          it "Nothing"
+        $          Board.move (F5, R5)
+                              False
+                              (F5, R7)
+                              (Board.fromList [((F5, R5), Piece White Pawn)])
         `shouldBe` Nothing
   describe "移動元なし"
     $          it "Nothing"
@@ -240,20 +218,16 @@ spec_checked = describe "checked" $ do
       $          it "王手判定 False"
       $          Board.checked
                    Black
-                   (Board
-                     (Map.fromList
-                       [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
-                     )
+                   (Board.fromList
+                     [((F5, R9), Piece Black Pawn), ((F5, R1), Piece White Pawn)]
                    )
       `shouldBe` False
     describe "後手"
       $          it "王手判定 False"
       $          Board.checked
                    White
-                   (Board
-                     (Map.fromList
-                       [((F5, R1), Piece White Pawn), ((F5, R9), Piece Black Pawn)]
-                     )
+                   (Board.fromList
+                     [((F5, R1), Piece White Pawn), ((F5, R9), Piece Black Pawn)]
                    )
       `shouldBe` False
   describe "王手されていない場合" $ do
@@ -261,20 +235,16 @@ spec_checked = describe "checked" $ do
       $          it "王手判定 False"
       $          Board.checked
                    Black
-                   (Board
-                     (Map.fromList
-                       [((F5, R9), Piece Black King), ((F5, R1), Piece White Pawn)]
-                     )
+                   (Board.fromList
+                     [((F5, R9), Piece Black King), ((F5, R1), Piece White Pawn)]
                    )
       `shouldBe` False
     describe "後手"
       $          it "王手判定 False"
       $          Board.checked
                    White
-                   (Board
-                     (Map.fromList
-                       [((F5, R1), Piece White King), ((F5, R9), Piece Black Pawn)]
-                     )
+                   (Board.fromList
+                     [((F5, R1), Piece White King), ((F5, R9), Piece Black Pawn)]
                    )
       `shouldBe` False
   describe "王手されている場合" $ do
@@ -282,20 +252,16 @@ spec_checked = describe "checked" $ do
       $          it "王手判定 True"
       $          Board.checked
                    Black
-                   (Board
-                     (Map.fromList
-                       [((F5, R9), Piece Black King), ((F5, R8), Piece White Pawn)]
-                     )
+                   (Board.fromList
+                     [((F5, R9), Piece Black King), ((F5, R8), Piece White Pawn)]
                    )
       `shouldBe` True
     describe "後手"
       $          it "王手判定 True"
       $          Board.checked
                    White
-                   (Board
-                     (Map.fromList
-                       [((F5, R1), Piece White King), ((F5, R2), Piece Black Pawn)]
-                     )
+                   (Board.fromList
+                     [((F5, R1), Piece White King), ((F5, R2), Piece Black Pawn)]
                    )
       `shouldBe` True
 
@@ -309,13 +275,11 @@ spec_movables = describe "movables" $ do
     $          it "駒ごとの可動範囲を返す"
     $          Board.movables
                  Black
-                 (Board
-                   (Map.fromList
-                     [ ((F5, R5), Piece Black Pawn)
-                     , ((F5, R9), Piece Black Gold)
-                     , ((F5, R1), Piece White Pawn)
-                     ]
-                   )
+                 (Board.fromList
+                   [ ((F5, R5), Piece Black Pawn)
+                   , ((F5, R9), Piece Black Gold)
+                   , ((F5, R1), Piece White Pawn)
+                   ]
                  )
     `shouldBe` Movables
                  (Map.fromList
@@ -338,13 +302,11 @@ spec_movables = describe "movables" $ do
       $          it "王手回避する可動範囲を返さない"
       $          Board.movables
                    Black
-                   (Board
-                     (Map.fromList
-                       [ ((F5, R9), Piece Black King)
-                       , ((F5, R5), Piece Black Pawn)
-                       , ((F5, R8), Piece White Gold)
-                       ]
-                     )
+                   (Board.fromList
+                     [ ((F5, R9), Piece Black King)
+                     , ((F5, R5), Piece Black Pawn)
+                     , ((F5, R8), Piece White Gold)
+                     ]
                    )
       `shouldBe` Movables
                    (Map.fromList
@@ -366,13 +328,11 @@ spec_movables = describe "movables" $ do
       $          it "王手回避する可動範囲を返さない"
       $          Board.movables
                    White
-                   (Board
-                     (Map.fromList
-                       [ ((F5, R1), Piece White King)
-                       , ((F5, R5), Piece White Pawn)
-                       , ((F5, R2), Piece Black Gold)
-                       ]
-                     )
+                   (Board.fromList
+                     [ ((F5, R1), Piece White King)
+                     , ((F5, R5), Piece White Pawn)
+                     , ((F5, R2), Piece Black Gold)
+                     ]
                    )
       `shouldBe` Movables
                    (Map.fromList

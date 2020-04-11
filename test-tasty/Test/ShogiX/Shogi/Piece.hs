@@ -363,20 +363,16 @@ spec_droppable = describe "droppable" $ do
         $          Piece.droppable
                      Black
                      Pawn
-                     (Board
-                       (Map.fromList
-                         [ ((file, R5), Piece Black Pawn) | file <- [F9 .. F2] ]
-                       )
+                     (Board.fromList
+                       [ ((file, R5), Piece Black Pawn) | file <- [F9 .. F2] ]
                      )
         `shouldBe` Droppable (Set.fromList [ (F1, rank) | rank <- [R2 .. R9] ])
       it "後手の歩兵は二歩にならない"
         $          Piece.droppable
                      Black
                      Pawn
-                     (Board
-                       (Map.fromList
-                         [ ((file, R9), Piece White Pawn) | file <- [F9 .. F1] ]
-                       )
+                     (Board.fromList
+                       [ ((file, R9), Piece White Pawn) | file <- [F9 .. F1] ]
                      )
         `shouldBe` Droppable
                      (Set.fromList
@@ -389,20 +385,16 @@ spec_droppable = describe "droppable" $ do
         $          Piece.droppable
                      White
                      Pawn
-                     (Board
-                       (Map.fromList
-                         [ ((file, R5), Piece White Pawn) | file <- [F9 .. F2] ]
-                       )
+                     (Board.fromList
+                       [ ((file, R5), Piece White Pawn) | file <- [F9 .. F2] ]
                      )
         `shouldBe` Droppable (Set.fromList [ (F1, rank) | rank <- [R1 .. R8] ])
       it "先手の歩兵は二歩にならない"
         $          Piece.droppable
                      White
                      Pawn
-                     (Board
-                       (Map.fromList
-                         [ ((file, R1), Piece Black Pawn) | file <- [F9 .. F1] ]
-                       )
+                     (Board.fromList
+                       [ ((file, R1), Piece Black Pawn) | file <- [F9 .. F1] ]
                      )
         `shouldBe` Droppable
                      (Set.fromList
@@ -416,10 +408,8 @@ spec_droppable = describe "droppable" $ do
         $          Piece.droppable
                      Black
                      Lance
-                     (Board
-                       (Map.fromList
-                         [((F1, R9), Piece Black Pawn), ((F1, R1), Piece White Pawn)]
-                       )
+                     (Board.fromList
+                       [((F1, R9), Piece Black Pawn), ((F1, R1), Piece White Pawn)]
                      )
         `shouldBe` Droppable
                      (Set.difference
@@ -438,10 +428,8 @@ spec_droppable = describe "droppable" $ do
         $          Piece.droppable
                      White
                      Lance
-                     (Board
-                       (Map.fromList
-                         [((F1, R9), Piece Black Pawn), ((F1, R1), Piece White Pawn)]
-                       )
+                     (Board.fromList
+                       [((F1, R9), Piece Black Pawn), ((F1, R1), Piece White Pawn)]
                      )
 
         `shouldBe` Droppable

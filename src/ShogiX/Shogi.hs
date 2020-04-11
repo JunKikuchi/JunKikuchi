@@ -27,11 +27,11 @@ move = undefined
 -- | 駒の移動範囲を取得
 --
 -- >>> import RIO
--- >>> import qualified RIO.Map as Map
+-- >>> import qualified ShogiX.Shogi.Board as Board
 -- >>> import qualified ShogiX.Shogi.Stand as Stand
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
--- >>> let board = Board (Map.fromList [((F5, R5), Piece Black Pawn)])
+-- >>> let board = Board.fromList [((F5, R5), Piece Black Pawn)]
 -- >>> let stands = Stands Stand.empty Stand.empty
 -- >>> let position = Position Black board stands Clocks.infinity
 -- >>> let shogi = Shogi Open (Positions (position :| []))
@@ -50,10 +50,11 @@ movables shogi | status == Open = Position.movables pos
 --
 -- >>> import RIO
 -- >>> import qualified RIO.Map as Map
+-- >>> import qualified ShogiX.Shogi.Board as Board
 -- >>> import qualified ShogiX.Shogi.Stand as Stand
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
--- >>> let board = Board (Map.fromList [((file, R3), Piece Black Pawn) | file <- [F9 .. F2]])
+-- >>> let board = Board.fromList [((file, R3), Piece Black Pawn) | file <- [F9 .. F2]]
 -- >>> let bs = Stand (Map.singleton Pawn 1)
 -- >>> let stands = Stands bs Stand.empty
 -- >>> let position = Position Black board stands Clocks.infinity
