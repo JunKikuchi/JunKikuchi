@@ -104,7 +104,7 @@ data Position
   , positionBoard  :: Board  -- ^ 将棋盤
   , positionStands :: Stands -- ^ 駒台
   , positionClocks :: Clocks -- ^ 時計
-  } deriving Show
+  } deriving (Show, Eq)
 
 -- | 手番
 type Turn = Color
@@ -126,10 +126,10 @@ data Stands
   = Stands
   { blackStand :: Stand -- ^ 先手の駒台
   , whiteStand :: Stand -- ^ 後手の駒台
-  } deriving Show
+  } deriving (Show, Eq)
 
 -- | 駒台
-newtype Stand = Stand { unStand :: Map PieceType Int } deriving Show
+newtype Stand = Stand { unStand :: Map PieceType Int } deriving (Show, Eq)
 
 -- | 駒
 data Piece

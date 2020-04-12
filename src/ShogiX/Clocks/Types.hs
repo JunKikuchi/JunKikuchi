@@ -7,7 +7,7 @@ data Clocks
   = Clocks
   { blackClock :: Clock
   , whiteClock :: Clock
-  } deriving Show
+  } deriving (Show, Eq)
 
 -- | 持ち時間
 data Clock
@@ -16,7 +16,7 @@ data Clock
   | Countdown AllotmentSec CountdownSec -- ^ 秒読み (持ち時間 秒読み)
   | Fischer AllotmentSec IncrementSec   -- ^ フィッシャーモード (持ち時間 加算時間)
   | Timeout                             -- ^ 時間切れ
-  deriving Show
+  deriving (Show, Eq)
 
 -- | 秒
 type Sec = Int
