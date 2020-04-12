@@ -1,5 +1,7 @@
 module ShogiX.Shogi.Position
-  ( movables
+  ( move
+  , ShogiX.Shogi.Position.drop
+  , movables
   , droppables
   )
 where
@@ -7,9 +9,19 @@ where
 import           RIO
 import qualified RIO.Map                       as Map
 import qualified RIO.Set                       as Set
+import           ShogiX.Clocks.Types
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stand            as Stand
+
+-- | 駒の移動
+move
+  :: SrcSquare -> Promotion -> DestSquare -> Sec -> Position -> Maybe Position
+move = undefined
+
+-- | 駒の打ち込み
+drop :: PieceType -> DestSquare -> Sec -> Position -> Maybe Position
+drop = undefined
 
 -- | 駒の移動範囲を取得
 movables :: Position -> Movables
