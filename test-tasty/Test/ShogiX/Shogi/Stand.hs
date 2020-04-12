@@ -11,8 +11,8 @@ import qualified ShogiX.Shogi.Stand            as Stand
 import qualified ShogiX.Shogi.Droppables       as Droppables
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
-spec_droppables :: Spec
-spec_droppables = describe "droppables" $ do
+spec_Test_ShogiX_Shogi_Stand :: Spec
+spec_Test_ShogiX_Shogi_Stand = describe "droppables" $ do
   describe "将棋盤も駒台も空の場合"
     $          it "空を返す"
     $          Stand.droppables Black (Board Map.empty) Stands.empty
