@@ -12,7 +12,7 @@ import qualified RIO.Set                       as Set
 import           ShogiX.Clocks.Types
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Board            as Board
-import qualified ShogiX.Shogi.Stand            as Stand
+import qualified ShogiX.Shogi.Stands           as Stands
 
 -- | 駒の移動
 move
@@ -65,7 +65,7 @@ droppables pos = removeCheckedDroppables turn board ds
   turn   = positionTurn pos
   board  = positionBoard pos
   stands = positionStands pos
-  ds     = Stand.droppables turn board stands
+  ds     = Stands.droppables turn board stands
 
 -- | 持ち駒の打ち先範囲から王手になるものを除く
 -- >>> import qualified ShogiX.Shogi.Droppables as Droppables
