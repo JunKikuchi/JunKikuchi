@@ -10,14 +10,26 @@ import           RIO
 import qualified RIO.Map                       as Map
 import qualified RIO.Set                       as Set
 import           ShogiX.Clocks.Types
+import qualified ShogiX.Clocks                 as Clocks
 import           ShogiX.Shogi.Types
+import qualified ShogiX.Shogi.Color            as Color
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stands           as Stands
 
 -- | 駒の移動
 move
   :: SrcSquare -> Promotion -> DestSquare -> Sec -> Position -> Maybe Position
-move = undefined
+move src promo dest sec pos = do
+  (newBoard, captured) <- Board.move src promo dest (positionBoard pos)
+  pure $ pos { positionTurn   = Color.turnColor turn
+             , positionBoard  = newBoard
+             , positionStands = Stands.add turn captured stands
+             , positionClocks = Clocks.consume sec turn clocks
+             }
+ where
+  turn   = positionTurn pos
+  stands = positionStands pos
+  clocks = positionClocks pos
 
 -- | 駒の打ち込み
 drop :: PieceType -> DestSquare -> Sec -> Position -> Maybe Position
