@@ -14,6 +14,71 @@ import           ShogiX.Clocks                 as Clocks
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_Test_ShogiX_Shogi_Position :: Spec
 spec_Test_ShogiX_Shogi_Position = do
+  describe "move" $ do
+    describe "駒の移動ができる場合" $ do
+      describe "先手"
+        $          it "移動後の局面を返す"
+        $          Position.move
+                     (F5, R5)
+                     False
+                     (F5, R4)
+                     3
+                     (Position Black
+                               (Board.fromList [((F5, R5), Piece Black Pawn)])
+                               Stands.empty
+                               Clocks.infinity
+                     )
+        `shouldBe` Just
+                     (Position White
+                               (Board.fromList [((F5, R4), Piece Black Pawn)])
+                               Stands.empty
+                               Clocks.infinity
+                     )
+      describe "後手"
+        $          it "移動後の局面を返す"
+        $          Position.move
+                     (F5, R5)
+                     False
+                     (F5, R6)
+                     3
+                     (Position White
+                               (Board.fromList [((F5, R5), Piece Black Pawn)])
+                               Stands.empty
+                               Clocks.infinity
+                     )
+        `shouldBe` Just
+                     (Position Black
+                               (Board.fromList [((F5, R6), Piece Black Pawn)])
+                               Stands.empty
+                               Clocks.infinity
+                     )
+    describe "駒の移動が出来ない場合" $ do
+      describe "先手"
+        $          it "Nothing"
+        $          Position.move
+                     (F5, R5)
+                     False
+                     (F5, R3)
+                     3
+                     (Position Black
+                               (Board.fromList [((F5, R5), Piece Black Pawn)])
+                               Stands.empty
+                               Clocks.infinity
+                     )
+        `shouldBe` Nothing
+      describe "後手"
+        $          it "Nothing"
+        $          Position.move
+                     (F5, R5)
+                     False
+                     (F5, R7)
+                     3
+                     (Position White
+                               (Board.fromList [((F5, R5), Piece White Pawn)])
+                               Stands.empty
+                               Clocks.infinity
+                     )
+        `shouldBe` Nothing
   describe "movables" $ do
     describe "王手されていない場合" $ do
       describe "玉将が無い場合" $ do
