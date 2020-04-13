@@ -42,13 +42,13 @@ spec_Test_ShogiX_Shogi_Position = do
                      (F5, R6)
                      3
                      (Position White
-                               (Board.fromList [((F5, R5), Piece Black Pawn)])
+                               (Board.fromList [((F5, R5), Piece White Pawn)])
                                Stands.empty
                                Clocks.infinity
                      )
         `shouldBe` Just
                      (Position Black
-                               (Board.fromList [((F5, R6), Piece Black Pawn)])
+                               (Board.fromList [((F5, R6), Piece White Pawn)])
                                Stands.empty
                                Clocks.infinity
                      )
