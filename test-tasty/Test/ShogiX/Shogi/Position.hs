@@ -52,6 +52,51 @@ spec_Test_ShogiX_Shogi_Position = do
                                Stands.empty
                                Clocks.infinity
                      )
+      describe "駒を取った場合" $ do
+        describe "先手"
+          $          it "移動後の局面を返す"
+          $          Position.move
+                       (F5, R5)
+                       False
+                       (F5, R4)
+                       3
+                       (Position
+                         Black
+                         (Board.fromList
+                           [((F5, R5), Piece Black Pawn), ((F5, R4), Piece White Pawn)]
+                         )
+                         Stands.empty
+                         Clocks.infinity
+                       )
+          `shouldBe` Just
+                       (Position
+                         White
+                         (Board.fromList [((F5, R4), Piece Black Pawn)])
+                         (Stands.fromList [(Pawn, 1)] [])
+                         Clocks.infinity
+                       )
+        describe "後手"
+          $          it "移動後の局面を返す"
+          $          Position.move
+                       (F5, R5)
+                       False
+                       (F5, R6)
+                       3
+                       (Position
+                         White
+                         (Board.fromList
+                           [((F5, R5), Piece White Pawn), ((F5, R6), Piece Black Pawn)]
+                         )
+                         Stands.empty
+                         Clocks.infinity
+                       )
+          `shouldBe` Just
+                       (Position
+                         Black
+                         (Board.fromList [((F5, R6), Piece White Pawn)])
+                         (Stands.fromList [] [(Pawn, 1)])
+                         Clocks.infinity
+                       )
     describe "駒の移動が出来ない場合" $ do
       describe "先手"
         $          it "Nothing"
