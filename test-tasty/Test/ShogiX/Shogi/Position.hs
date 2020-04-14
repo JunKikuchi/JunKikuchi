@@ -125,38 +125,76 @@ spec_Test_ShogiX_Shogi_Position = do
                      )
         `shouldBe` Nothing
       describe "駒を取れない場合" $ do
-        describe "先手"
-          $          it "Nothing"
-          $          Position.move
-                       (F5, R5)
-                       False
-                       (F5, R4)
-                       3
-                       (Position
-                         Black
-                         (Board.fromList
-                           [((F5, R5), Piece Black Pawn), ((F5, R4), Piece Black Pawn)]
+        describe "移動先に味方の駒がある場合" $ do
+          describe "先手"
+            $          it "Nothing"
+            $          Position.move
+                         (F5, R5)
+                         False
+                         (F5, R4)
+                         3
+                         (Position
+                           Black
+                           (Board.fromList
+                             [((F5, R5), Piece Black Pawn), ((F5, R4), Piece Black Pawn)]
+                           )
+                           Stands.empty
+                           Clocks.infinity
                          )
-                         Stands.empty
-                         Clocks.infinity
-                       )
-          `shouldBe` Nothing
-        describe "後手"
-          $          it "Nothing"
-          $          Position.move
-                       (F5, R5)
-                       False
-                       (F5, R6)
-                       3
-                       (Position
-                         White
-                         (Board.fromList
-                           [((F5, R5), Piece White Pawn), ((F5, R6), Piece White Pawn)]
+            `shouldBe` Nothing
+          describe "後手"
+            $          it "Nothing"
+            $          Position.move
+                         (F5, R5)
+                         False
+                         (F5, R6)
+                         3
+                         (Position
+                           White
+                           (Board.fromList
+                             [((F5, R5), Piece White Pawn), ((F5, R6), Piece White Pawn)]
+                           )
+                           Stands.empty
+                           Clocks.infinity
                          )
-                         Stands.empty
-                         Clocks.infinity
-                       )
-          `shouldBe` Nothing
+            `shouldBe` Nothing
+        describe "移動すると王手になる場合" $ do
+          describe "先手"
+            $          it "Nothing"
+            $          Position.move
+                         (F5, R5)
+                         False
+                         (F4, R5)
+                         3
+                         (Position
+                           Black
+                           (Board.fromList
+                             [ ((F5, R5), Piece Black Pawn)
+                             , ((F5, R1), Piece White Lance)
+                             ]
+                           )
+                           Stands.empty
+                           Clocks.infinity
+                         )
+            `shouldBe` Nothing
+          describe "後手"
+            $          it "Nothing"
+            $          Position.move
+                         (F5, R5)
+                         False
+                         (F6, R5)
+                         3
+                         (Position
+                           White
+                           (Board.fromList
+                             [ ((F5, R5), Piece White Pawn)
+                             , ((F5, R9), Piece Black Lance)
+                             ]
+                           )
+                           Stands.empty
+                           Clocks.infinity
+                         )
+            `shouldBe` Nothing
   describe "movables" $ do
     describe "王手されていない場合" $ do
       describe "玉将が無い場合" $ do
