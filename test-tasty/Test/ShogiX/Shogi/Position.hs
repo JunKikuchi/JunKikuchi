@@ -26,13 +26,13 @@ spec_Test_ShogiX_Shogi_Position = do
                      (Position Black
                                (Board.fromList [((F5, R5), Piece Black Pawn)])
                                Stands.empty
-                               Clocks.infinity
+                               (Clocks.guillotine 10)
                      )
         `shouldBe` Just
                      (Position White
                                (Board.fromList [((F5, R4), Piece Black Pawn)])
                                Stands.empty
-                               Clocks.infinity
+                               (Clocks.Clocks (Guillotine 7) (Guillotine 10))
                      )
       describe "後手"
         $          it "移動後の局面を返す"
@@ -44,13 +44,13 @@ spec_Test_ShogiX_Shogi_Position = do
                      (Position White
                                (Board.fromList [((F5, R5), Piece White Pawn)])
                                Stands.empty
-                               Clocks.infinity
+                               (Clocks.guillotine 10)
                      )
         `shouldBe` Just
                      (Position Black
                                (Board.fromList [((F5, R6), Piece White Pawn)])
                                Stands.empty
-                               Clocks.infinity
+                               (Clocks.Clocks (Guillotine 10) (Guillotine 7))
                      )
       describe "駒を取った場合" $ do
         describe "先手"
