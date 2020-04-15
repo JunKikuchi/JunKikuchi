@@ -19,6 +19,11 @@ fromList :: [(PieceType, Int)] -> Stand
 fromList = Stand . Map.fromList
 
 -- | 駒台に駒を追加
+-- >>> add Pawn empty
+-- Stand {unStand = fromList [(Pawn,1)]}
+--
+-- >>> add Pawn (fromList [(Pawn, 1)])
+-- Stand {unStand = fromList [(Pawn,2)]}
 add :: PieceType -> Stand -> Stand
 add pt stand | Map.member pt s = Stand (Map.update (pure . (+ 1)) pt s)
              | otherwise       = Stand (Map.insert pt 1 s)
