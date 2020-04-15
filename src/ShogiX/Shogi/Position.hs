@@ -17,30 +17,39 @@ import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stands           as Stands
 
 -- | 駒の移動
+{-# ANN module "HLint: ignore Reduce duplication" #-}
 move
   :: SrcSquare -> Promotion -> DestSquare -> Sec -> Position -> Maybe Position
 move src promo dest sec pos = do
-  (newBoard, captured) <- Board.move src promo dest (positionBoard pos)
+  (newBoard, captured) <- Board.move src promo dest board
   pure $ pos { positionTurn   = Color.turnColor turn
              , positionBoard  = newBoard
-             , positionStands = Stands.add turn captured (positionStands pos)
-             , positionClocks = Clocks.consume sec turn (positionClocks pos)
+             , positionStands = Stands.add turn captured stands
+             , positionClocks = Clocks.consume sec turn clocks
              }
-  where turn = positionTurn pos
+ where
+  turn   = positionTurn pos
+  board  = positionBoard pos
+  stands = positionStands pos
+  clocks = positionClocks pos
 
 -- | 駒の打ち込み
 drop :: PieceType -> DestSquare -> Sec -> Position -> Maybe Position
 drop pt dest sec pos = do
-  newStand <- Stands.drop turn pt (positionStands pos)
-  newBoard <- Board.drop turn pt dest (positionBoard pos)
+  newStand <- Stands.drop turn pt stands
+  newBoard <- Board.drop turn pt dest board
   pure $ pos { positionTurn   = Color.turnColor turn
              , positionBoard  = newBoard
              , positionStands = newStand
-             , positionClocks = Clocks.consume sec turn (positionClocks pos)
+             , positionClocks = Clocks.consume sec turn clocks
              }
-  where turn = positionTurn pos
+ where
+  turn   = positionTurn pos
+  board  = positionBoard pos
+  stands = positionStands pos
+  clocks = positionClocks pos
 
--- | 駒の移動範囲を取得
+-- | 駒の移動範囲を取得s
 movables :: Position -> Movables
 movables pos = removeCheckedMovables turn board ms
  where
