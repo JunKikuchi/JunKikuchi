@@ -195,6 +195,43 @@ spec_Test_ShogiX_Shogi_Position = do
                            Clocks.infinity
                          )
             `shouldBe` Nothing
+        describe "持ち時間が無い場合" $ do
+          describe "先手"
+            $          it "Nothing"
+            $          Position.move
+                         (F5, R5)
+                         False
+                         (F4, R5)
+                         3
+                         (Position
+                           Black
+                           (Board.fromList
+                             [ ((F5, R5), Piece Black Pawn)
+                             , ((F5, R1), Piece White Lance)
+                             ]
+                           )
+                           Stands.empty
+                           (Clocks Clocks.Timeout Infinity)
+                         )
+            `shouldBe` Nothing
+          describe "後手"
+            $          it "Nothing"
+            $          Position.move
+                         (F5, R5)
+                         False
+                         (F6, R5)
+                         3
+                         (Position
+                           White
+                           (Board.fromList
+                             [ ((F5, R5), Piece White Pawn)
+                             , ((F5, R9), Piece Black Lance)
+                             ]
+                           )
+                           Stands.empty
+                           (Clocks Infinity Clocks.Timeout)
+                         )
+            `shouldBe` Nothing
   describe "movables" $ do
     describe "王手されていない場合" $ do
       describe "玉将が無い場合" $ do
