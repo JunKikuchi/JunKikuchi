@@ -232,6 +232,77 @@ spec_Test_ShogiX_Shogi_Position = do
                            (Clocks Infinity Clocks.Timeout)
                          )
             `shouldBe` Nothing
+  describe "drop" $ do
+    describe "駒を打ち込める場合" $ do
+      describe "先手"
+        $          it "打ち込み後の局面を返す"
+        $          Position.drop
+                     Pawn
+                     (F4, R5)
+                     3
+                     (Position Black
+                               (Board.fromList [((F5, R5), Piece Black Pawn)])
+                               (Stands.fromList [(Pawn, 1)] [])
+                               (Clocks.guillotine 10)
+                     )
+        `shouldBe` Just
+                     (Position
+                       White
+                       (Board.fromList
+                         [ ((F5, R5), Piece Black Pawn)
+                         , ((F4, R5), Piece Black Pawn)
+                         ]
+                       )
+                       Stands.empty
+                       (Clocks.Clocks (Guillotine 7) (Guillotine 10))
+                     )
+      describe "後手"
+        $          it "打ち込み後の局面を返す"
+        $          Position.drop
+                     Pawn
+                     (F6, R5)
+                     3
+                     (Position White
+                               (Board.fromList [((F5, R5), Piece White Pawn)])
+                               (Stands.fromList [] [(Pawn, 1)])
+                               (Clocks.guillotine 10)
+                     )
+        `shouldBe` Just
+                     (Position
+                       Black
+                       (Board.fromList
+                         [ ((F5, R5), Piece White Pawn)
+                         , ((F6, R5), Piece White Pawn)
+                         ]
+                       )
+                       Stands.empty
+                       (Clocks.Clocks (Guillotine 10) (Guillotine 7))
+                     )
+    describe "駒を打ち込めない場合" $ do
+      describe "先手"
+        $          it "Nothing"
+        $          Position.drop
+                     Pawn
+                     (F4, R5)
+                     3
+                     (Position Black
+                               (Board.fromList [((F5, R5), Piece Black Pawn)])
+                               (Stands.fromList [] [])
+                               (Clocks.guillotine 10)
+                     )
+        `shouldBe` Nothing
+      describe "後手"
+        $          it "Nothing"
+        $          Position.drop
+                     Pawn
+                     (F6, R5)
+                     3
+                     (Position White
+                               (Board.fromList [((F5, R5), Piece White Pawn)])
+                               (Stands.fromList [] [])
+                               (Clocks.guillotine 10)
+                     )
+        `shouldBe` Nothing
   describe "movables" $ do
     describe "王手されていない場合" $ do
       describe "玉将が無い場合" $ do
