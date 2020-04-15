@@ -2,6 +2,7 @@ module ShogiX.Shogi.Stands
   ( empty
   , fromList
   , add
+  , ShogiX.Shogi.Stands.drop
   , droppables
   )
 where
@@ -20,11 +21,18 @@ empty = Stands Stand.empty Stand.empty
 fromList :: [(PieceType, Int)] -> [(PieceType, Int)] -> Stands
 fromList b w = Stands (Stand.fromList b) (Stand.fromList w)
 
--- | 駒台の駒修正
+-- | 駒台に駒を追加
 add :: Color -> Maybe PieceType -> Stands -> Stands
 add _     Nothing   stands = stands
 add color (Just pt) stands = setStand color newStand stands
   where newStand = Stand.add pt $ getStand color stands
+
+-- | 駒台の駒を削除
+drop :: Color -> PieceType -> Stands -> Maybe Stands
+drop color pt stands = do
+  newStand <- Stand.drop pt stand
+  pure $ setStand color newStand stands
+  where stand = getStand color stands
 
 -- | 持ち駒の打ち先範囲を取得
 droppables :: Color -> Board -> Stands -> Droppables

@@ -23,17 +23,22 @@ move src promo dest sec pos = do
   (newBoard, captured) <- Board.move src promo dest (positionBoard pos)
   pure $ pos { positionTurn   = Color.turnColor turn
              , positionBoard  = newBoard
-             , positionStands = Stands.add turn captured stands
-             , positionClocks = Clocks.consume sec turn clocks
+             , positionStands = Stands.add turn captured (positionStands pos)
+             , positionClocks = Clocks.consume sec turn (positionClocks pos)
              }
- where
-  turn   = positionTurn pos
-  stands = positionStands pos
-  clocks = positionClocks pos
+  where turn = positionTurn pos
 
 -- | 駒の打ち込み
 drop :: PieceType -> DestSquare -> Sec -> Position -> Maybe Position
-drop = undefined
+drop pt dest sec pos = do
+  newStand <- Stands.drop turn pt (positionStands pos)
+  newBoard <- Board.drop turn pt dest (positionBoard pos)
+  pure $ pos { positionTurn   = Color.turnColor turn
+             , positionBoard  = newBoard
+             , positionStands = newStand
+             , positionClocks = Clocks.consume sec turn (positionClocks pos)
+             }
+  where turn = positionTurn pos
 
 -- | 駒の移動範囲を取得
 movables :: Position -> Movables
