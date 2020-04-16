@@ -124,7 +124,6 @@ spec_Test_ShogiX_Shogi_Position = do
                                Clocks.infinity
                      )
         `shouldBe` Nothing
-      describe "駒を取れない場合" $ do
         describe "移動先に味方の駒がある場合" $ do
           describe "先手"
             $          it "Nothing"
@@ -208,9 +207,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          (Position
                            Black
                            (Board.fromList
-                             [ ((F5, R5), Piece Black Pawn)
-                             , ((F5, R1), Piece White Lance)
-                             ]
+                           [((F5, R5), Piece Black Pawn), ((F5, R1), Piece White Lance)]
                            )
                            Stands.empty
                            (Clocks Clocks.Timeout Infinity)
@@ -226,9 +223,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          (Position
                            White
                            (Board.fromList
-                             [ ((F5, R5), Piece White Pawn)
-                             , ((F5, R9), Piece Black Lance)
-                             ]
+                           [((F5, R5), Piece White Pawn), ((F5, R9), Piece Black Lance)]
                            )
                            Stands.empty
                            (Clocks Infinity Clocks.Timeout)
