@@ -61,7 +61,7 @@ checked pos = Board.checked (Color.turnColor turn) board
   turn  = positionTurn pos
   board = positionBoard pos
 
--- | 駒の移動範囲を取得s
+-- | 駒の移動範囲を取得
 movables :: Position -> Movables
 movables pos = removeCheckedMovables turn board ms
  where
