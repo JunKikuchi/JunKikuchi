@@ -158,8 +158,8 @@ data PieceType
 
 -- | 駒の移動
 data Move
-  = Move DestSquare SrcSquare Promotion -- ^駒移動
-  | Drop DestSquare PieceType           -- ^駒打ち
+  = Move SrcSquare Promotion DestSquare -- ^駒移動
+  | Drop PieceType DestSquare           -- ^駒打ち
   | CloseResign                         -- ^投了
   | CloseTimeout                        -- ^時間切れ
   | CloseImpasse                        -- ^持将棋
