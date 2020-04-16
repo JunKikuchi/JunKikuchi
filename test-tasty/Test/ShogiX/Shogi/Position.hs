@@ -335,7 +335,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (Position
                          Black
                          (Board.fromList
-                           [((F5, R9), Piece Black Gold), ((F5, R1), Piece White Lance)]
+                           [((F5, R9), Piece Black King), ((F5, R1), Piece White Lance)]
                          )
                          (Stands.fromList [(Pawn, 1)] [(Pawn, 1)])
                          Clocks.infinity
@@ -350,7 +350,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (Position
                          White
                          (Board.fromList
-                           [((F5, R1), Piece White Gold), ((F5, R9), Piece Black Lance)]
+                           [((F5, R1), Piece White King), ((F5, R9), Piece Black Lance)]
                          )
                          (Stands.fromList [(Pawn, 1)] [(Pawn, 1)])
                          Clocks.infinity
