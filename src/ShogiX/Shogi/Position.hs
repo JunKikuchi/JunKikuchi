@@ -24,10 +24,10 @@ move
 move src promo dest sec pos = do
   (newBoard, captured) <- Board.move src promo dest board
   let newPos = pos { positionTurn   = Color.turnColor turn
-             , positionBoard  = newBoard
-             , positionStands = Stands.add turn captured stands
-             , positionClocks = Clocks.consume sec turn clocks
-             }
+                   , positionBoard  = newBoard
+                   , positionStands = Stands.add turn captured stands
+                   , positionClocks = Clocks.consume sec turn clocks
+                   }
   guard $ not (checked newPos)
   pure newPos
  where
@@ -41,11 +41,13 @@ drop :: PieceType -> DestSquare -> Sec -> Position -> Maybe Position
 drop pt dest sec pos = do
   newStand <- Stands.drop turn pt stands
   newBoard <- Board.drop turn pt dest board
-  pure $ pos { positionTurn   = Color.turnColor turn
-             , positionBoard  = newBoard
-             , positionStands = newStand
-             , positionClocks = Clocks.consume sec turn clocks
-             }
+  let newPos = pos { positionTurn   = Color.turnColor turn
+                   , positionBoard  = newBoard
+                   , positionStands = newStand
+                   , positionClocks = Clocks.consume sec turn clocks
+                   }
+  guard $ not (checked newPos)
+  pure newPos
  where
   turn   = positionTurn pos
   board  = positionBoard pos
