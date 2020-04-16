@@ -1,6 +1,7 @@
 module ShogiX.Shogi.Position
   ( move
   , ShogiX.Shogi.Position.drop
+  , checked
   , movables
   , droppables
   )
@@ -22,11 +23,13 @@ move
   :: SrcSquare -> Promotion -> DestSquare -> Sec -> Position -> Maybe Position
 move src promo dest sec pos = do
   (newBoard, captured) <- Board.move src promo dest board
-  pure $ pos { positionTurn   = Color.turnColor turn
+  let newPos = pos { positionTurn   = Color.turnColor turn
              , positionBoard  = newBoard
              , positionStands = Stands.add turn captured stands
              , positionClocks = Clocks.consume sec turn clocks
              }
+  guard $ not (checked newPos)
+  pure newPos
  where
   turn   = positionTurn pos
   board  = positionBoard pos
@@ -48,6 +51,13 @@ drop pt dest sec pos = do
   board  = positionBoard pos
   stands = positionStands pos
   clocks = positionClocks pos
+
+-- | 王手判定
+checked :: Position -> Bool
+checked pos = Board.checked (Color.turnColor turn) board
+ where
+  turn  = positionTurn pos
+  board = positionBoard pos
 
 -- | 駒の移動範囲を取得s
 movables :: Position -> Movables
