@@ -20,15 +20,23 @@ import qualified ShogiX.Shogi.Stands           as Stands
 -- | 駒の移動
 {-# ANN module "HLint: ignore Reduce duplication" #-}
 move
-  :: SrcSquare -> Promotion -> DestSquare -> Sec -> Position -> Maybe Position
+  :: SrcSquare
+  -> Promotion
+  -> DestSquare
+  -> Sec
+  -> Position
+  -> Either CloseStatus Position
 move src promo dest sec pos = do
   (newBoard, captured) <- Board.move src promo dest board
+  let newClocks = Clocks.consume sec turn clocks
+      clock     = Clocks.getClock turn newClocks
+  when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
   let newPos = pos { positionTurn   = Color.turnColor turn
                    , positionBoard  = newBoard
                    , positionStands = Stands.add turn captured stands
-                   , positionClocks = Clocks.consume sec turn clocks
+                   , positionClocks = newClocks
                    }
-  guard $ not (checked newPos)
+  when (checked newPos) (Left (Illegal AbandonCheck))
   pure newPos
  where
   turn   = positionTurn pos
@@ -92,9 +100,9 @@ removeCheckedMovable :: Color -> Board -> SrcSquare -> Movable -> Movable
 removeCheckedMovable turn board src =
   Movable . Map.filterWithKey isNotChecked . unMovable
  where
-  isNotChecked dest _ = isJust $ do
+  isNotChecked dest _ = isRight $ do
     mv <- Board.move src False dest board
-    guard $ not . Board.checked turn . fst $ mv
+    when (Board.checked turn . fst $ mv) (Left (Illegal IllegalMove))
 
 -- | 持ち駒の打ち先範囲を取得
 droppables :: Position -> Droppables

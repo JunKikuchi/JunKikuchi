@@ -28,7 +28,7 @@ spec_Test_ShogiX_Shogi_Position = do
                                Stands.empty
                                (Clocks.guillotine 10)
                      )
-        `shouldBe` Just
+        `shouldBe` Right
                      (Position White
                                (Board.fromList [((F5, R4), Piece Black Pawn)])
                                Stands.empty
@@ -46,7 +46,7 @@ spec_Test_ShogiX_Shogi_Position = do
                                Stands.empty
                                (Clocks.guillotine 10)
                      )
-        `shouldBe` Just
+        `shouldBe` Right
                      (Position Black
                                (Board.fromList [((F5, R6), Piece White Pawn)])
                                Stands.empty
@@ -68,7 +68,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          Stands.empty
                          Clocks.infinity
                        )
-          `shouldBe` Just
+          `shouldBe` Right
                        (Position
                          White
                          (Board.fromList [((F5, R4), Piece Black Pawn)])
@@ -90,7 +90,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          Stands.empty
                          Clocks.infinity
                        )
-          `shouldBe` Just
+          `shouldBe` Right
                        (Position
                          Black
                          (Board.fromList [((F5, R6), Piece White Pawn)])
@@ -98,35 +98,36 @@ spec_Test_ShogiX_Shogi_Position = do
                          Clocks.infinity
                        )
     describe "駒の移動が出来ない場合" $ do
-      describe "先手"
-        $          it "Nothing"
-        $          Position.move
-                     (F5, R5)
-                     False
-                     (F5, R3)
-                     3
-                     (Position Black
-                               (Board.fromList [((F5, R5), Piece Black Pawn)])
-                               Stands.empty
-                               Clocks.infinity
-                     )
-        `shouldBe` Nothing
-      describe "後手"
-        $          it "Nothing"
-        $          Position.move
-                     (F5, R5)
-                     False
-                     (F5, R7)
-                     3
-                     (Position White
-                               (Board.fromList [((F5, R5), Piece White Pawn)])
-                               Stands.empty
-                               Clocks.infinity
-                     )
-        `shouldBe` Nothing
+      describe "駒移動違反" $ do
+        describe "先手"
+          $          it "Illegal IllegalMove"
+          $          Position.move
+                       (F5, R5)
+                       False
+                       (F5, R3)
+                       3
+                       (Position Black
+                                 (Board.fromList [((F5, R5), Piece Black Pawn)])
+                                 Stands.empty
+                                 Clocks.infinity
+                       )
+          `shouldBe` Left (Illegal IllegalMove)
+        describe "後手"
+          $          it "Illegal IllegalMove"
+          $          Position.move
+                       (F5, R5)
+                       False
+                       (F5, R7)
+                       3
+                       (Position White
+                                 (Board.fromList [((F5, R5), Piece White Pawn)])
+                                 Stands.empty
+                                 Clocks.infinity
+                       )
+          `shouldBe` Left (Illegal IllegalMove)
       describe "移動先に味方の駒がある場合" $ do
         describe "先手"
-          $          it "Nothing"
+          $          it "Illegal IllegalMove"
           $          Position.move
                        (F5, R5)
                        False
@@ -140,9 +141,9 @@ spec_Test_ShogiX_Shogi_Position = do
                          Stands.empty
                          Clocks.infinity
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left (Illegal IllegalMove)
         describe "後手"
-          $          it "Nothing"
+          $          it "Illegal IllegalMove"
           $          Position.move
                        (F5, R5)
                        False
@@ -156,10 +157,10 @@ spec_Test_ShogiX_Shogi_Position = do
                          Stands.empty
                          Clocks.infinity
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left (Illegal IllegalMove)
       describe "移動すると王手になる場合" $ do
         describe "先手"
-          $          it "Nothing"
+          $          it "Illegal AbandonCheck"
           $          Position.move
                        (F5, R5)
                        False
@@ -176,9 +177,9 @@ spec_Test_ShogiX_Shogi_Position = do
                          Stands.empty
                          Clocks.infinity
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left (Illegal AbandonCheck)
         describe "後手"
-          $          it "Nothing"
+          $          it "Illegal AbandonCheck"
           $          Position.move
                        (F5, R5)
                        False
@@ -195,14 +196,14 @@ spec_Test_ShogiX_Shogi_Position = do
                          Stands.empty
                          Clocks.infinity
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left (Illegal AbandonCheck)
       describe "持ち時間が無い場合" $ do
         describe "先手"
-          $          it "Nothing"
+          $          it "Timeout"
           $          Position.move
                        (F5, R5)
                        False
-                       (F4, R5)
+                       (F5, R4)
                        3
                        (Position
                          Black
@@ -212,13 +213,13 @@ spec_Test_ShogiX_Shogi_Position = do
                          Stands.empty
                          (Clocks Clocks.Timeout Infinity)
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left ShogiX.Shogi.Types.Timeout
         describe "後手"
-          $          it "Nothing"
+          $          it "Timeout"
           $          Position.move
                        (F5, R5)
                        False
-                       (F6, R5)
+                       (F5, R6)
                        3
                        (Position
                          White
@@ -228,7 +229,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          Stands.empty
                          (Clocks Infinity Clocks.Timeout)
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left ShogiX.Shogi.Types.Timeout
   describe "drop" $ do
     describe "駒を打ち込める場合" $ do
       describe "先手"

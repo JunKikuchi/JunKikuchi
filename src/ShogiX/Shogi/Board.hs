@@ -29,19 +29,20 @@ move
   -> Promotion
   -> DestSquare
   -> Board
-  -> Maybe (Board, Maybe PieceType)
+  -> Either CloseStatus (Board, Maybe PieceType)
 move src promo dest board = do
-  piece      <- Map.lookup src b
-  promotable <- Map.lookup dest $ unMovable $ Piece.movable piece src ss
-  guard
-    $  (promotable == No && not promo)
-    || (promotable == Option)
-    || (promotable == Must && promo)
+  piece      <- f (Map.lookup src b)
+  promotable <- f (Map.lookup dest . unMovable . Piece.movable piece src $ ss)
+  g promotable
   let deleted  = Map.delete src b
-  let p        = Piece.promote promo piece
-  let inserted = Map.insert dest p deleted
-  pure (Board inserted, capture)
+      p        = Piece.promote promo piece
+      newBoard = Map.insert dest p deleted
+  pure (Board newBoard, capture)
  where
+  f = maybe e pure
+  g p =
+    unless ((p == No && not promo) || (p == Option) || (p == Must && promo)) e
+  e       = Left (Illegal IllegalMove)
   b       = unBoard board
   ss      = Map.map pieceColor b
   capture = pieceType <$> Map.lookup dest b
