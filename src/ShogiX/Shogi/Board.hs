@@ -57,8 +57,12 @@ drop _ PromotedBishop _ _ = Nothing
 drop _ PromotedRook   _ _ = Nothing
 drop color pt dest board
   | Map.member dest b = Nothing
-  | otherwise         = Just (Board (Map.insert dest (Piece color pt) b))
-  where b = unBoard board
+  | otherwise = do
+    guard (Set.member dest . unDroppable $ droppable)
+    pure (Board (Map.insert dest (Piece color pt) b))
+ where
+  droppable = Piece.droppable color pt board
+  b         = unBoard board
 
 -- | 王手判定
 checked :: Color -> Board -> Bool

@@ -27,16 +27,19 @@ move
   -> Position
   -> Either CloseStatus Position
 move src promo dest sec pos = do
-  (newBoard, captured) <- Board.move src promo dest board
+  -- 持ち時間チェック
   let newClocks = Clocks.consume sec turn clocks
       clock     = Clocks.getClock turn newClocks
   when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
+  -- 駒移動
+  (newBoard, captured) <- Board.move src promo dest board
   let newPos = pos { positionTurn   = Color.turnColor turn
                    , positionBoard  = newBoard
                    , positionStands = Stands.add turn captured stands
                    , positionClocks = newClocks
                    }
-  when (checked newPos) (Left (Illegal AbandonCheck))
+  -- 王手回避チェック
+  when (checked turn newPos) (Left (Illegal AbandonCheck))
   pure newPos
  where
   turn   = positionTurn pos
@@ -45,29 +48,37 @@ move src promo dest sec pos = do
   clocks = positionClocks pos
 
 -- | 駒の打ち込み
-drop :: PieceType -> DestSquare -> Sec -> Position -> Maybe Position
+drop
+  :: PieceType -> DestSquare -> Sec -> Position -> Either CloseStatus Position
 drop pt dest sec pos = do
-  newStand <- Stands.drop turn pt stands
-  newBoard <- Board.drop turn pt dest board
+  -- 持ち時間チェック
+  let newClocks = Clocks.consume sec turn clocks
+      clock     = Clocks.getClock turn newClocks
+  when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
+  -- 駒の打ち込み
+  newStand <- illegalCheck (Stands.drop turn pt stands)
+  newBoard <- illegalCheck (Board.drop turn pt dest board)
   let newPos = pos { positionTurn   = Color.turnColor turn
                    , positionBoard  = newBoard
                    , positionStands = newStand
                    , positionClocks = Clocks.consume sec turn clocks
                    }
-  guard $ not (checked newPos)
+  -- 王手回避チェック
+  when (checked turn newPos) (Left (Illegal AbandonCheck))
+  -- 打ち歩詰めチェック
+  when (checked (Color.turnColor turn) newPos && pt == Pawn)
+       (Left (Illegal DroppedPawnMate))
   pure newPos
  where
-  turn   = positionTurn pos
-  board  = positionBoard pos
-  stands = positionStands pos
-  clocks = positionClocks pos
+  illegalCheck = maybe (Left (Illegal IllegalDrop)) pure
+  turn         = positionTurn pos
+  board        = positionBoard pos
+  stands       = positionStands pos
+  clocks       = positionClocks pos
 
 -- | 王手判定
-checked :: Position -> Bool
-checked pos = Board.checked (Color.turnColor turn) board
- where
-  turn  = positionTurn pos
-  board = positionBoard pos
+checked :: Color -> Position -> Bool
+checked color = Board.checked color . positionBoard
 
 -- | 駒の移動範囲を取得
 movables :: Position -> Movables

@@ -243,7 +243,7 @@ spec_Test_ShogiX_Shogi_Position = do
                                (Stands.fromList [(Pawn, 1)] [])
                                (Clocks.guillotine 10)
                      )
-        `shouldBe` Just
+        `shouldBe` Right
                      (Position
                        White
                        (Board.fromList
@@ -265,7 +265,7 @@ spec_Test_ShogiX_Shogi_Position = do
                                (Stands.fromList [] [(Pawn, 1)])
                                (Clocks.guillotine 10)
                      )
-        `shouldBe` Just
+        `shouldBe` Right
                      (Position
                        Black
                        (Board.fromList
@@ -277,33 +277,34 @@ spec_Test_ShogiX_Shogi_Position = do
                        (Clocks.Clocks (Guillotine 10) (Guillotine 7))
                      )
     describe "駒を打ち込めない場合" $ do
-      describe "先手"
-        $          it "Nothing"
-        $          Position.drop
-                     Pawn
-                     (F4, R5)
-                     3
-                     (Position Black
-                               (Board.fromList [((F5, R5), Piece Black Pawn)])
-                               (Stands.fromList [] [])
-                               (Clocks.guillotine 10)
-                     )
-        `shouldBe` Nothing
-      describe "後手"
-        $          it "Nothing"
-        $          Position.drop
-                     Pawn
-                     (F6, R5)
-                     3
-                     (Position White
-                               (Board.fromList [((F5, R5), Piece White Pawn)])
-                               (Stands.fromList [] [])
-                               (Clocks.guillotine 10)
-                     )
-        `shouldBe` Nothing
       describe "駒を持っていない場合" $ do
         describe "先手"
-          $          it "Nothing"
+          $          it "Illegal IllegalDrop"
+          $          Position.drop
+                       Pawn
+                       (F4, R5)
+                       3
+                       (Position Black
+                                 (Board.fromList [((F5, R5), Piece Black Pawn)])
+                                 (Stands.fromList [] [])
+                                 (Clocks.guillotine 10)
+                       )
+          `shouldBe` Left (Illegal IllegalDrop)
+        describe "後手"
+          $          it "Illegal IllegalDrop"
+          $          Position.drop
+                       Pawn
+                       (F6, R5)
+                       3
+                       (Position White
+                                 (Board.fromList [((F5, R5), Piece White Pawn)])
+                                 (Stands.fromList [] [])
+                                 (Clocks.guillotine 10)
+                       )
+          `shouldBe` Left (Illegal IllegalDrop)
+      describe "指定された駒を持っていない場合" $ do
+        describe "先手"
+          $          it "Illegal IllegalDrop"
           $          Position.drop
                        Pawn
                        (F4, R5)
@@ -313,9 +314,9 @@ spec_Test_ShogiX_Shogi_Position = do
                                  (Stands.fromList [(Gold, 1)] [(Gold, 1)])
                                  (Clocks.guillotine 10)
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left (Illegal IllegalDrop)
         describe "後手"
-          $          it "Nothing"
+          $          it "Illegal IllegalDrop"
           $          Position.drop
                        Pawn
                        (F6, R5)
@@ -325,10 +326,60 @@ spec_Test_ShogiX_Shogi_Position = do
                                  (Stands.fromList [(Gold, 1)] [(Gold, 1)])
                                  (Clocks.guillotine 10)
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left (Illegal IllegalDrop)
+      describe "駒を打ち込めないマス目の場合" $ do
+        describe "先手"
+          $          it "Illegal IllegalDrop"
+          $          Position.drop
+                       Pawn
+                       (F5, R1)
+                       3
+                       (Position Black
+                                 (Board.fromList [])
+                                 (Stands.fromList [(Pawn, 1)] [])
+                                 (Clocks.guillotine 10)
+                       )
+          `shouldBe` Left (Illegal IllegalDrop)
+        describe "後手"
+          $          it "Illegal IllegalDrop"
+          $          Position.drop
+                       Pawn
+                       (F5, R9)
+                       3
+                       (Position White
+                                 (Board.fromList [])
+                                 (Stands.fromList [] [(Pawn, 1)])
+                                 (Clocks.guillotine 10)
+                       )
+          `shouldBe` Left (Illegal IllegalDrop)
+      describe "二歩の場合" $ do
+        describe "先手"
+          $          it "Illegal IllegalDrop"
+          $          Position.drop
+                       Pawn
+                       (F5, R5)
+                       3
+                       (Position Black
+                                 (Board.fromList [((F5, R9), Piece Black Pawn)])
+                                 (Stands.fromList [(Pawn, 1)] [])
+                                 Clocks.infinity
+                       )
+          `shouldBe` Left (Illegal IllegalDrop)
+        describe "後手"
+          $          it "Illegal IllegalDrop"
+          $          Position.drop
+                       Pawn
+                       (F5, R5)
+                       3
+                       (Position White
+                                 (Board.fromList [((F5, R1), Piece White Pawn)])
+                                 (Stands.fromList [] [(Pawn, 1)])
+                                 Clocks.infinity
+                       )
+          `shouldBe` Left (Illegal IllegalDrop)
       describe "王手を回避出来ない場合" $ do
         describe "先手"
-          $          it "Nothing"
+          $          it "Illegal AbandonCheck"
           $          Position.drop
                        Pawn
                        (F4, R5)
@@ -341,9 +392,9 @@ spec_Test_ShogiX_Shogi_Position = do
                          (Stands.fromList [(Pawn, 1)] [(Pawn, 1)])
                          Clocks.infinity
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left (Illegal AbandonCheck)
         describe "後手"
-          $          it "Nothing"
+          $          it "Illegal AbandonCheck"
           $          Position.drop
                        Pawn
                        (F6, R5)
@@ -356,7 +407,71 @@ spec_Test_ShogiX_Shogi_Position = do
                          (Stands.fromList [(Pawn, 1)] [(Pawn, 1)])
                          Clocks.infinity
                        )
-          `shouldBe` Nothing
+          `shouldBe` Left (Illegal AbandonCheck)
+      describe "打ち歩詰めの場合" $ do
+        describe "先手"
+          $          it "Illegal DroppedPawnMate"
+          $          Position.drop
+                       Pawn
+                       (F5, R2)
+                       3
+                       (Position
+                         Black
+                         (Board.fromList
+                           [ ((F5, R1), Piece White King)
+                           , ((F5, R3), Piece Black Gold)
+                           , ((F6, R3), Piece Black Lance)
+                           , ((F4, R3), Piece Black Lance)
+                           ]
+                         )
+                         (Stands.fromList [(Pawn, 1)] [])
+                         Clocks.infinity
+                       )
+          `shouldBe` Left (Illegal DroppedPawnMate)
+        describe "後手"
+          $          it "Illegal DroppedPawnMate"
+          $          Position.drop
+                       Pawn
+                       (F5, R8)
+                       3
+                       (Position
+                         White
+                         (Board.fromList
+                           [ ((F5, R9), Piece Black King)
+                           , ((F5, R7), Piece White Gold)
+                           , ((F6, R7), Piece White Lance)
+                           , ((F4, R7), Piece White Lance)
+                           ]
+                         )
+                         (Stands.fromList [] [(Pawn, 1)])
+                         Clocks.infinity
+                       )
+          `shouldBe` Left (Illegal DroppedPawnMate)
+      describe "持ち時間が無い場合" $ do
+        describe "先手"
+          $          it "Timeout"
+          $          Position.drop
+                       Pawn
+                       (F5, R5)
+                       3
+                       (Position Black
+                                 (Board.fromList [])
+                                 (Stands.fromList [(Pawn, 1)] [])
+                                 (Clocks Clocks.Timeout Infinity)
+                       )
+          `shouldBe` Left ShogiX.Shogi.Types.Timeout
+        describe "後手"
+          $          it "Timeout"
+          $          Position.drop
+                       Pawn
+                       (F5, R5)
+                       3
+                       (Position White
+                                 (Board.fromList [])
+                                 (Stands.fromList [] [(Pawn, 1)])
+                                 (Clocks Infinity Clocks.Timeout)
+                       )
+          `shouldBe` Left ShogiX.Shogi.Types.Timeout
   describe "movables" $ do
     describe "王手されていない場合" $ do
       describe "玉将が無い場合" $ do
