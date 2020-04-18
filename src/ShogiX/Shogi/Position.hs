@@ -32,7 +32,7 @@ move src promo dest sec pos = do
       clock     = Clocks.getClock turn newClocks
   when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
   -- 駒移動
-  (newBoard, captured) <- Board.move src promo dest board
+  (newBoard, captured) <- illegalCheck (Board.move src promo dest board)
   let newPos = pos { positionTurn   = Color.turnColor turn
                    , positionBoard  = newBoard
                    , positionStands = Stands.add turn captured stands
@@ -42,10 +42,11 @@ move src promo dest sec pos = do
   when (checked turn newPos) (Left (Illegal AbandonCheck))
   pure newPos
  where
-  turn   = positionTurn pos
-  board  = positionBoard pos
-  stands = positionStands pos
-  clocks = positionClocks pos
+  illegalCheck = maybe (Left (Illegal IllegalMove)) pure
+  turn         = positionTurn pos
+  board        = positionBoard pos
+  stands       = positionStands pos
+  clocks       = positionClocks pos
 
 -- | 駒の打ち込み
 drop
@@ -111,9 +112,9 @@ removeCheckedMovable :: Color -> Board -> SrcSquare -> Movable -> Movable
 removeCheckedMovable turn board src =
   Movable . Map.filterWithKey isNotChecked . unMovable
  where
-  isNotChecked dest _ = isRight $ do
+  isNotChecked dest _ = isJust $ do
     mv <- Board.move src False dest board
-    when (Board.checked turn . fst $ mv) (Left (Illegal IllegalMove))
+    guard (not . Board.checked turn . fst $ mv)
 
 -- | 持ち駒の打ち先範囲を取得
 droppables :: Position -> Droppables

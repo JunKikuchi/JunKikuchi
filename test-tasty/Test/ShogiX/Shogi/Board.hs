@@ -24,7 +24,7 @@ spec_Test_ShogiX_Shogi_Board = do
                                False
                                (F5, R4)
                                (Board.fromList [((F5, R5), Piece Black Pawn)])
-                  `shouldBe` Right
+                  `shouldBe` Just
                                ( Board.fromList [((F5, R4), Piece Black Pawn)]
                                , Nothing
                                )
@@ -34,7 +34,7 @@ spec_Test_ShogiX_Shogi_Board = do
                                False
                                (F5, R6)
                                (Board.fromList [((F5, R5), Piece White Pawn)])
-                  `shouldBe` Right
+                  `shouldBe` Just
                                ( Board.fromList [((F5, R6), Piece White Pawn)]
                                , Nothing
                                )
@@ -50,7 +50,7 @@ spec_Test_ShogiX_Shogi_Board = do
                                  , ((F5, R4), Piece White Gold)
                                  ]
                                )
-                  `shouldBe` Right
+                  `shouldBe` Just
                                ( Board.fromList [((F5, R4), Piece Black Pawn)]
                                , Just Gold
                                )
@@ -65,13 +65,13 @@ spec_Test_ShogiX_Shogi_Board = do
                                  , ((F5, R6), Piece Black Gold)
                                  ]
                                )
-                  `shouldBe` Right
+                  `shouldBe` Just
                                ( Board.fromList [((F5, R6), Piece White Pawn)]
                                , Just Gold
                                )
               describe "移動先に味方の駒がある" $ do
                 describe "先手"
-                  $          it "Illegal IllegalMove"
+                  $          it "Nothing"
                   $          Board.move
                                (F5, R5)
                                False
@@ -81,9 +81,9 @@ spec_Test_ShogiX_Shogi_Board = do
                                  , ((F5, R4), Piece Black Gold)
                                  ]
                                )
-                  `shouldBe` Left (Illegal IllegalMove)
+                  `shouldBe` Nothing
                 describe "後手"
-                  $          it "Illegal IllegalMove"
+                  $          it "Nothing"
                   $          Board.move
                                (F5, R5)
                                False
@@ -93,22 +93,22 @@ spec_Test_ShogiX_Shogi_Board = do
                                  , ((F5, R6), Piece White Gold)
                                  ]
                                )
-                  `shouldBe` Left (Illegal IllegalMove)
+                  `shouldBe` Nothing
             describe "成り必須" $ do
               describe "先手"
-                $ it "Illegal IllegalMove"
+                $ it "Nothing"
                 $ Board.move (F5, R2)
                              False
                              (F5, R1)
                              (Board.fromList [((F5, R2), Piece Black Pawn)])
-                `shouldBe` Left (Illegal IllegalMove)
+                `shouldBe` Nothing
               describe "後手"
-                $ it "Illegal IllegalMove"
+                $ it "Nothing"
                 $ Board.move (F5, R8)
                              False
                              (F5, R9)
                              (Board.fromList [((F5, R8), Piece White Pawn)])
-                `shouldBe` Left (Illegal IllegalMove)
+                `shouldBe` Nothing
           describe "成り" $ do
             describe "成り可" $ do
               describe "先手"
@@ -117,7 +117,7 @@ spec_Test_ShogiX_Shogi_Board = do
                              True
                              (F5, R3)
                              (Board.fromList [((F5, R4), Piece Black Pawn)])
-                `shouldBe` Right
+                `shouldBe` Just
                              ( Board
                                (Map.fromList
                                  [((F5, R3), Piece Black PromotedPawn)]
@@ -130,7 +130,7 @@ spec_Test_ShogiX_Shogi_Board = do
                              True
                              (F5, R7)
                              (Board.fromList [((F5, R6), Piece White Pawn)])
-                `shouldBe` Right
+                `shouldBe` Just
                              ( Board
                                (Map.fromList
                                  [((F5, R7), Piece White PromotedPawn)]
@@ -139,19 +139,19 @@ spec_Test_ShogiX_Shogi_Board = do
                              )
             describe "成り不可" $ do
               describe "先手"
-                $ it "Illegal IllegalMove"
+                $ it "Nothing"
                 $ Board.move (F5, R5)
                              True
                              (F5, R4)
                              (Board.fromList [((F5, R5), Piece Black Pawn)])
-                `shouldBe` Left (Illegal IllegalMove)
+                `shouldBe` Nothing
               describe "後手"
-                $ it "Illegal IllegalMove"
+                $ it "Nothing"
                 $ Board.move (F5, R5)
                              True
                              (F5, R6)
                              (Board.fromList [((F5, R5), Piece White Pawn)])
-                `shouldBe` Left (Illegal IllegalMove)
+                `shouldBe` Nothing
         describe "成り駒" $ do
           describe "そのまま" $ do
             describe "先手"
@@ -161,7 +161,7 @@ spec_Test_ShogiX_Shogi_Board = do
                            False
                            (F5, R3)
                            (Board.fromList [((F5, R4), Piece Black PromotedPawn)])
-              `shouldBe` Right
+              `shouldBe` Just
                            ( Board.fromList
                              [((F5, R3), Piece Black PromotedPawn)]
                            , Nothing
@@ -173,47 +173,47 @@ spec_Test_ShogiX_Shogi_Board = do
                            False
                            (F5, R8)
                            (Board.fromList [((F5, R7), Piece White PromotedPawn)])
-              `shouldBe` Right
+              `shouldBe` Just
                            ( Board.fromList
                              [((F5, R8), Piece White PromotedPawn)]
                            , Nothing
                            )
           describe "成り不可" $ do
             describe "先手"
-              $          it "Illegal IllegalMove"
+              $          it "Nothing"
               $          Board.move
                            (F5, R4)
                            True
                            (F5, R3)
                            (Board.fromList [((F5, R4), Piece Black PromotedPawn)])
-              `shouldBe` Left (Illegal IllegalMove)
+              `shouldBe` Nothing
             describe "後手"
-              $          it "Illegal IllegalMove"
+              $          it "Nothing"
               $          Board.move
                            (F5, R7)
                            True
                            (F5, R8)
                            (Board.fromList [((F5, R7), Piece White PromotedPawn)])
-              `shouldBe` Left (Illegal IllegalMove)
+              `shouldBe` Nothing
       describe "移動先が可動範囲外" $ do
         describe "先手"
-          $          it "Illegal IllegalMove"
+          $          it "Nothing"
           $          Board.move (F5, R5)
                                 False
                                 (F5, R3)
                                 (Board.fromList [((F5, R5), Piece Black Pawn)])
-          `shouldBe` Left (Illegal IllegalMove)
+          `shouldBe` Nothing
         describe "後手"
-          $          it "Illegal IllegalMove"
+          $          it "Nothing"
           $          Board.move (F5, R5)
                                 False
                                 (F5, R7)
                                 (Board.fromList [((F5, R5), Piece White Pawn)])
-          `shouldBe` Left (Illegal IllegalMove)
+          `shouldBe` Nothing
     describe "移動元なし"
-      $          it "Illegal IllegalMove"
+      $          it "Nothinge"
       $          Board.move (F5, R5) False (F5, R4) (Board Map.empty)
-      `shouldBe` Left (Illegal IllegalMove)
+      `shouldBe` Nothing
 
   describe "checked" $ do
     describe "玉将がない場合" $ do
