@@ -215,6 +215,63 @@ spec_Test_ShogiX_Shogi_Board = do
       $          Board.move (F5, R5) False (F5, R4) (Board Map.empty)
       `shouldBe` Nothing
 
+  describe "drop" $ do
+    describe "打ち込める場合" $ do
+      describe "先手"
+        $          it "駒を打ち込む"
+        $          Board.drop Black Pawn (F5, R5) (Board.fromList [])
+        `shouldBe` Just (Board.fromList [((F5, R5), Piece Black Pawn)])
+      describe "後手"
+        $          it "駒を打ち込む"
+        $          Board.drop White Pawn (F5, R5) (Board.fromList [])
+        `shouldBe` Just (Board.fromList [((F5, R5), Piece White Pawn)])
+    describe "打ち込めない場合" $ do
+      describe "成り駒を打ち込んだ場合" $ do
+        describe "先手"
+          $          it "Nothing"
+          $          Board.drop Black PromotedPawn (F5, R5) (Board.fromList [])
+          `shouldBe` Nothing
+        describe "後手"
+          $          it "Nothing"
+          $          Board.drop White PromotedPawn (F5, R5) (Board.fromList [])
+          `shouldBe` Nothing
+      describe "打ち込める範囲外の場合" $ do
+        describe "先手"
+          $          it "Nothing"
+          $          Board.drop Black PromotedPawn (F5, R1) (Board.fromList [])
+          `shouldBe` Nothing
+        describe "後手"
+          $          it "Nothing"
+          $          Board.drop White PromotedPawn (F5, R9) (Board.fromList [])
+          `shouldBe` Nothing
+      describe "打ち込み先に駒がある場合" $ do
+        describe "先手" $ do
+          it "Nothing"
+            $ Board.drop Black
+                         Pawn
+                         (F5, R5)
+                         (Board.fromList [((F5, R5), Piece Black Pawn)])
+            `shouldBe` Nothing
+          it "Nothing"
+            $ Board.drop Black
+                         Pawn
+                         (F5, R5)
+                         (Board.fromList [((F5, R5), Piece White Pawn)])
+            `shouldBe` Nothing
+        describe "後手" $ do
+          it "Nothing"
+            $ Board.drop White
+                         Pawn
+                         (F5, R5)
+                         (Board.fromList [((F5, R5), Piece White Pawn)])
+            `shouldBe` Nothing
+          it "Nothing"
+            $ Board.drop White
+                         PromotedPawn
+                         (F5, R5)
+                         (Board.fromList [((F5, R5), Piece Black Pawn)])
+            `shouldBe` Nothing
+
   describe "checked" $ do
     describe "玉将がない場合" $ do
       describe "先手"
