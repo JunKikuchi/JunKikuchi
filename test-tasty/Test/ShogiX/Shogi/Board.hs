@@ -195,6 +195,88 @@ spec_Test_ShogiX_Shogi_Board = do
                            (F5, R8)
                            (Board.fromList [((F5, R7), Piece White PromotedPawn)])
               `shouldBe` Nothing
+        describe "王手されている場合" $ do
+          describe "先手"
+            $          it "移動後の盤面を返す"
+            $          Board.move
+                         (F4, R5)
+                         False
+                         (F4, R4)
+                         (Board.fromList
+                           [ ((F5, R9), Piece Black King)
+                           , ((F5, R1), Piece White Lance)
+                           , ((F4, R5), Piece Black Pawn)
+                           ]
+                         )
+            `shouldBe` Just
+                         ( Board.fromList
+                           [ ((F5, R9), Piece Black King)
+                           , ((F5, R1), Piece White Lance)
+                           , ((F4, R4), Piece Black Pawn)
+                           ]
+                         , Nothing
+                         )
+          describe "後手"
+            $          it "移動後の盤面を返す"
+            $          Board.move
+                         (F6, R5)
+                         False
+                         (F6, R6)
+                         (Board.fromList
+                           [ ((F5, R1), Piece White King)
+                           , ((F5, R9), Piece Black Lance)
+                           , ((F6, R5), Piece White Pawn)
+                           ]
+                         )
+            `shouldBe` Just
+                         ( Board.fromList
+                           [ ((F5, R1), Piece White King)
+                           , ((F5, R9), Piece Black Lance)
+                           , ((F6, R6), Piece White Pawn)
+                           ]
+                         , Nothing
+                         )
+        describe "移動すると王手になる場合" $ do
+          describe "先手"
+            $          it "移動後の盤面を返す"
+            $          Board.move
+                         (F5, R5)
+                         False
+                         (F4, R5)
+                         (Board.fromList
+                           [ ((F5, R9), Piece Black King)
+                           , ((F5, R1), Piece White Lance)
+                           , ((F5, R5), Piece Black Gold)
+                           ]
+                         )
+            `shouldBe` Just
+                         ( Board.fromList
+                           [ ((F5, R9), Piece Black King)
+                           , ((F5, R1), Piece White Lance)
+                           , ((F4, R5), Piece Black Gold)
+                           ]
+                         , Nothing
+                         )
+          describe "後手"
+            $          it "移動後の盤面を返す"
+            $          Board.move
+                         (F5, R5)
+                         False
+                         (F6, R5)
+                         (Board.fromList
+                           [ ((F5, R1), Piece White King)
+                           , ((F5, R9), Piece Black Lance)
+                           , ((F5, R5), Piece White Gold)
+                           ]
+                         )
+            `shouldBe` Just
+                         ( Board.fromList
+                           [ ((F5, R1), Piece White King)
+                           , ((F5, R9), Piece Black Lance)
+                           , ((F6, R5), Piece White Gold)
+                           ]
+                         , Nothing
+                         )
       describe "移動先が可動範囲外" $ do
         describe "先手"
           $          it "Nothing"
@@ -225,6 +307,39 @@ spec_Test_ShogiX_Shogi_Board = do
         $          it "駒を打ち込む"
         $          Board.drop White Pawn (F5, R5) (Board.fromList [])
         `shouldBe` Just (Board.fromList [((F5, R5), Piece White Pawn)])
+      describe "王手されている場合" $ do
+        describe "先手"
+          $          it "駒を打ち込む"
+          $          Board.drop
+                       Black
+                       Pawn
+                       (F4, R5)
+                       (Board.fromList
+                         [((F5, R9), Piece Black King), ((F5, R1), Piece White Lance)]
+                       )
+          `shouldBe` Just
+                       (Board.fromList
+                         [ ((F5, R9), Piece Black King)
+                         , ((F5, R1), Piece White Lance)
+                         , ((F4, R5), Piece Black Pawn)
+                         ]
+                       )
+        describe "後手"
+          $          it "駒を打ち込む"
+          $          Board.drop
+                       White
+                       Pawn
+                       (F6, R5)
+                       (Board.fromList
+                         [((F5, R1), Piece White King), ((F5, R9), Piece Black Lance)]
+                       )
+          `shouldBe` Just
+                       (Board.fromList
+                         [ ((F5, R1), Piece White King)
+                         , ((F5, R9), Piece Black Lance)
+                         , ((F6, R5), Piece White Pawn)
+                         ]
+                       )
     describe "打ち込めない場合" $ do
       describe "成り駒を打ち込んだ場合" $ do
         describe "先手"
