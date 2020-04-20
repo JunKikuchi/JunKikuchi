@@ -14,6 +14,130 @@ import           ShogiX.Clocks                 as Clocks
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_Test_ShogiX_Shogi_Position :: Spec
 spec_Test_ShogiX_Shogi_Position = do
+  describe "mate" $ do
+    describe "詰んでいる場合" $ do
+      describe "先手"
+        $          it "True"
+        $          Position.mate
+                     (Position
+                       Black
+                       (Board.fromList
+                         [ ((F5, R9), Piece Black King)
+                         , ((F5, R8), Piece White Gold)
+                         , ((F5, R7), Piece White Pawn)
+                         ]
+                       )
+                       Stands.empty
+                       Clocks.infinity
+                     )
+        `shouldBe` True
+      describe "後手"
+        $          it "True"
+        $          Position.mate
+                     (Position
+                       White
+                       (Board.fromList
+                         [ ((F5, R1), Piece White King)
+                         , ((F5, R2), Piece Black Gold)
+                         , ((F5, R3), Piece Black Pawn)
+                         ]
+                       )
+                       Stands.empty
+                       Clocks.infinity
+                     )
+        `shouldBe` True
+      describe "行き場所が無い場合" $ do
+        describe "先手"
+          $          it "True"
+          $          Position.mate
+                       (Position
+                         Black
+                         (Board.fromList
+                           [ ((F5, R9), Piece Black King)
+                           , ((F5, R7), Piece White Gold)
+                           , ((F6, R7), Piece White Lance)
+                           , ((F4, R7), Piece White Lance)
+                           ]
+                         )
+                         Stands.empty
+                         Clocks.infinity
+                       )
+          `shouldBe` True
+        describe "後手"
+          $          it "True"
+          $          Position.mate
+                       (Position
+                         White
+                         (Board.fromList
+                           [ ((F5, R1), Piece White King)
+                           , ((F5, R3), Piece Black Gold)
+                           , ((F6, R3), Piece Black Lance)
+                           , ((F4, R3), Piece Black Lance)
+                           ]
+                         )
+                         Stands.empty
+                         Clocks.infinity
+                       )
+          `shouldBe` True
+    describe "詰んでいない場合" $ do
+      describe "移動すると回避" $ do
+        describe "先手"
+          $          it "False"
+          $          Position.mate
+                       (Position
+                         Black
+                         (Board.fromList
+                           [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
+                         )
+                         Stands.empty
+                         Clocks.infinity
+                       )
+          `shouldBe` False
+        describe "後手"
+          $          it "False"
+          $          Position.mate
+                       (Position
+                         White
+                         (Board.fromList
+                           [((F5, R1), Piece White King), ((F5, R2), Piece Black Gold)]
+                         )
+                         Stands.empty
+                         Clocks.infinity
+                       )
+          `shouldBe` False
+      describe "駒を打つと詰み回避" $ do
+        describe "先手"
+          $          it "False"
+          $          Position.mate
+                       (Position
+                         Black
+                         (Board.fromList
+                           [ ((F5, R9), Piece Black King)
+                           , ((F5, R7), Piece White Lance)
+                           , ((F6, R7), Piece White Lance)
+                           , ((F4, R7), Piece White Lance)
+                           ]
+                         )
+                         (Stands.fromList [(Pawn, 1)] [])
+                         Clocks.infinity
+                       )
+          `shouldBe` False
+        describe "後手"
+          $          it "False"
+          $          Position.mate
+                       (Position
+                         White
+                         (Board.fromList
+                           [ ((F5, R1), Piece White King)
+                           , ((F5, R3), Piece Black Lance)
+                           , ((F6, R3), Piece Black Lance)
+                           , ((F4, R3), Piece Black Lance)
+                           ]
+                         )
+                         (Stands.fromList [] [(Pawn, 1)])
+                         Clocks.infinity
+                       )
+          `shouldBe` False
   describe "move" $ do
     describe "駒の移動ができる場合" $ do
       describe "先手"
@@ -276,6 +400,67 @@ spec_Test_ShogiX_Shogi_Position = do
                        Stands.empty
                        (Clocks.Clocks (Guillotine 10) (Guillotine 7))
                      )
+      describe "歩を打ち込んで王手しても詰んでいない場合" $ do
+        describe "先手"
+          $          it "打ち込み後の局面を返す"
+          $          Position.drop
+                       Pawn
+                       (F5, R2)
+                       3
+                       (Position
+                         Black
+                         (Board.fromList
+                           [ ((F5, R1), Piece White King)
+                           , ((F5, R3), Piece Black Gold)
+                           , ((F6, R3), Piece Black Lance)
+                           ]
+                         )
+                         (Stands.fromList [(Pawn, 1)] [])
+                         Clocks.infinity
+                       )
+          `shouldBe` Right
+                       (Position
+                         White
+                         (Board.fromList
+                           [ ((F5, R1), Piece White King)
+                           , ((F5, R3), Piece Black Gold)
+                           , ((F6, R3), Piece Black Lance)
+                           , ((F5, R2), Piece Black Pawn)
+                           ]
+                         )
+                         Stands.empty
+                         Clocks.infinity
+                       )
+        describe "後手"
+          $          it "打ち込み後の局面を返す"
+          $          Position.drop
+                       Pawn
+                       (F5, R8)
+                       3
+                       (Position
+                         White
+                         (Board.fromList
+                           [ ((F5, R9), Piece Black King)
+                           , ((F5, R7), Piece White Gold)
+                           , ((F6, R7), Piece White Lance)
+                           ]
+                         )
+                         (Stands.fromList [] [(Pawn, 1)])
+                         Clocks.infinity
+                       )
+          `shouldBe` Right
+                       (Position
+                         Black
+                         (Board.fromList
+                           [ ((F5, R9), Piece Black King)
+                           , ((F5, R7), Piece White Gold)
+                           , ((F6, R7), Piece White Lance)
+                           , ((F5, R8), Piece White Pawn)
+                           ]
+                         )
+                         Stands.empty
+                         Clocks.infinity
+                       )
     describe "駒を打ち込めない場合" $ do
       describe "駒を持っていない場合" $ do
         describe "先手"

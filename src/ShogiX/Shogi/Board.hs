@@ -5,6 +5,8 @@ module ShogiX.Shogi.Board
   , ShogiX.Shogi.Board.drop
   , checked
   , movables
+  , pieceTypeMovables
+  , kingSquares
   )
 where
 
@@ -14,6 +16,7 @@ import qualified RIO.Set                       as Set
 import           ShogiX.Shogi.Color             ( turnColor )
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Piece            as Piece
+import qualified ShogiX.Shogi.Movables         as Movables
 
 -- | 空の将棋盤
 empty :: Board
@@ -68,24 +71,8 @@ drop color pt dest board
 checked :: Color -> Board -> Bool
 checked color board = ks /= Set.empty && Set.intersection ms ks == ks
  where
-  ms = Set.unions $ (Set.fromList . Map.keys . unMovable) <$> Map.elems
-    (unMovables $ movables (turnColor color) board)
+  ms = Movables.destSquareSet $ movables (turnColor color) board
   ks = kingSquares color board
-
-{--
--- | 玉の可動範囲
--- let kings = kingSquares Color ...
--- let ms  = kingMovableSquares Color ... kings
-kingMovableSquares :: Color -> Board -> Set Square -> Set Square
-kingMovableSquares color board = Set.unions . Set.map fs
- where
-  fs =
-    Set.fromList
-      . Map.keys
-      . unMovable
-      . flip (Piece.movable (Piece color King)) ss
-  ss = Map.map pieceColor (unBoard board)
---}
 
 -- | 玉のマス目取得
 kingSquares :: Color -> Board -> Set Square
@@ -103,10 +90,25 @@ movables color board = Movables $ Map.foldrWithKey build Map.empty b
  where
   b  = unBoard board
   ss = Map.map pieceColor b
-  build square piece acc
-    | pc == color && not emptyMovable = Map.insert square m acc
-    | otherwise                       = acc
+  build square piece acc | sameColor && hasMovable = Map.insert square m acc
+                         | otherwise               = acc
    where
-    pc           = pieceColor piece
-    emptyMovable = Map.null $ unMovable m
-    m            = Piece.movable piece square ss
+    sameColor  = pieceColor piece == color
+    hasMovable = not . Map.null . unMovable $ m
+    m          = Piece.movable piece square ss
+
+-- | 指定した駒の移動範囲を取得
+pieceTypeMovables :: PieceType -> Color -> Board -> Movables
+pieceTypeMovables pt color board = Movables
+  $ Map.foldrWithKey build Map.empty b
+ where
+  b  = unBoard board
+  ss = Map.map pieceColor b
+  build square piece acc
+    | sameColor && samePieceType && hasMovable = Map.insert square m acc
+    | otherwise = acc
+   where
+    sameColor     = pieceColor piece == color
+    samePieceType = pieceType piece == pt
+    hasMovable    = not . Map.null . unMovable $ m
+    m             = Piece.movable piece square ss

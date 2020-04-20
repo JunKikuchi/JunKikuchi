@@ -2,6 +2,7 @@ module ShogiX.Shogi.Position
   ( move
   , ShogiX.Shogi.Position.drop
   , checked
+  , mate
   , movables
   , droppables
   )
@@ -16,6 +17,8 @@ import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Color            as Color
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stands           as Stands
+import qualified ShogiX.Shogi.Movables         as Movables
+import qualified ShogiX.Shogi.Droppables       as Droppables
 
 -- | 駒の移動
 {-# ANN module "HLint: ignore Reduce duplication" #-}
@@ -65,10 +68,9 @@ drop pt dest sec pos = do
                    , positionClocks = Clocks.consume sec turn clocks
                    }
   -- 王手回避チェック
-  when (checked turn newPos) (Left (Illegal AbandonCheck))
+  when (checked turn newPos)       (Left (Illegal AbandonCheck))
   -- 打ち歩詰めチェック
-  when (checked (Color.turnColor turn) newPos && pt == Pawn)
-       (Left (Illegal DroppedPawnMate))
+  when (mate newPos && pt == Pawn) (Left (Illegal DroppedPawnMate))
   pure newPos
  where
   illegalCheck = maybe (Left (Illegal IllegalDrop)) pure
@@ -81,13 +83,38 @@ drop pt dest sec pos = do
 checked :: Color -> Position -> Bool
 checked color = Board.checked color . positionBoard
 
+-- | 詰み判定
+mate :: Position -> Bool
+mate pos | checked turn pos = ms && ds
+         | otherwise        = kss && kms -- 玉の移動先が無い
+ where
+  turn = positionTurn pos
+  kss  = not $ Set.null $ Board.kingSquares turn (positionBoard pos)
+  kms  = Movables.null $ pieceTypeMovables King pos
+  ms   = Movables.null $ movables pos
+  ds   = Droppables.null $ droppables pos
+
 -- | 駒の移動範囲を取得
 movables :: Position -> Movables
-movables pos = removeCheckedMovables turn board ms
+movables pos = colorMovables (positionTurn pos) pos
+
+-- | 駒の移動範囲を取得
+colorMovables :: Color -> Position -> Movables
+colorMovables color pos = removeCheckedMovables color board ms
  where
-  turn  = positionTurn pos
   board = positionBoard pos
-  ms    = Board.movables turn board
+  ms    = Board.movables color board
+
+-- | 指定した駒の移動範囲を取得
+pieceTypeMovables :: PieceType -> Position -> Movables
+pieceTypeMovables pt pos = pieceTypeColorMovables pt (positionTurn pos) pos
+
+-- | 指定した駒の移動範囲を取得
+pieceTypeColorMovables :: PieceType -> Color -> Position -> Movables
+pieceTypeColorMovables pt color pos = removeCheckedMovables color board ms
+ where
+  board = positionBoard pos
+  ms    = Board.pieceTypeMovables pt color board
 
 -- | 駒の可動範囲から王手になるものを除く
 -- >>> import qualified ShogiX.Shogi.Movables as Movables
