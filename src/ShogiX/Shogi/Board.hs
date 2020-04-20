@@ -5,7 +5,6 @@ module ShogiX.Shogi.Board
   , ShogiX.Shogi.Board.drop
   , checked
   , movables
-  , pieceTypeMovables
   , kingSquares
   )
 where
@@ -96,19 +95,3 @@ movables color board = Movables $ Map.foldrWithKey build Map.empty b
     sameColor  = pieceColor piece == color
     hasMovable = not . Map.null . unMovable $ m
     m          = Piece.movable piece square ss
-
--- | 指定した駒の移動範囲を取得
-pieceTypeMovables :: PieceType -> Color -> Board -> Movables
-pieceTypeMovables pt color board = Movables
-  $ Map.foldrWithKey build Map.empty b
- where
-  b  = unBoard board
-  ss = Map.map pieceColor b
-  build square piece acc
-    | sameColor && samePieceType && hasMovable = Map.insert square m acc
-    | otherwise = acc
-   where
-    sameColor     = pieceColor piece == color
-    samePieceType = pieceType piece == pt
-    hasMovable    = not . Map.null . unMovable $ m
-    m             = Piece.movable piece square ss

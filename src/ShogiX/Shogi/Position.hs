@@ -85,14 +85,12 @@ checked color = Board.checked color . positionBoard
 
 -- | 詰み判定
 mate :: Position -> Bool
-mate pos | checked turn pos = ms && ds
-         | otherwise        = kss && kms -- 玉の移動先が無い
+mate pos = hasKing && nullMovables && nullDroppables
  where
-  turn = positionTurn pos
-  kss  = not $ Set.null $ Board.kingSquares turn (positionBoard pos)
-  kms  = Movables.null $ pieceTypeMovables King pos
-  ms   = Movables.null $ movables pos
-  ds   = Droppables.null $ droppables pos
+  turn           = positionTurn pos
+  hasKing        = not $ Set.null $ Board.kingSquares turn (positionBoard pos)
+  nullMovables   = Movables.null $ movables pos
+  nullDroppables = Droppables.null $ droppables pos
 
 -- | 駒の移動範囲を取得
 movables :: Position -> Movables
@@ -104,17 +102,6 @@ colorMovables color pos = removeCheckedMovables color board ms
  where
   board = positionBoard pos
   ms    = Board.movables color board
-
--- | 指定した駒の移動範囲を取得
-pieceTypeMovables :: PieceType -> Position -> Movables
-pieceTypeMovables pt pos = pieceTypeColorMovables pt (positionTurn pos) pos
-
--- | 指定した駒の移動範囲を取得
-pieceTypeColorMovables :: PieceType -> Color -> Position -> Movables
-pieceTypeColorMovables pt color pos = removeCheckedMovables color board ms
- where
-  board = positionBoard pos
-  ms    = Board.pieceTypeMovables pt color board
 
 -- | 駒の可動範囲から王手になるものを除く
 -- >>> import qualified ShogiX.Shogi.Movables as Movables
