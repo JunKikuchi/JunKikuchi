@@ -95,20 +95,40 @@ spec_Test_ShogiX_Shogi_Board = do
                                )
                   `shouldBe` Nothing
             describe "成り必須" $ do
-              describe "先手"
-                $ it "Nothing"
-                $ Board.move (F5, R2)
-                             False
-                             (F5, R1)
-                             (Board.fromList [((F5, R2), Piece Black Pawn)])
-                `shouldBe` Nothing
-              describe "後手"
-                $ it "Nothing"
-                $ Board.move (F5, R8)
-                             False
-                             (F5, R9)
-                             (Board.fromList [((F5, R8), Piece White Pawn)])
-                `shouldBe` Nothing
+              describe "先手" $ do
+                it "成らない場合は Nothing"
+                  $ Board.move (F5, R2)
+                               False
+                               (F5, R1)
+                               (Board.fromList [((F5, R2), Piece Black Pawn)])
+                  `shouldBe` Nothing
+                it "成った場合は駒を移動する"
+                  $ Board.move (F5, R2)
+                               True
+                               (F5, R1)
+                               (Board.fromList [((F5, R2), Piece Black Pawn)])
+                  `shouldBe` Just
+                               ( Board.fromList
+                                 [((F5, R1), Piece Black PromotedPawn)]
+                               , Nothing
+                               )
+              describe "後手" $ do
+                it "成らない場合は Nothing"
+                  $ Board.move (F5, R8)
+                               False
+                               (F5, R9)
+                               (Board.fromList [((F5, R8), Piece White Pawn)])
+                  `shouldBe` Nothing
+                it "成った場合は駒を移動する"
+                  $ Board.move (F5, R8)
+                               True
+                               (F5, R9)
+                               (Board.fromList [((F5, R8), Piece White Pawn)])
+                  `shouldBe` Just
+                               ( Board.fromList
+                                 [((F5, R9), Piece White PromotedPawn)]
+                               , Nothing
+                               )
           describe "成り" $ do
             describe "成り可" $ do
               describe "先手"
