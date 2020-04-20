@@ -1,6 +1,7 @@
 module ShogiX.Shogi.Droppables
   ( empty
   , fromList
+  , ShogiX.Shogi.Droppables.null
   )
 where
 
@@ -16,3 +17,7 @@ empty = Droppables Map.empty
 -- | リストから持ち駒の打ち先を作成
 fromList :: [(PieceType, [DestSquare])] -> Droppables
 fromList = Droppables . Map.fromList . map (second Droppable.fromList)
+
+-- | 打ち先の有無
+null :: Droppables -> Bool
+null = Map.null . unDroppables
