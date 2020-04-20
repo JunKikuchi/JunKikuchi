@@ -65,7 +65,7 @@ drop pt dest sec pos = do
   let newPos = pos { positionTurn   = Color.turnColor turn
                    , positionBoard  = newBoard
                    , positionStands = newStand
-                   , positionClocks = Clocks.consume sec turn clocks
+                   , positionClocks = newClocks
                    }
   -- 王手回避チェック
   when (checked turn newPos)       (Left (Illegal AbandonCheck))
