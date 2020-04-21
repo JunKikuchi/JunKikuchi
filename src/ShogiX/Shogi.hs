@@ -39,12 +39,12 @@ hirate = undefined
 -- >>> update (Drop Pawn (F5, R8)) 3 shogi
 -- Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = Pawn}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}}
 update :: Move -> Sec -> Shogi -> Shogi
-update (Move s p d) sec shogi = updatePosition (Position.move s p d sec) shogi
-update (Drop p d  ) sec shogi = updatePosition (Position.drop p d sec) shogi
+update (Move s p d) sec shogi = updateShogi (Position.move s p d sec) shogi
+update (Drop p d  ) sec shogi = updateShogi (Position.drop p d sec) shogi
 update _            _   _     = undefined
 
-updatePosition :: (Position -> Either CloseStatus Position) -> Shogi -> Shogi
-updatePosition up shogi = either close id $ do
+updateShogi :: (Position -> Either CloseStatus Position) -> Shogi -> Shogi
+updateShogi up shogi = either close id $ do
   newPosition <- up pos
   let newShogi = shogi
         { shogiPositions = Positions $ newPosition NE.<| unPositions poss
