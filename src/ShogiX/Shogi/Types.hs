@@ -58,7 +58,7 @@ data Shogi
   = Shogi
   { shogiStatus    :: Status    -- ^ 対局状態
   , shogiPositions :: Positions -- ^ 局面
-  } deriving Show
+  } deriving (Show, Eq)
 
 -- | 対局状態
 data Status
@@ -95,7 +95,7 @@ data IllegalStatus
   deriving (Show, Eq)
 
 -- | 局面ログ
-newtype Positions = Positions { unPositions :: NonEmpty Position } deriving Show
+newtype Positions = Positions { unPositions :: NonEmpty Position } deriving (Show, Eq)
 
 -- | 局面
 data Position
