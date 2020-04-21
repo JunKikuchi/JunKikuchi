@@ -13,7 +13,7 @@ import qualified ShogiX.Shogi.Droppables       as Droppables
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_Test_ShogiX_Shogi :: Spec
-spec_Test_ShogiX_Shogi = describe "move Move(..)" $ do
+spec_Test_ShogiX_Shogi = describe "update Move(..)" $ do
   let board = Board.fromList
         [ ((F5, R9), Piece Black King)
         , ((F5, R7), Piece White Pawn)
@@ -40,7 +40,7 @@ spec_Test_ShogiX_Shogi = describe "move Move(..)" $ do
       let newPosition = Position White newBoard stands Clocks.infinity
       let newShogi    = Shogi Open (Positions (newPosition <| position :| []))
       it "将棋データを更新"
-        $          move (Move (F5, R9) False (F4, R9)) 3 shogi
+        $          update (Move (F5, R9) False (F4, R9)) 3 shogi
         `shouldBe` newShogi
     describe "詰みで対局終了" $ do
       let newBoard = Board.fromList
@@ -55,7 +55,7 @@ spec_Test_ShogiX_Shogi = describe "move Move(..)" $ do
       let newShogi = Shogi (Closed Black Mate)
                            (Positions (newPosition <| position :| []))
       it "将棋データを更新"
-        $          move (Move (F4, R3) True (F5, R2)) 3 shogi
+        $          update (Move (F4, R3) True (F5, R2)) 3 shogi
         `shouldBe` newShogi
   describe "駒を打ち込み" $ do
     describe "対局継続" $ do
@@ -71,7 +71,7 @@ spec_Test_ShogiX_Shogi = describe "move Move(..)" $ do
       let newStands   = Stands.fromList [] [(Gold, 1)]
       let newPosition = Position White newBoard newStands Clocks.infinity
       let newShogi    = Shogi Open (Positions (newPosition <| position :| []))
-      it "将棋データを更新" $ move (Drop Gold (F4, R9)) 3 shogi `shouldBe` newShogi
+      it "将棋データを更新" $ update (Drop Gold (F4, R9)) 3 shogi `shouldBe` newShogi
     describe "詰みで対局終了" $ do
       let newBoard' = Board.fromList
             [ ((F5, R9), Piece Black King)
@@ -86,4 +86,4 @@ spec_Test_ShogiX_Shogi = describe "move Move(..)" $ do
       let newPosition = Position White newBoard' newStands Clocks.infinity
       let newShogi = Shogi (Closed Black Mate)
                            (Positions (newPosition <| position :| []))
-      it "将棋データを更新" $ move (Drop Gold (F5, R2)) 3 shogi `shouldBe` newShogi
+      it "将棋データを更新" $ update (Drop Gold (F5, R2)) 3 shogi `shouldBe` newShogi

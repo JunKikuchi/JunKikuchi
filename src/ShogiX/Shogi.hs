@@ -1,6 +1,6 @@
 module ShogiX.Shogi
   ( hirate
-  , move
+  , update
   , movables
   , droppables
   , shogiPosition
@@ -21,7 +21,7 @@ import           ShogiX.Clocks                  ( Sec )
 hirate :: Shogi
 hirate = undefined
 
--- | 駒の移動
+-- | 更新
 --
 -- >>> import RIO
 -- >>> import qualified ShogiX.Shogi.Board as Board
@@ -33,19 +33,19 @@ hirate = undefined
 -- >>> let position = Position Black board stands Clocks.infinity
 -- >>> let shogi = Shogi Open (Positions (position :| []))
 -- >>>
--- >>> move (Move (F5, R9) False (F5, R8)) 3 shogi
+-- >>> update (Move (F5, R9) False (F5, R8)) 3 shogi
 -- Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}}
 -- >>>
--- >>> move (Drop Pawn (F5, R8)) 3 shogi
+-- >>> update (Drop Pawn (F5, R8)) 3 shogi
 -- Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = Pawn}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}}
-move :: Move -> Sec -> Shogi -> Shogi
-move (Move s p d) sec shogi = movePosition (Position.move s p d sec) shogi
-move (Drop p d  ) sec shogi = movePosition (Position.drop p d sec) shogi
-move _            _   _     = undefined
+update :: Move -> Sec -> Shogi -> Shogi
+update (Move s p d) sec shogi = updatePosition (Position.move s p d sec) shogi
+update (Drop p d  ) sec shogi = updatePosition (Position.drop p d sec) shogi
+update _            _   _     = undefined
 
-movePosition :: (Position -> Either CloseStatus Position) -> Shogi -> Shogi
-movePosition mv shogi = either close id $ do
-  newPosition <- mv pos
+updatePosition :: (Position -> Either CloseStatus Position) -> Shogi -> Shogi
+updatePosition up shogi = either close id $ do
+  newPosition <- up pos
   let newShogi = shogi
         { shogiPositions = Positions $ newPosition NE.<| unPositions poss
         }
