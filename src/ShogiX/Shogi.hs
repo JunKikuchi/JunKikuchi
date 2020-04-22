@@ -52,29 +52,21 @@ updateShogi up sec shogi = either id id $ do
   pos <- shogiConsumeTime sec shogi
   pure $ either (closed pos) continue $ up pos
  where
-  closed pos status = shogi
-    { shogiStatus    = Closed winner status
-    , shogiPositions = Positions $ pos NE.<| unPositions poss
-    }
+  closed pos status = consPosition
+    pos
+    shogi { shogiStatus = Closed winner status }
     where winner = Color.turnColor . positionTurn $ pos
-  continue pos = shogi
-    { shogiStatus    = newStatus
-    , shogiPositions = Positions $ pos NE.<| unPositions poss
-    }
+  continue pos = consPosition pos shogi { shogiStatus = newStatus }
    where
     newStatus =
       if Position.mate pos then Closed winner Mate else shogiStatus shogi
     winner = Color.turnColor . positionTurn $ pos
-  poss = shogiPositions shogi
 
 closeShogi :: (Color -> Status) -> Sec -> Shogi -> Shogi
 closeShogi status sec shogi = either id id $ do
   pos <- shogiConsumeTime sec shogi
   let winner = Color.turnColor $ positionTurn pos
-  pure $ shogi { shogiStatus    = status winner
-               , shogiPositions = Positions $ pos NE.<| unPositions poss
-               }
-  where poss = shogiPositions shogi
+  pure $ consPosition pos shogi { shogiStatus = status winner }
 
 consumeTime :: Sec -> Shogi -> Shogi
 consumeTime sec shogi = either id id $ do
@@ -90,15 +82,12 @@ shogiConsumeTime sec shogi = do
   pure newPos
  where
   clock  = Clocks.getClock turn clocks
-  closed = shogi { shogiStatus    = Closed winner Timeout
-                 , shogiPositions = Positions $ newPos NE.<| unPositions poss
-                 }
+  closed = consPosition newPos shogi { shogiStatus = Closed winner Timeout }
   winner = Color.turnColor turn
   turn   = positionTurn pos
   clocks = positionClocks newPos
   newPos = Position.consumeTime sec pos
   pos    = shogiPosition shogi
-  poss   = shogiPositions shogi
 
 -- | 駒の移動範囲を取得
 --
@@ -145,3 +134,13 @@ droppables shogi | status == Open = Position.droppables pos
 -- | 最新の局面取得
 shogiPosition :: Shogi -> Position
 shogiPosition = NE.head . unPositions . shogiPositions
+
+-- | 局面を追加
+consPosition :: Position -> Shogi -> Shogi
+consPosition pos shogi = shogi
+  { shogiPositions = Positions
+                     . (pos NE.<|)
+                     . unPositions
+                     . shogiPositions
+                     $ shogi
+  }
