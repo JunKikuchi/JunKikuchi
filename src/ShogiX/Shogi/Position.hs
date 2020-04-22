@@ -1,6 +1,7 @@
 module ShogiX.Shogi.Position
   ( move
   , ShogiX.Shogi.Position.drop
+  , timeConsume
   , checked
   , mate
   , movables
@@ -31,16 +32,13 @@ move
   -> Either CloseStatus Position
 move src promo dest sec pos = do
   -- 持ち時間チェック
-  let newClocks = Clocks.consume sec turn clocks
-      clock     = Clocks.getClock turn newClocks
-  when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
+  clockedPos           <- timeConsume sec pos
   -- 駒移動
   (newBoard, captured) <- illegalCheck (Board.move src promo dest board)
-  let newPos = pos { positionTurn   = Color.turnColor turn
-                   , positionBoard  = newBoard
-                   , positionStands = Stands.add turn captured stands
-                   , positionClocks = newClocks
-                   }
+  let newPos = clockedPos { positionTurn   = Color.turnColor turn
+                          , positionBoard  = newBoard
+                          , positionStands = Stands.add turn captured stands
+                          }
   -- 王手回避チェック
   when (checked turn newPos) (Left (Illegal AbandonCheck))
   pure newPos
@@ -49,24 +47,20 @@ move src promo dest sec pos = do
   turn         = positionTurn pos
   board        = positionBoard pos
   stands       = positionStands pos
-  clocks       = positionClocks pos
 
 -- | 駒の打ち込み
 drop
   :: PieceType -> DestSquare -> Sec -> Position -> Either CloseStatus Position
 drop pt dest sec pos = do
   -- 持ち時間チェック
-  let newClocks = Clocks.consume sec turn clocks
-      clock     = Clocks.getClock turn newClocks
-  when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
+  clockedPos <- timeConsume sec pos
   -- 駒の打ち込み
-  newStand <- illegalCheck (Stands.drop turn pt stands)
-  newBoard <- illegalCheck (Board.drop turn pt dest board)
-  let newPos = pos { positionTurn   = Color.turnColor turn
-                   , positionBoard  = newBoard
-                   , positionStands = newStand
-                   , positionClocks = newClocks
-                   }
+  newStand   <- illegalCheck (Stands.drop turn pt stands)
+  newBoard   <- illegalCheck (Board.drop turn pt dest board)
+  let newPos = clockedPos { positionTurn   = Color.turnColor turn
+                          , positionBoard  = newBoard
+                          , positionStands = newStand
+                          }
   -- 王手回避チェック
   when (checked turn newPos)       (Left (Illegal AbandonCheck))
   -- 打ち歩詰めチェック
@@ -77,7 +71,18 @@ drop pt dest sec pos = do
   turn         = positionTurn pos
   board        = positionBoard pos
   stands       = positionStands pos
-  clocks       = positionClocks pos
+
+-- | 時間消費
+timeConsume :: Sec -> Position -> Either CloseStatus Position
+timeConsume sec pos = do
+  let newClocks = Clocks.consume sec turn clocks
+      clock     = Clocks.getClock turn newClocks
+  when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
+  pure $ pos { positionClocks = newClocks }
+ where
+  turn   = positionTurn pos
+  clocks = positionClocks pos
+
 
 -- | 王手判定
 checked :: Color -> Position -> Bool
