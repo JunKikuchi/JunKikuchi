@@ -13,7 +13,7 @@ import qualified ShogiX.Shogi.Droppables       as Droppables
 
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_Test_ShogiX_Shogi :: Spec
-spec_Test_ShogiX_Shogi = describe "update Move(..)" $ do
+spec_Test_ShogiX_Shogi = describe "update" $ do
   let board = Board.fromList
         [ ((F5, R9), Piece Black King)
         , ((F5, R7), Piece White Pawn)
