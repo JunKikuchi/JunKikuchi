@@ -48,12 +48,9 @@ updateShogi
   :: (Position -> Either CloseStatus Position) -> Sec -> Shogi -> Shogi
 updateShogi up sec shogi = either close id $ do
   -- 持ち時間チェック
-  let clockedPosition = Position.timeConsume sec pos
-      clocks          = positionClocks clockedPosition
-      clock           = Clocks.getClock turn clocks
-  when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
+  clockedPosition <- timeConsume sec pos
   -- 盤面更新
-  newPosition <- up clockedPosition
+  newPosition     <- up clockedPosition
   let newShogi = shogi
         { shogiPositions = Positions $ newPosition NE.<| unPositions poss
         }
@@ -66,6 +63,16 @@ updateShogi up sec shogi = either close id $ do
   pos    = shogiPosition shogi
   poss   = shogiPositions shogi
   turn   = positionTurn pos
+
+timeConsume :: Sec -> Position -> Either CloseStatus Position
+timeConsume sec pos = do
+  when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
+  pure clockedPosition
+ where
+  clockedPosition = Position.timeConsume sec pos
+  clocks          = positionClocks clockedPosition
+  clock           = Clocks.getClock turn clocks
+  turn            = positionTurn pos
 
 -- | 駒の移動範囲を取得
 --
