@@ -50,13 +50,14 @@ updateShogi up shogi = either close id $ do
         { shogiPositions = Positions $ newPosition NE.<| unPositions poss
         }
   pure $ if Position.mate newPosition
-    then newShogi { shogiStatus = Closed (positionTurn pos) Mate }
+    then newShogi { shogiStatus = Closed turn Mate }
     else newShogi
  where
   close status = shogi { shogiStatus = Closed winner status }
   winner = Color.turnColor . positionTurn $ pos
   pos    = shogiPosition shogi
   poss   = shogiPositions shogi
+  turn   = positionTurn pos
 
 -- | 駒の移動範囲を取得
 --
