@@ -146,7 +146,6 @@ spec_Test_ShogiX_Shogi_Position = do
                      (F5, R5)
                      False
                      (F5, R4)
-                     3
                      (Position Black
                                (Board.fromList [((F5, R5), Piece Black Pawn)])
                                Stands.empty
@@ -156,7 +155,7 @@ spec_Test_ShogiX_Shogi_Position = do
                      (Position White
                                (Board.fromList [((F5, R4), Piece Black Pawn)])
                                Stands.empty
-                               (Clocks.Clocks (Guillotine 7) (Guillotine 10))
+                               (Clocks.guillotine 10)
                      )
       describe "後手"
         $          it "移動後の局面を返す"
@@ -164,7 +163,6 @@ spec_Test_ShogiX_Shogi_Position = do
                      (F5, R5)
                      False
                      (F5, R6)
-                     3
                      (Position White
                                (Board.fromList [((F5, R5), Piece White Pawn)])
                                Stands.empty
@@ -174,7 +172,7 @@ spec_Test_ShogiX_Shogi_Position = do
                      (Position Black
                                (Board.fromList [((F5, R6), Piece White Pawn)])
                                Stands.empty
-                               (Clocks.Clocks (Guillotine 10) (Guillotine 7))
+                               (Clocks.guillotine 10)
                      )
       describe "駒を取った場合" $ do
         describe "先手"
@@ -183,7 +181,6 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        False
                        (F5, R4)
-                       3
                        (Position
                          Black
                          (Board.fromList
@@ -205,7 +202,6 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        False
                        (F5, R6)
-                       3
                        (Position
                          White
                          (Board.fromList
@@ -229,7 +225,6 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        False
                        (F5, R3)
-                       3
                        (Position Black
                                  (Board.fromList [((F5, R5), Piece Black Pawn)])
                                  Stands.empty
@@ -242,7 +237,6 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        False
                        (F5, R7)
-                       3
                        (Position White
                                  (Board.fromList [((F5, R5), Piece White Pawn)])
                                  Stands.empty
@@ -256,7 +250,6 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        False
                        (F5, R4)
-                       3
                        (Position
                          Black
                          (Board.fromList
@@ -272,7 +265,6 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        False
                        (F5, R6)
-                       3
                        (Position
                          White
                          (Board.fromList
@@ -289,7 +281,6 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        False
                        (F4, R5)
-                       3
                        (Position
                          Black
                          (Board.fromList
@@ -308,7 +299,6 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        False
                        (F6, R5)
-                       3
                        (Position
                          White
                          (Board.fromList
@@ -321,39 +311,6 @@ spec_Test_ShogiX_Shogi_Position = do
                          Clocks.infinity
                        )
           `shouldBe` Left (Illegal AbandonCheck)
-      describe "持ち時間が無い場合" $ do
-        describe "先手"
-          $          it "Timeout"
-          $          Position.move
-                       (F5, R5)
-                       False
-                       (F5, R4)
-                       3
-                       (Position
-                         Black
-                         (Board.fromList
-                           [((F5, R5), Piece Black Pawn), ((F5, R1), Piece White Lance)]
-                         )
-                         Stands.empty
-                         (Clocks Clocks.Timeout Infinity)
-                       )
-          `shouldBe` Left ShogiX.Shogi.Types.Timeout
-        describe "後手"
-          $          it "Timeout"
-          $          Position.move
-                       (F5, R5)
-                       False
-                       (F5, R6)
-                       3
-                       (Position
-                         White
-                         (Board.fromList
-                           [((F5, R5), Piece White Pawn), ((F5, R9), Piece Black Lance)]
-                         )
-                         Stands.empty
-                         (Clocks Infinity Clocks.Timeout)
-                       )
-          `shouldBe` Left ShogiX.Shogi.Types.Timeout
   describe "drop" $ do
     describe "駒を打ち込める場合" $ do
       describe "先手"
@@ -361,7 +318,6 @@ spec_Test_ShogiX_Shogi_Position = do
         $          Position.drop
                      Pawn
                      (F4, R5)
-                     3
                      (Position Black
                                (Board.fromList [((F5, R5), Piece Black Pawn)])
                                (Stands.fromList [(Pawn, 1)] [])
@@ -376,14 +332,13 @@ spec_Test_ShogiX_Shogi_Position = do
                          ]
                        )
                        Stands.empty
-                       (Clocks.Clocks (Guillotine 7) (Guillotine 10))
+                       (Clocks.guillotine 10)
                      )
       describe "後手"
         $          it "打ち込み後の局面を返す"
         $          Position.drop
                      Pawn
                      (F6, R5)
-                     3
                      (Position White
                                (Board.fromList [((F5, R5), Piece White Pawn)])
                                (Stands.fromList [] [(Pawn, 1)])
@@ -398,7 +353,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          ]
                        )
                        Stands.empty
-                       (Clocks.Clocks (Guillotine 10) (Guillotine 7))
+                       (Clocks.guillotine 10)
                      )
       describe "歩を打ち込んで王手しても詰んでいない場合" $ do
         describe "先手"
@@ -406,7 +361,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F5, R2)
-                       3
                        (Position
                          Black
                          (Board.fromList
@@ -436,7 +390,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F5, R8)
-                       3
                        (Position
                          White
                          (Board.fromList
@@ -468,7 +421,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F4, R5)
-                       3
                        (Position Black
                                  (Board.fromList [((F5, R5), Piece Black Pawn)])
                                  (Stands.fromList [] [])
@@ -480,7 +432,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F6, R5)
-                       3
                        (Position White
                                  (Board.fromList [((F5, R5), Piece White Pawn)])
                                  (Stands.fromList [] [])
@@ -493,7 +444,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F4, R5)
-                       3
                        (Position Black
                                  (Board.fromList [((F5, R5), Piece Black Pawn)])
                                  (Stands.fromList [(Gold, 1)] [(Gold, 1)])
@@ -505,7 +455,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F6, R5)
-                       3
                        (Position White
                                  (Board.fromList [((F5, R5), Piece White Pawn)])
                                  (Stands.fromList [(Gold, 1)] [(Gold, 1)])
@@ -518,7 +467,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F5, R1)
-                       3
                        (Position Black
                                  (Board.fromList [])
                                  (Stands.fromList [(Pawn, 1)] [])
@@ -530,7 +478,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F5, R9)
-                       3
                        (Position White
                                  (Board.fromList [])
                                  (Stands.fromList [] [(Pawn, 1)])
@@ -543,7 +490,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F5, R5)
-                       3
                        (Position Black
                                  (Board.fromList [((F5, R9), Piece Black Pawn)])
                                  (Stands.fromList [(Pawn, 1)] [])
@@ -555,7 +501,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F5, R5)
-                       3
                        (Position White
                                  (Board.fromList [((F5, R1), Piece White Pawn)])
                                  (Stands.fromList [] [(Pawn, 1)])
@@ -568,7 +513,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F4, R5)
-                       3
                        (Position
                          Black
                          (Board.fromList
@@ -583,7 +527,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F6, R5)
-                       3
                        (Position
                          White
                          (Board.fromList
@@ -599,7 +542,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F5, R2)
-                       3
                        (Position
                          Black
                          (Board.fromList
@@ -618,7 +560,6 @@ spec_Test_ShogiX_Shogi_Position = do
           $          Position.drop
                        Pawn
                        (F5, R8)
-                       3
                        (Position
                          White
                          (Board.fromList
@@ -632,31 +573,6 @@ spec_Test_ShogiX_Shogi_Position = do
                          Clocks.infinity
                        )
           `shouldBe` Left (Illegal DroppedPawnMate)
-      describe "持ち時間が無い場合" $ do
-        describe "先手"
-          $          it "Timeout"
-          $          Position.drop
-                       Pawn
-                       (F5, R5)
-                       3
-                       (Position Black
-                                 (Board.fromList [])
-                                 (Stands.fromList [(Pawn, 1)] [])
-                                 (Clocks Clocks.Timeout Infinity)
-                       )
-          `shouldBe` Left ShogiX.Shogi.Types.Timeout
-        describe "後手"
-          $          it "Timeout"
-          $          Position.drop
-                       Pawn
-                       (F5, R5)
-                       3
-                       (Position White
-                                 (Board.fromList [])
-                                 (Stands.fromList [] [(Pawn, 1)])
-                                 (Clocks Infinity Clocks.Timeout)
-                       )
-          `shouldBe` Left ShogiX.Shogi.Types.Timeout
   describe "movables" $ do
     describe "王手されていない場合" $ do
       describe "玉将が無い場合" $ do

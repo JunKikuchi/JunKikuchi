@@ -27,18 +27,15 @@ move
   :: SrcSquare
   -> Promotion
   -> DestSquare
-  -> Sec
   -> Position
   -> Either CloseStatus Position
-move src promo dest sec pos = do
-  -- 持ち時間チェック
-  clockedPos           <- timeConsume sec pos
+move src promo dest pos = do
   -- 駒移動
   (newBoard, captured) <- illegalCheck (Board.move src promo dest board)
-  let newPos = clockedPos { positionTurn   = Color.turnColor turn
-                          , positionBoard  = newBoard
-                          , positionStands = Stands.add turn captured stands
-                          }
+  let newPos = pos { positionTurn   = Color.turnColor turn
+                   , positionBoard  = newBoard
+                   , positionStands = Stands.add turn captured stands
+                   }
   -- 王手回避チェック
   when (checked turn newPos) (Left (Illegal AbandonCheck))
   pure newPos
@@ -49,18 +46,15 @@ move src promo dest sec pos = do
   stands       = positionStands pos
 
 -- | 駒の打ち込み
-drop
-  :: PieceType -> DestSquare -> Sec -> Position -> Either CloseStatus Position
-drop pt dest sec pos = do
-  -- 持ち時間チェック
-  clockedPos <- timeConsume sec pos
+drop :: PieceType -> DestSquare -> Position -> Either CloseStatus Position
+drop pt dest pos = do
   -- 駒の打ち込み
-  newStand   <- illegalCheck (Stands.drop turn pt stands)
-  newBoard   <- illegalCheck (Board.drop turn pt dest board)
-  let newPos = clockedPos { positionTurn   = Color.turnColor turn
-                          , positionBoard  = newBoard
-                          , positionStands = newStand
-                          }
+  newStand <- illegalCheck (Stands.drop turn pt stands)
+  newBoard <- illegalCheck (Board.drop turn pt dest board)
+  let newPos = pos { positionTurn   = Color.turnColor turn
+                   , positionBoard  = newBoard
+                   , positionStands = newStand
+                   }
   -- 王手回避チェック
   when (checked turn newPos)       (Left (Illegal AbandonCheck))
   -- 打ち歩詰めチェック
@@ -73,16 +67,12 @@ drop pt dest sec pos = do
   stands       = positionStands pos
 
 -- | 時間消費
-timeConsume :: Sec -> Position -> Either CloseStatus Position
-timeConsume sec pos = do
-  let newClocks = Clocks.consume sec turn clocks
-      clock     = Clocks.getClock turn newClocks
-  when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
-  pure $ pos { positionClocks = newClocks }
+timeConsume :: Sec -> Position -> Position
+timeConsume sec pos = pos { positionClocks = newClocks }
  where
-  turn   = positionTurn pos
-  clocks = positionClocks pos
-
+  newClocks = Clocks.consume sec turn clocks
+  turn      = positionTurn pos
+  clocks    = positionClocks pos
 
 -- | 王手判定
 checked :: Color -> Position -> Bool
