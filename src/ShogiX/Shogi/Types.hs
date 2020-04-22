@@ -70,7 +70,7 @@ data Status
 -- | 引き分けの状態
 data DrawStatus
   = Repetition  -- ^ 千日手
-  | ImpasseDraw -- ^ 持将棋
+  | Impasse     -- ^ 持将棋
   deriving (Show, Eq)
 
 -- | 勝者
@@ -82,7 +82,6 @@ data CloseStatus
   | Illegal IllegalStatus -- ^ 反則
   | Resign                -- ^ 投了
   | Timeout               -- ^ 時間切れ
-  | ImpasseClose          -- ^ 持将棋
   deriving (Show, Eq)
 
 -- | 反則で対局終了の状態
@@ -161,8 +160,8 @@ data Move
   = Move SrcSquare Promotion DestSquare -- ^駒移動
   | Drop PieceType DestSquare           -- ^駒打ち
   | CloseResign                         -- ^投了
-  | CloseTimeout                        -- ^時間切れ
   | CloseImpasse                        -- ^持将棋
+  | ConsumeTime                         -- ^対局時計を進める
   deriving Show
 
 -- | 移動元のマス目

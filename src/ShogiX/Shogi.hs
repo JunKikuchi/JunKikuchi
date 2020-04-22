@@ -40,39 +40,65 @@ hirate = undefined
 -- >>> update (Drop Pawn (F5, R8)) 3 shogi
 -- Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = Pawn}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}}
 update :: Move -> Sec -> Shogi -> Shogi
-update (Move s p d) sec shogi = updateShogi (Position.move s p d) sec shogi
-update (Drop p d  ) sec shogi = updateShogi (Position.drop p d) sec shogi
-update _            _   _     = undefined
+update (Move s p d) = updateShogi (Position.move s p d)
+update (Drop pt d ) = updateShogi (Position.drop pt d)
+update CloseResign  = closeShogi (`Closed` Resign)
+update CloseImpasse = closeShogi (const (Draw Impasse))
+update ConsumeTime  = consumeTime
 
 updateShogi
   :: (Position -> Either CloseStatus Position) -> Sec -> Shogi -> Shogi
-updateShogi up sec shogi = either close id $ do
-  -- 持ち時間チェック
-  clockedPosition <- timeConsume sec pos
-  -- 盤面更新
-  newPosition     <- up clockedPosition
-  let newShogi = shogi
-        { shogiPositions = Positions $ newPosition NE.<| unPositions poss
-        }
-  pure $ if Position.mate newPosition
-    then newShogi { shogiStatus = Closed turn Mate }
-    else newShogi
+updateShogi up sec shogi = either id id $ do
+  pos <- shogiConsumeTime sec shogi
+  pure $ either (closed pos) continue $ up pos
  where
-  close status = shogi { shogiStatus = Closed winner status }
-  winner = Color.turnColor . positionTurn $ pos
+  closed pos status = shogi
+    { shogiStatus    = Closed winner status
+    , shogiPositions = Positions $ pos NE.<| unPositions poss
+    }
+    where winner = Color.turnColor . positionTurn $ pos
+  continue pos = shogi
+    { shogiStatus    = newStatus
+    , shogiPositions = Positions $ pos NE.<| unPositions poss
+    }
+   where
+    newStatus =
+      if Position.mate pos then Closed winner Mate else shogiStatus shogi
+    winner = Color.turnColor . positionTurn $ pos
+  poss = shogiPositions shogi
+
+closeShogi :: (Color -> Status) -> Sec -> Shogi -> Shogi
+closeShogi status sec shogi = either id id $ do
+  pos <- shogiConsumeTime sec shogi
+  let winner = Color.turnColor $ positionTurn pos
+  pure $ shogi { shogiStatus    = status winner
+               , shogiPositions = Positions $ pos NE.<| unPositions poss
+               }
+  where poss = shogiPositions shogi
+
+consumeTime :: Sec -> Shogi -> Shogi
+consumeTime sec shogi = either id id $ do
+  pos <- shogiConsumeTime sec shogi
+  pure $ shogi
+    { shogiPositions = Positions . (pos NE.:|) . NE.tail . unPositions $ poss
+    }
+  where poss = shogiPositions shogi
+
+shogiConsumeTime :: Sec -> Shogi -> Either Shogi Position
+shogiConsumeTime sec shogi = do
+  when (clock == Clocks.Timeout) (Left closed)
+  pure newPos
+ where
+  clock  = Clocks.getClock turn clocks
+  closed = shogi { shogiStatus    = Closed winner Timeout
+                 , shogiPositions = Positions $ newPos NE.<| unPositions poss
+                 }
+  winner = Color.turnColor turn
+  turn   = positionTurn pos
+  clocks = positionClocks newPos
+  newPos = Position.consumeTime sec pos
   pos    = shogiPosition shogi
   poss   = shogiPositions shogi
-  turn   = positionTurn pos
-
-timeConsume :: Sec -> Position -> Either CloseStatus Position
-timeConsume sec pos = do
-  when (clock == Clocks.Timeout) (Left ShogiX.Shogi.Types.Timeout)
-  pure clockedPosition
- where
-  clockedPosition = Position.timeConsume sec pos
-  clocks          = positionClocks clockedPosition
-  clock           = Clocks.getClock turn clocks
-  turn            = positionTurn pos
 
 -- | 駒の移動範囲を取得
 --

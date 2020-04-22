@@ -1,7 +1,7 @@
 module ShogiX.Shogi.Position
   ( move
   , ShogiX.Shogi.Position.drop
-  , timeConsume
+  , consumeTime
   , checked
   , mate
   , movables
@@ -67,8 +67,8 @@ drop pt dest pos = do
   stands       = positionStands pos
 
 -- | 時間消費
-timeConsume :: Sec -> Position -> Position
-timeConsume sec pos = pos { positionClocks = newClocks }
+consumeTime :: Sec -> Position -> Position
+consumeTime sec pos = pos { positionClocks = newClocks }
  where
   newClocks = Clocks.consume sec turn clocks
   turn      = positionTurn pos
