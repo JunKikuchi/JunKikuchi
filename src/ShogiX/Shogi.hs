@@ -46,6 +46,7 @@ update CloseResign  = closeShogi (`Closed` Resign)
 update CloseImpasse = closeShogi (const (Draw Impasse))
 update ConsumeTime  = consumeTime
 
+-- | 将棋の駒移動
 updateShogi
   :: (Position -> Either CloseStatus Position) -> Sec -> Shogi -> Shogi
 updateShogi up sec shogi = either id id $ do
@@ -62,12 +63,14 @@ updateShogi up sec shogi = either id id $ do
       if Position.mate pos then Closed winner Mate else shogiStatus shogi
     winner = Color.turnColor . positionTurn $ pos
 
+-- | 将棋の終了
 closeShogi :: (Color -> Status) -> Sec -> Shogi -> Shogi
 closeShogi status sec shogi = either id id $ do
   pos <- shogiConsumeTime sec shogi
   let winner = Color.turnColor $ positionTurn pos
   pure $ consPosition pos shogi { shogiStatus = status winner }
 
+-- | 将棋の対局時計の時間を進める
 consumeTime :: Sec -> Shogi -> Shogi
 consumeTime sec shogi = either id id $ do
   pos <- shogiConsumeTime sec shogi
