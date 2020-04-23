@@ -82,9 +82,8 @@ unEither = either id id
 
 -- | 対局時計の時間を進める
 shogiConsumeTime :: Sec -> Shogi -> Either Shogi Position
-shogiConsumeTime sec shogi = do
-  when (clock == Clocks.Timeout) (Left closed)
-  pure newPos
+shogiConsumeTime sec shogi | clock == Clocks.Timeout = Left closed
+                           | otherwise               = Right newPos
  where
   clock  = Clocks.getClock turn $ positionClocks newPos
   closed = consPosition newPos shogi { shogiStatus = Closed winner Timeout }
