@@ -76,16 +76,16 @@ consumeTime sec shogi = either id id $ do
     }
   where poss = shogiPositions shogi
 
+-- | 対局時計の時間を進める
 shogiConsumeTime :: Sec -> Shogi -> Either Shogi Position
 shogiConsumeTime sec shogi = do
   when (clock == Clocks.Timeout) (Left closed)
   pure newPos
  where
-  clock  = Clocks.getClock turn clocks
+  clock  = Clocks.getClock turn $ positionClocks newPos
   closed = consPosition newPos shogi { shogiStatus = Closed winner Timeout }
   winner = Color.turnColor turn
   turn   = positionTurn pos
-  clocks = positionClocks newPos
   newPos = Position.consumeTime sec pos
   pos    = shogiPosition shogi
 
