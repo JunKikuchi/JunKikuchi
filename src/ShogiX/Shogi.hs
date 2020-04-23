@@ -70,14 +70,11 @@ closeShogi status sec shogi = either id id $ do
   let winner = Color.turnColor $ positionTurn pos
   pure $ consPosition pos shogi { shogiStatus = status winner }
 
--- | 将棋の対局時計の時間を進める
+-- | 対局時計の経過時間チェック
 consumeTime :: Sec -> Shogi -> Shogi
 consumeTime sec shogi = either id id $ do
-  pos <- shogiConsumeTime sec shogi
-  pure $ shogi
-    { shogiPositions = Positions . (pos NE.:|) . NE.tail . unPositions $ poss
-    }
-  where poss = shogiPositions shogi
+  _ <- shogiConsumeTime sec shogi
+  pure shogi
 
 -- | 対局時計の時間を進める
 shogiConsumeTime :: Sec -> Shogi -> Either Shogi Position
