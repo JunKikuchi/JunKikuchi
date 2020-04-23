@@ -49,7 +49,7 @@ update ConsumeTime  = consumeTime
 -- | 将棋の駒移動
 updateShogi
   :: (Position -> Either CloseStatus Position) -> Sec -> Shogi -> Shogi
-updateShogi up sec shogi = either id id $ do
+updateShogi up sec shogi = unEither $ do
   pos <- shogiConsumeTime sec shogi
   pure $ either (closed pos) continue $ up pos
  where
@@ -65,16 +65,20 @@ updateShogi up sec shogi = either id id $ do
 
 -- | 将棋の終了
 closeShogi :: (Color -> Status) -> Sec -> Shogi -> Shogi
-closeShogi status sec shogi = either id id $ do
+closeShogi status sec shogi = unEither $ do
   pos <- shogiConsumeTime sec shogi
   let winner = Color.turnColor $ positionTurn pos
   pure $ consPosition pos shogi { shogiStatus = status winner }
 
 -- | 対局時計の経過時間チェック
 consumeTime :: Sec -> Shogi -> Shogi
-consumeTime sec shogi = either id id $ do
+consumeTime sec shogi = unEither $ do
   _ <- shogiConsumeTime sec shogi
   pure shogi
+
+-- | Either を外す
+unEither :: Either Shogi Shogi -> Shogi
+unEither = either id id
 
 -- | 対局時計の時間を進める
 shogiConsumeTime :: Sec -> Shogi -> Either Shogi Position
