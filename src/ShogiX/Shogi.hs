@@ -51,17 +51,13 @@ updateShogi
   :: (Position -> Either CloseStatus Position) -> Sec -> Shogi -> Shogi
 updateShogi up sec shogi = unEither $ do
   pos <- shogiConsumeTime sec shogi
-  pure $ either (closed pos) continue $ up pos
+  pure . cons . either (close pos) continue . up $ pos
  where
-  closed pos status = consPosition
-    pos
-    shogi { shogiStatus = Closed winner status }
+  cons (status, pos) = consPosition pos shogi { shogiStatus = status }
+  continue pos | Position.mate pos = close pos Mate
+               | otherwise         = (shogiStatus shogi, pos)
+  close pos status = (Closed winner status, pos)
     where winner = Color.turnColor . positionTurn $ pos
-  continue pos = consPosition pos shogi { shogiStatus = newStatus }
-   where
-    newStatus =
-      if Position.mate pos then Closed winner Mate else shogiStatus shogi
-    winner = Color.turnColor . positionTurn $ pos
 
 -- | 将棋の終了
 closeShogi :: (Color -> Status) -> Sec -> Shogi -> Shogi
