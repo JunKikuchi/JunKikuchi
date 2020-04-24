@@ -42,8 +42,8 @@ hirate = undefined
 update :: Update -> Sec -> Shogi -> Shogi
 update (Move s p d) = updateShogi (Position.move s p d)
 update (Drop pt d ) = updateShogi (Position.drop pt d)
-update CloseResign  = closeShogi (`Closed` Resign)
-update CloseImpasse = closeShogi (const (Draw Impasse))
+update CloseResign  = closeResign
+update CloseImpasse = closeImpasse
 update ConsumeTime  = consumeTime
 
 -- | 将棋の駒移動
@@ -51,20 +51,31 @@ updateShogi
   :: (Position -> Either CloseStatus Position) -> Sec -> Shogi -> Shogi
 updateShogi up sec shogi = unEither $ do
   pos <- shogiConsumeTime sec shogi
-  pure . cons . either (close pos) continue . up $ pos
+  pure $ put shogi $ either (close pos) continue $ up pos
  where
-  cons (status, pos) = consPosition pos shogi { shogiStatus = status }
   continue pos | Position.mate pos = close pos Mate
                | otherwise         = (shogiStatus shogi, pos)
-  close pos status = (Closed winner status, pos)
-    where winner = Color.turnColor . positionTurn $ pos
+  close pos status = (Closed (winner pos) status, pos)
 
--- | 将棋の終了
-closeShogi :: (Color -> Status) -> Sec -> Shogi -> Shogi
-closeShogi status sec shogi = unEither $ do
+-- | 投了
+closeResign :: Sec -> Shogi -> Shogi
+closeResign sec shogi = unEither $ do
   pos <- shogiConsumeTime sec shogi
-  let winner = Color.turnColor $ positionTurn pos
-  pure $ consPosition pos shogi { shogiStatus = status winner }
+  pure $ put shogi (Closed (winner pos) Resign, pos)
+
+-- | 持将棋
+closeImpasse :: Sec -> Shogi -> Shogi
+closeImpasse sec shogi = unEither $ do
+  pos <- shogiConsumeTime sec shogi
+  pure $ put shogi (Draw Impasse, pos)
+
+-- | 将棋データ更新
+put :: Shogi -> (Status, Position) -> Shogi
+put shogi (status, pos) = consPosition pos shogi { shogiStatus = status }
+
+-- | 手番では無い側
+winner :: Position -> Color
+winner = Color.turnColor . positionTurn
 
 -- | 対局時計の経過時間チェック
 consumeTime :: Sec -> Shogi -> Shogi
@@ -81,9 +92,9 @@ shogiConsumeTime :: Sec -> Shogi -> Either Shogi Position
 shogiConsumeTime sec shogi | clock == Clocks.Timeout = Left closed
                            | otherwise               = Right newPos
  where
-  clock  = Clocks.getClock turn $ positionClocks newPos
-  closed = consPosition newPos shogi { shogiStatus = Closed winner Timeout }
-  winner = Color.turnColor turn
+  clock = Clocks.getClock turn $ positionClocks newPos
+  closed =
+    consPosition newPos shogi { shogiStatus = Closed (winner pos) Timeout }
   turn   = positionTurn pos
   newPos = Position.consumeTime sec pos
   pos    = shogiPosition shogi
