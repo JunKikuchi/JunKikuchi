@@ -17,7 +17,7 @@ module ShogiX.Shogi.Types
   , Stand(..)
   , Piece(..)
   , PieceType(..)
-  , Move(..)
+  , Update(..)
   , DestSquare
   , SrcSquare
   , Promotion
@@ -155,8 +155,8 @@ data PieceType
   | King           -- ^ 玉将
   deriving (Show, Eq, Ord)
 
--- | 駒の移動
-data Move
+-- | 将棋の更新s
+data Update
   = Move SrcSquare Promotion DestSquare -- ^駒移動
   | Drop PieceType DestSquare           -- ^駒打ち
   | CloseResign                         -- ^投了

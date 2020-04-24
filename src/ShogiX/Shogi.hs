@@ -39,7 +39,7 @@ hirate = undefined
 -- >>>
 -- >>> update (Drop Pawn (F5, R8)) 3 shogi
 -- Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = Pawn}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}}
-update :: Move -> Sec -> Shogi -> Shogi
+update :: Update -> Sec -> Shogi -> Shogi
 update (Move s p d) = updateShogi (Position.move s p d)
 update (Drop pt d ) = updateShogi (Position.drop pt d)
 update CloseResign  = closeShogi (`Closed` Resign)
