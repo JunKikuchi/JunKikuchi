@@ -51,8 +51,10 @@ update u sec shogi
 
 -- | 千日手
 repetition :: Shogi -> Shogi
-repetition shogi = if n >= 4 then perpetualCheck shogi else shogi
-  where n = numberOfPositions (shogiPosition shogi) shogi
+repetition shogi = if t then perpetualCheck shogi else shogi
+ where
+  t    = (== 4) . length . take 4 $ poss
+  poss = filterPositions (shogiPosition shogi) shogi
 
 -- | 連続王手の千日手
 perpetualCheck :: Shogi -> Shogi
@@ -177,21 +179,7 @@ consPosition pos shogi = shogi
                      $ shogi
   }
 
--- | 局面の出現回数
---
--- >>> import RIO
--- >>> import qualified ShogiX.Shogi.Board as Board
--- >>> import qualified ShogiX.Shogi.Stands as Stands
--- >>> import qualified ShogiX.Clocks as Clocks
--- >>>
--- >>> let pos1 = Position Black Board.empty Stands.empty Clocks.infinity
--- >>> let pos2 = Position White Board.empty Stands.empty Clocks.infinity
--- >>> let positions = pos1 NE.<| pos2 NE.<| pos1 :| []
--- >>> let shogi = Shogi Open (Positions positions)
--- >>> numberOfPositions pos1 shogi
--- 2
--- >>> numberOfPositions pos2 shogi
--- 1
-numberOfPositions :: Position -> Shogi -> Int
-numberOfPositions pos =
-  length . NE.filter (Position.positionEq pos) . unPositions . shogiPositions
+-- | 局面抽出
+filterPositions :: Position -> Shogi -> [Position]
+filterPositions pos =
+  NE.filter (Position.positionEq pos) . unPositions . shogiPositions
