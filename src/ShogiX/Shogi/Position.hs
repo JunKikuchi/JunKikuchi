@@ -111,7 +111,8 @@ colorMovables color pos = removeCheckedMovables color board ms
   board = positionBoard pos
   ms    = Board.movables color board
 
--- | 駒の可動範囲から王手になるものを除く
+-- | 駒の可動範囲から自分が王手になるものを除く
+--
 -- >>> import qualified ShogiX.Shogi.Movables as Movables
 -- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
 -- >>> let ms = Movables.fromList [((F5, R9), [((F5, R8), No), ((F4, R9), No)])]
@@ -124,7 +125,8 @@ removeCheckedMovables turn board =
     . Map.mapWithKey (removeCheckedMovable turn board)
     . unMovables
 
--- | 駒の可動範囲から王手になるものを除く
+-- | 駒の可動範囲から自分が王手になるものを除く
+--
 -- >>> import qualified ShogiX.Shogi.Movable as Movable
 -- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
 -- >>> let m = Movable.fromList [((F5, R8), No), ((F4, R9), No)]
@@ -147,7 +149,8 @@ droppables pos = removeCheckedDroppables turn board ds
   stands = positionStands pos
   ds     = Stands.droppables turn board stands
 
--- | 持ち駒の打ち先範囲から王手になるものを除く
+-- | 持ち駒の打ち先範囲から自分が王手になるものを除く
+--
 -- >>> import qualified ShogiX.Shogi.Droppables as Droppables
 -- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
 -- >>> let ds = Droppables.fromList [(Pawn, [(F5, R8), (F5, R4)])]
@@ -161,7 +164,8 @@ removeCheckedDroppables turn board ds =
     $ Map.foldr (Set.union . unDroppable) Set.empty d
   d = unDroppables ds
 
--- | 持ち駒の打ち先範囲から王手になるものを除く
+-- | 持ち駒の打ち先範囲から自分が王手になるものを除く
+--
 -- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
 -- >>> removeCheckedDroppable Black board (F5, R8)
 -- True

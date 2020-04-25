@@ -19,6 +19,7 @@ fromList :: [(PieceType, Int)] -> Stand
 fromList = Stand . Map.fromList
 
 -- | 駒台に駒を追加
+--
 -- >>> add Pawn empty
 -- Stand {unStand = fromList [(Pawn,1)]}
 --
@@ -30,6 +31,7 @@ add pt stand | Map.member pt s = Stand (Map.update (pure . (+ 1)) pt s)
   where s = unStand stand
 
 -- | 駒台の駒を削除
+--
 -- >>> ShogiX.Shogi.Stand.drop Pawn (fromList [(Pawn, 2)])
 -- Just (Stand {unStand = fromList [(Pawn,1)]})
 --
