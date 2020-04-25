@@ -12,6 +12,7 @@ import qualified ShogiX.Shogi.Position         as Position
 import qualified ShogiX.Shogi.Movables         as Movables
 import qualified ShogiX.Shogi.Droppables       as Droppables
 
+{-# ANN module "HLint: ignore Reduce duplication" #-}
 {-# ANN module "HLint: ignore Use camelCase" #-}
 spec_Test_ShogiX_Shogi :: Spec
 spec_Test_ShogiX_Shogi = describe "update" $ do
