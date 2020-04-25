@@ -51,10 +51,23 @@ update u sec shogi
 
 -- | 千日手
 repetition :: Shogi -> Shogi
-repetition shogi = if n >= 4 then newShogi else shogi
+repetition shogi = if n >= 4 then perpetualCheck shogi else shogi
+  where n = numberOfPositions (shogiPosition shogi) shogi
+
+-- | 連続王手の千日手
+perpetualCheck :: Shogi -> Shogi
+perpetualCheck shogi = if t then p else r
  where
-  n        = numberOfPositions (shogiPosition shogi) shogi
-  newShogi = shogi { shogiStatus = Draw Repetition }
+  t = and . fmap (Position.checked turn) $ poss
+  p = shogi { shogiStatus = Closed turn (Illegal PerpetualCheck) }
+  r = shogi { shogiStatus = Draw Repetition }
+  poss =
+    filter ((==) turn . positionTurn)
+      . NE.take 7
+      . unPositions
+      . shogiPositions
+      $ shogi
+  turn = positionTurn $ shogiPosition shogi
 
 -- | 将棋の駒移動
 updateShogi

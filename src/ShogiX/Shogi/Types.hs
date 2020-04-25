@@ -86,11 +86,11 @@ data CloseStatus
 
 -- | 反則で対局終了の状態
 data IllegalStatus
-  = IllegalMove           -- ^ 駒移動違反
-  | IllegalDrop           -- ^ 駒打ち込み違反
-  | DroppedPawnMate       -- ^ 打ち歩詰め
-  | RepetitionRepetedMate -- ^ 連続王手の千日手
-  | AbandonCheck          -- ^ 王手放置
+  = IllegalMove     -- ^ 駒移動違反
+  | IllegalDrop     -- ^ 駒打ち込み違反
+  | DroppedPawnMate -- ^ 打ち歩詰め
+  | PerpetualCheck  -- ^ 連続王手の千日手
+  | AbandonCheck    -- ^ 王手放置
   deriving (Show, Eq)
 
 -- | 局面ログ

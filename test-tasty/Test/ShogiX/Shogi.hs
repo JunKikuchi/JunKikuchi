@@ -154,3 +154,32 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
       length . unPositions . shogiPositions <$> newShogi `shouldBe` pure
         (length moves + 1)
       shogiStatus <$> newShogi `shouldBe` pure (Draw Repetition)
+  describe "連続王手の千日手" $ do
+    let board = Board.fromList
+          [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
+    let stands = Stands.fromList [(Rook, 1), (Gold, 1)] [(Gold, 1)]
+    let position = Position Black board stands $ Clocks.guillotine 10
+    let positions = position :| []
+    let shogi     = Shogi Open (Positions positions)
+    let moves =
+          [ Drop Rook (F5, R5)
+          , Move (F5, R1) False (F4, R1)
+          , Move (F5, R5) False (F4, R5)
+          , Move (F4, R1) False (F5, R1)
+          , Move (F4, R5) False (F5, R5)
+          , Move (F5, R1) False (F4, R1)
+          , Move (F5, R5) False (F4, R5)
+          , Move (F4, R1) False (F5, R1)
+          , Move (F4, R5) False (F5, R5)
+          , Move (F5, R1) False (F4, R1)
+          , Move (F5, R5) False (F4, R5)
+          , Move (F4, R1) False (F5, R1)
+          , Move (F4, R5) False (F5, R5)
+          ]
+    let newShogi = foldl' (\s u -> s >>= update u 1) (Just shogi) moves
+    it "将棋データを更新" $ do
+      isJust newShogi `shouldBe` True
+      length . unPositions . shogiPositions <$> newShogi `shouldBe` pure
+        (length moves + 1)
+      shogiStatus <$> newShogi `shouldBe` pure
+        (Closed White (Illegal PerpetualCheck))
