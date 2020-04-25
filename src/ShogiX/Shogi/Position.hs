@@ -1,5 +1,6 @@
 module ShogiX.Shogi.Position
-  ( move
+  ( positionEq
+  , move
   , ShogiX.Shogi.Position.drop
   , consumeTime
   , checked
@@ -21,8 +22,20 @@ import qualified ShogiX.Shogi.Stands           as Stands
 import qualified ShogiX.Shogi.Movables         as Movables
 import qualified ShogiX.Shogi.Droppables       as Droppables
 
--- | 駒の移動
 {-# ANN module "HLint: ignore Reduce duplication" #-}
+
+-- | 時計以外が同じ場合 True
+positionEq :: Position -> Position -> Bool
+positionEq a b = at == bt && ab == bb && as == bs
+ where
+  at = positionTurn a
+  bt = positionTurn b
+  ab = positionBoard a
+  bb = positionBoard b
+  as = positionStands a
+  bs = positionStands b
+
+-- | 駒の移動
 move
   :: SrcSquare
   -> Promotion

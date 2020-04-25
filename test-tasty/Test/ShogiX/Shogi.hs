@@ -127,3 +127,30 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
     let newShogi =
           Shogi (Draw Impasse) (Positions (newPosition <| position :| []))
     it "将棋データを更新" $ update CloseImpasse 3 shogi `shouldBe` Just newShogi
+  describe "千日手" $ do
+    let board = Board.fromList
+          [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
+    let stands    = Stands.fromList [(Gold, 1)] [(Gold, 1)]
+    let position = Position Black board stands $ Clocks.guillotine 10
+    let positions = position :| []
+    let shogi     = Shogi Open (Positions positions)
+    let moves =
+          [ Move (F5, R9) False (F5, R8)
+          , Move (F5, R1) False (F5, R2)
+          , Move (F5, R8) False (F5, R9)
+          , Move (F5, R2) False (F5, R1)
+          , Move (F5, R9) False (F5, R8)
+          , Move (F5, R1) False (F5, R2)
+          , Move (F5, R8) False (F5, R9)
+          , Move (F5, R2) False (F5, R1)
+          , Move (F5, R9) False (F5, R8)
+          , Move (F5, R1) False (F5, R2)
+          , Move (F5, R8) False (F5, R9)
+          , Move (F5, R2) False (F5, R1)
+          ]
+    let newShogi = foldl' (\s u -> s >>= update u 1) (Just shogi) moves
+    it "将棋データを更新" $ do
+      isJust newShogi `shouldBe` True
+      length . unPositions . shogiPositions <$> newShogi `shouldBe` pure
+        (length moves + 1)
+      shogiStatus <$> newShogi `shouldBe` pure (Draw Repetition)

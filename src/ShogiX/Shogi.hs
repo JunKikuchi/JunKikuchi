@@ -42,12 +42,19 @@ hirate = undefined
 update :: Update -> Sec -> Shogi -> Maybe Shogi
 update u sec shogi
   | shogiStatus shogi /= Open = Nothing
-  | otherwise = pure . (\f -> f sec shogi) $ case u of
+  | otherwise = pure . (\f -> repetition $ f sec shogi) $ case u of
     (Move s p d) -> updateShogi (Position.move s p d)
     (Drop pt d ) -> updateShogi (Position.drop pt d)
     CloseResign  -> closeResign
     CloseImpasse -> closeImpasse
     ConsumeTime  -> consumeTime
+
+-- | 千日手
+repetition :: Shogi -> Shogi
+repetition shogi = if n >= 4 then newShogi else shogi
+ where
+  n        = numberOfPositions (shogiPosition shogi) shogi
+  newShogi = shogi { shogiStatus = Draw Repetition }
 
 -- | 将棋の駒移動
 updateShogi
@@ -156,3 +163,22 @@ consPosition pos shogi = shogi
                      . shogiPositions
                      $ shogi
   }
+
+-- | 局面の出現回数
+--
+-- >>> import RIO
+-- >>> import qualified ShogiX.Shogi.Board as Board
+-- >>> import qualified ShogiX.Shogi.Stands as Stands
+-- >>> import qualified ShogiX.Clocks as Clocks
+-- >>>
+-- >>> let pos1 = Position Black Board.empty Stands.empty Clocks.infinity
+-- >>> let pos2 = Position White Board.empty Stands.empty Clocks.infinity
+-- >>> let positions = pos1 NE.<| pos2 NE.<| pos1 :| []
+-- >>> let shogi = Shogi Open (Positions positions)
+-- >>> numberOfPositions pos1 shogi
+-- 2
+-- >>> numberOfPositions pos2 shogi
+-- 1
+numberOfPositions :: Position -> Shogi -> Int
+numberOfPositions pos =
+  length . NE.filter (Position.positionEq pos) . unPositions . shogiPositions
