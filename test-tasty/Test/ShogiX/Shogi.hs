@@ -97,7 +97,7 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
           $ Clocks Clocks.Timeout (Clocks.Guillotine 10)
     let newShogi = Shogi (Closed White ShogiX.Shogi.Timeout)
                          (Positions (newPosition <| position :| []))
-    it "時間切れで対局終了"
+    it "将棋データを更新"
       $          update (Move (F4, R3) True (F5, R2)) 10 shogi
       `shouldBe` newShogi
   describe "投了" $ do
@@ -105,7 +105,7 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
           $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
     let newShogi = Shogi (Closed White Resign)
                          (Positions (newPosition <| position :| []))
-    it "投了で対局終了" $ update CloseResign 3 shogi `shouldBe` newShogi
+    it "将棋データを更新" $ update CloseResign 3 shogi `shouldBe` newShogi
   describe "対局時計の時間を進める" $ do
     describe "残り時間あり"
       $          it "将棋データをそのまま返す"
@@ -122,4 +122,4 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
           $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
     let newShogi =
           Shogi (Draw Impasse) (Positions (newPosition <| position :| []))
-    it "持将棋で対局終了" $ update CloseImpasse 3 shogi `shouldBe` newShogi
+    it "将棋データを更新" $ update CloseImpasse 3 shogi `shouldBe` newShogi
