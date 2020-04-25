@@ -125,7 +125,6 @@ movables shogi | status == Open = Position.movables pos
 -- | 持ち駒の打ち先範囲を取得
 --
 -- >>> import RIO
--- >>> import qualified RIO.Map as Map
 -- >>> import qualified ShogiX.Shogi.Board as Board
 -- >>> import qualified ShogiX.Shogi.Stands as Stands
 -- >>> import qualified ShogiX.Clocks as Clocks
