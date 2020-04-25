@@ -64,7 +64,7 @@ perpetualCheck shogi = if t then p else r
   p = shogi { shogiStatus = Closed turn (Illegal PerpetualCheck) }
   r = shogi { shogiStatus = Draw Repetition }
   poss =
-    filter ((==) turn . positionTurn)
+    filter ((== turn) . positionTurn)
       . NE.take 7
       . unPositions
       . shogiPositions
