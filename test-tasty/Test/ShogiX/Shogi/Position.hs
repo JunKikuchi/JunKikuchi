@@ -541,14 +541,14 @@ spec_Test_ShogiX_Shogi_Position = do
           $          it "Illegal DroppedPawnMate"
           $          Position.drop
                        Pawn
-                       (F5, R2)
+                       (F1, R4)
                        (Position
                          Black
                          (Board.fromList
-                           [ ((F5, R1), Piece White King)
-                           , ((F5, R3), Piece Black Gold)
-                           , ((F6, R3), Piece Black Lance)
-                           , ((F4, R3), Piece Black Lance)
+                           [ ((F2, R1), Piece Black PromotedBishop)
+                           , ((F2, R5), Piece Black Silver)
+                           , ((F2, R3), Piece White Pawn)
+                           , ((F1, R3), Piece White King)
                            ]
                          )
                          (Stands.fromList [(Pawn, 1)] [])
@@ -559,14 +559,14 @@ spec_Test_ShogiX_Shogi_Position = do
           $          it "Illegal DroppedPawnMate"
           $          Position.drop
                        Pawn
-                       (F5, R8)
+                       (F1, R6)
                        (Position
                          White
                          (Board.fromList
-                           [ ((F5, R9), Piece Black King)
-                           , ((F5, R7), Piece White Gold)
-                           , ((F6, R7), Piece White Lance)
-                           , ((F4, R7), Piece White Lance)
+                           [ ((F1, R7), Piece Black King)
+                           , ((F2, R7), Piece Black Pawn)
+                           , ((F2, R9), Piece White PromotedBishop)
+                           , ((F2, R5), Piece White Silver)
                            ]
                          )
                          (Stands.fromList [] [(Pawn, 1)])
