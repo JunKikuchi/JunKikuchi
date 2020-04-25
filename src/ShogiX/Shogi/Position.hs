@@ -20,6 +20,7 @@ import qualified ShogiX.Shogi.Color            as Color
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stands           as Stands
 import qualified ShogiX.Shogi.Movables         as Movables
+import qualified ShogiX.Shogi.Droppable        as Droppable
 import qualified ShogiX.Shogi.Droppables       as Droppables
 
 {-# ANN module "HLint: ignore Reduce duplication" #-}
@@ -142,36 +143,24 @@ removeCheckedMovable turn board src =
 
 -- | 持ち駒の打ち先範囲を取得
 droppables :: Position -> Droppables
-droppables pos = removeCheckedDroppables turn board ds
+droppables pos = dsf pos ds
  where
+  ds     = Stands.droppables turn board stands
   turn   = positionTurn pos
   board  = positionBoard pos
   stands = positionStands pos
-  ds     = Stands.droppables turn board stands
 
--- | 持ち駒の打ち先範囲から自分が王手になるものを除く
---
--- >>> import qualified ShogiX.Shogi.Droppables as Droppables
--- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
--- >>> let ds = Droppables.fromList [(Pawn, [(F5, R8), (F5, R4)])]
--- >>> removeCheckedDroppables Black board ds
--- Droppables {unDroppables = fromList [(Pawn,Droppable {unDroppable = fromList [(F5,R8)]})]}
-removeCheckedDroppables :: Color -> Board -> Droppables -> Droppables
-removeCheckedDroppables turn board ds =
-  Droppables $ Droppable . Set.intersection ss . unDroppable <$> d
- where
-  ss = Set.filter (removeCheckedDroppable turn board)
-    $ Map.foldr (Set.union . unDroppable) Set.empty d
-  d = unDroppables ds
+-- | 駒の打ち先から負けになるものを削除
+dsf :: Position -> Droppables -> Droppables
+dsf pos =
+  Droppables
+    . Map.filter (/= Droppable.empty)
+    . Map.mapWithKey (df pos)
+    . unDroppables
 
--- | 持ち駒の打ち先範囲から自分が王手になるものを除く
---
--- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
--- >>> removeCheckedDroppable Black board (F5, R8)
--- True
--- >>> removeCheckedDroppable Black board (F5, R4)
--- False
-removeCheckedDroppable :: Color -> Board -> DestSquare -> Bool
-removeCheckedDroppable turn board dest = isJust $ do
-  bd <- Board.drop turn Pawn dest board
-  guard $ not $ Board.checked turn bd
+-- | 駒の打ち先から負けになるものを削除
+df :: Position -> PieceType -> Droppable -> Droppable
+df pos pt =
+  Droppable
+    . Set.filter (\dest -> isRight $ ShogiX.Shogi.Position.drop pt dest pos)
+    . unDroppable
