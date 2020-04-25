@@ -43,7 +43,7 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
       let newShogi = Shogi Open (Positions (newPosition <| position :| []))
       it "将棋データを更新"
         $          update (Move (F5, R9) False (F4, R9)) 3 shogi
-        `shouldBe` newShogi
+        `shouldBe` Just newShogi
     describe "詰みで対局終了" $ do
       let newBoard = Board.fromList
             [ ((F5, R9), Piece Black King)
@@ -59,7 +59,7 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
                            (Positions (newPosition <| position :| []))
       it "将棋データを更新"
         $          update (Move (F4, R3) True (F5, R2)) 3 shogi
-        `shouldBe` newShogi
+        `shouldBe` Just newShogi
   describe "駒を打ち込み" $ do
     describe "対局継続" $ do
       let newBoard = Board.fromList
@@ -75,7 +75,9 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
       let newPosition = Position White newBoard newStands
             $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
       let newShogi = Shogi Open (Positions (newPosition <| position :| []))
-      it "将棋データを更新" $ update (Drop Gold (F4, R9)) 3 shogi `shouldBe` newShogi
+      it "将棋データを更新"
+        $          update (Drop Gold (F4, R9)) 3 shogi
+        `shouldBe` Just newShogi
     describe "詰みで対局終了" $ do
       let newBoard' = Board.fromList
             [ ((F5, R9), Piece Black King)
@@ -91,7 +93,9 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
             $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
       let newShogi = Shogi (Closed Black Mate)
                            (Positions (newPosition <| position :| []))
-      it "将棋データを更新" $ update (Drop Gold (F5, R2)) 3 shogi `shouldBe` newShogi
+      it "将棋データを更新"
+        $          update (Drop Gold (F5, R2)) 3 shogi
+        `shouldBe` Just newShogi
   describe "時間切れ" $ do
     let newPosition = Position Black board stands
           $ Clocks Clocks.Timeout (Clocks.Guillotine 10)
@@ -99,27 +103,27 @@ spec_Test_ShogiX_Shogi = describe "update" $ do
                          (Positions (newPosition <| position :| []))
     it "将棋データを更新"
       $          update (Move (F4, R3) True (F5, R2)) 10 shogi
-      `shouldBe` newShogi
+      `shouldBe` Just newShogi
   describe "投了" $ do
     let newPosition = Position Black board stands
           $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
     let newShogi = Shogi (Closed White Resign)
                          (Positions (newPosition <| position :| []))
-    it "将棋データを更新" $ update CloseResign 3 shogi `shouldBe` newShogi
+    it "将棋データを更新" $ update CloseResign 3 shogi `shouldBe` Just newShogi
   describe "対局時計の時間を進める" $ do
     describe "残り時間あり"
       $          it "将棋データをそのまま返す"
       $          update ConsumeTime 3 shogi
-      `shouldBe` shogi
+      `shouldBe` Just shogi
     describe "時間切れ" $ do
       let newPosition = Position Black board stands
             $ Clocks Clocks.Timeout (Clocks.Guillotine 10)
       let newShogi = Shogi (Closed White ShogiX.Shogi.Timeout)
                            (Positions (newPosition <| position :| []))
-      it "将棋データを更新" $ update ConsumeTime 10 shogi `shouldBe` newShogi
+      it "将棋データを更新" $ update ConsumeTime 10 shogi `shouldBe` Just newShogi
   describe "持将棋" $ do
     let newPosition = Position Black board stands
           $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
     let newShogi =
           Shogi (Draw Impasse) (Positions (newPosition <| position :| []))
-    it "将棋データを更新" $ update CloseImpasse 3 shogi `shouldBe` newShogi
+    it "将棋データを更新" $ update CloseImpasse 3 shogi `shouldBe` Just newShogi
