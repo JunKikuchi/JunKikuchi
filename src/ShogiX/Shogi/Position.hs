@@ -19,6 +19,7 @@ import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Color            as Color
 import qualified ShogiX.Shogi.Board            as Board
 import qualified ShogiX.Shogi.Stands           as Stands
+import qualified ShogiX.Shogi.Movable          as Movable
 import qualified ShogiX.Shogi.Movables         as Movables
 import qualified ShogiX.Shogi.Droppable        as Droppable
 import qualified ShogiX.Shogi.Droppables       as Droppables
@@ -103,43 +104,26 @@ mate pos = hasKing && nullMovables && nullDroppables
 
 -- | 駒の移動範囲を取得
 movables :: Position -> Movables
-movables pos = colorMovables (positionTurn pos) pos
-
--- | 駒の移動範囲を取得
-colorMovables :: Color -> Position -> Movables
-colorMovables color pos = removeCheckedMovables color board ms
+movables pos = msf pos ms
  where
+  ms    = Board.movables turn board
+  turn  = positionTurn pos
   board = positionBoard pos
-  ms    = Board.movables color board
 
--- | 駒の可動範囲から自分が王手になるものを除く
---
--- >>> import qualified ShogiX.Shogi.Movables as Movables
--- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
--- >>> let ms = Movables.fromList [((F5, R9), [((F5, R8), No), ((F4, R9), No)])]
--- >>> removeCheckedMovables Black board ms
--- Movables {unMovables = fromList [((F5,R9),Movable {unMovable = fromList [((F5,R8),No)]})]}
-removeCheckedMovables :: Color -> Board -> Movables -> Movables
-removeCheckedMovables turn board =
+-- | 駒の移動先から負けになるものを削除
+msf :: Position -> Movables -> Movables
+msf pos =
   Movables
-    . Map.filter (not . Map.null . unMovable)
-    . Map.mapWithKey (removeCheckedMovable turn board)
+    . Map.filter (/= Movable.empty)
+    . Map.mapWithKey (mf pos)
     . unMovables
 
--- | 駒の可動範囲から自分が王手になるものを除く
---
--- >>> import qualified ShogiX.Shogi.Movable as Movable
--- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R8), Piece White Gold)]
--- >>> let m = Movable.fromList [((F5, R8), No), ((F4, R9), No)]
--- >>> removeCheckedMovable Black board (F5, R9) m
--- Movable {unMovable = fromList [((F5,R8),No)]}
-removeCheckedMovable :: Color -> Board -> SrcSquare -> Movable -> Movable
-removeCheckedMovable turn board src =
-  Movable . Map.filterWithKey isNotChecked . unMovable
- where
-  isNotChecked dest _ = isJust $ do
-    mv <- Board.move src False dest board
-    guard (not . Board.checked turn . fst $ mv)
+-- | 駒の移動先から負けになるものを削除
+mf :: Position -> SrcSquare -> Movable -> Movable
+mf pos src =
+  Movable
+    . Map.filterWithKey (\dest _ -> isRight $ move src False dest pos)
+    . unMovable
 
 -- | 持ち駒の打ち先範囲を取得
 droppables :: Position -> Droppables
