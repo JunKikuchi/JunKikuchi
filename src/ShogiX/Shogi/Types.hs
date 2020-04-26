@@ -155,7 +155,7 @@ data PieceType
   | King           -- ^ 玉将
   deriving (Show, Eq, Ord)
 
--- | 将棋の更新s
+-- | 将棋の更新
 data Update
   = Move SrcSquare Promotion DestSquare -- ^駒移動
   | Drop PieceType DestSquare           -- ^駒打ち
