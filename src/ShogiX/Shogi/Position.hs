@@ -14,7 +14,9 @@ where
 import           RIO
 import qualified RIO.Map                       as Map
 import qualified RIO.Set                       as Set
-import           ShogiX.Clocks.Types
+import           ShogiX.Clocks                  ( Clocks
+                                                , Sec
+                                                )
 import qualified ShogiX.Clocks                 as Clocks
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Color            as Color
