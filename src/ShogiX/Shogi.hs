@@ -14,15 +14,19 @@ import qualified RIO.NonEmpty                  as NE
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Color            as Color
 import qualified ShogiX.Shogi.Position         as Position
+import qualified ShogiX.Shogi.Positions        as Positions
+import qualified ShogiX.Shogi.Updates          as Updates
 import qualified ShogiX.Shogi.Movable          as Movable
 import qualified ShogiX.Shogi.Movables         as Movables
 import qualified ShogiX.Shogi.Droppables       as Droppables
-import           ShogiX.Clocks                  ( Sec )
+import           ShogiX.Clocks                  ( Clocks
+                                                , Sec
+                                                )
 import qualified ShogiX.Clocks                 as Clocks
 
--- | 平手作成
-hirate :: Shogi
-hirate = undefined
+-- | 平手の将棋開始
+hirate :: Clocks -> Shogi
+hirate clocks = Shogi Open (Positions.hirate clocks) Updates.empty
 
 -- | 更新
 --

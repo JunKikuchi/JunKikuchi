@@ -1,5 +1,6 @@
 module ShogiX.Shogi.Position
-  ( positionEq
+  ( hirate
+  , positionEq
   , move
   , ShogiX.Shogi.Position.drop
   , consumeTime
@@ -25,6 +26,10 @@ import qualified ShogiX.Shogi.Droppable        as Droppable
 import qualified ShogiX.Shogi.Droppables       as Droppables
 
 {-# ANN module "HLint: ignore Reduce duplication" #-}
+
+-- | 平手の局面
+hirate :: Clocks -> Position
+hirate = Position Black Board.hirate Stands.empty
 
 -- | 時計以外が同じ場合 True
 positionEq :: Position -> Position -> Bool

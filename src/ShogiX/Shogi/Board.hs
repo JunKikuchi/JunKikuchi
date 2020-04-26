@@ -1,5 +1,6 @@
 module ShogiX.Shogi.Board
   ( empty
+  , hirate
   , fromList
   , move
   , ShogiX.Shogi.Board.drop
@@ -20,6 +21,51 @@ import qualified ShogiX.Shogi.Movables         as Movables
 -- | 空の将棋盤
 empty :: Board
 empty = Board Map.empty
+
+-- | 平手の将棋盤
+hirate :: Board
+hirate = fromList
+  [ ((F9, R1), Piece White Lance)
+  , ((F8, R1), Piece White Knight)
+  , ((F7, R1), Piece White Silver)
+  , ((F6, R1), Piece White Gold)
+  , ((F5, R1), Piece White King)
+  , ((F4, R1), Piece White Gold)
+  , ((F3, R1), Piece White Silver)
+  , ((F2, R1), Piece White Knight)
+  , ((F1, R1), Piece White Lance)
+  , ((F8, R2), Piece White Rook)
+  , ((F2, R2), Piece White Bishop)
+  , ((F9, R3), Piece White Pawn)
+  , ((F8, R3), Piece White Pawn)
+  , ((F7, R3), Piece White Pawn)
+  , ((F6, R3), Piece White Pawn)
+  , ((F5, R3), Piece White Pawn)
+  , ((F4, R3), Piece White Pawn)
+  , ((F3, R3), Piece White Pawn)
+  , ((F2, R3), Piece White Pawn)
+  , ((F1, R3), Piece White Pawn)
+  , ((F9, R7), Piece Black Pawn)
+  , ((F8, R7), Piece Black Pawn)
+  , ((F7, R7), Piece Black Pawn)
+  , ((F6, R7), Piece Black Pawn)
+  , ((F5, R7), Piece Black Pawn)
+  , ((F4, R7), Piece Black Pawn)
+  , ((F3, R7), Piece Black Pawn)
+  , ((F2, R7), Piece Black Pawn)
+  , ((F1, R7), Piece Black Pawn)
+  , ((F8, R8), Piece Black Bishop)
+  , ((F2, R8), Piece Black Rook)
+  , ((F9, R9), Piece Black Lance)
+  , ((F8, R9), Piece Black Knight)
+  , ((F7, R9), Piece Black Silver)
+  , ((F6, R9), Piece Black Gold)
+  , ((F5, R9), Piece Black King)
+  , ((F4, R9), Piece Black Gold)
+  , ((F3, R9), Piece Black Silver)
+  , ((F2, R9), Piece Black Knight)
+  , ((F1, R9), Piece Black Lance)
+  ]
 
 -- | リストから将棋盤を作成
 fromList :: [(Square, Piece)] -> Board
