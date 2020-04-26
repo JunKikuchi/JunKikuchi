@@ -44,9 +44,9 @@ spec_Test_ShogiX_Shogi = do
               ]
         let newPosition = Position White newBoard stands
               $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
-        let
-          newShogi =
-            Shogi Open (Positions (newPosition <| position :| [])) Updates.empty
+        let newShogi = Shogi Open
+                             (Positions (newPosition <| position :| []))
+                             (Updates [(Move (F5, R9) False (F4, R9), 3)])
         it "将棋データを更新"
           $          update (Move (F5, R9) False (F4, R9)) 3 shogi
           `shouldBe` Just newShogi
@@ -63,7 +63,7 @@ spec_Test_ShogiX_Shogi = do
               $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
         let newShogi = Shogi (Closed Black Mate)
                              (Positions (newPosition <| position :| []))
-                             Updates.empty
+                             (Updates [(Move (F4, R3) True (F5, R2), 3)])
         it "将棋データを更新"
           $          update (Move (F4, R3) True (F5, R2)) 3 shogi
           `shouldBe` Just newShogi
@@ -81,9 +81,9 @@ spec_Test_ShogiX_Shogi = do
         let newStands = Stands.fromList [] [(Gold, 1)]
         let newPosition = Position White newBoard newStands
               $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
-        let
-          newShogi =
-            Shogi Open (Positions (newPosition <| position :| [])) Updates.empty
+        let newShogi = Shogi Open
+                             (Positions (newPosition <| position :| []))
+                             (Updates [(Drop Gold (F4, R9), 3)])
         it "将棋データを更新"
           $          update (Drop Gold (F4, R9)) 3 shogi
           `shouldBe` Just newShogi
@@ -102,7 +102,7 @@ spec_Test_ShogiX_Shogi = do
               $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
         let newShogi = Shogi (Closed Black Mate)
                              (Positions (newPosition <| position :| []))
-                             Updates.empty
+                             (Updates [(Drop Gold (F5, R2), 3)])
         it "将棋データを更新"
           $          update (Drop Gold (F5, R2)) 3 shogi
           `shouldBe` Just newShogi
@@ -111,7 +111,7 @@ spec_Test_ShogiX_Shogi = do
             $ Clocks Clocks.Timeout (Clocks.Guillotine 10)
       let newShogi = Shogi (Closed White ShogiX.Shogi.Timeout)
                            (Positions (newPosition <| position :| []))
-                           Updates.empty
+                           (Updates [(Move (F4, R3) True (F5, R2), 10)])
       it "将棋データを更新"
         $          update (Move (F4, R3) True (F5, R2)) 10 shogi
         `shouldBe` Just newShogi
@@ -120,7 +120,7 @@ spec_Test_ShogiX_Shogi = do
             $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
       let newShogi = Shogi (Closed White Resign)
                            (Positions (newPosition <| position :| []))
-                           Updates.empty
+                           (Updates [(CloseResign, 3)])
       it "将棋データを更新" $ update CloseResign 3 shogi `shouldBe` Just newShogi
     describe "対局時計の時間を進める" $ do
       describe "残り時間あり"
@@ -132,14 +132,14 @@ spec_Test_ShogiX_Shogi = do
               $ Clocks Clocks.Timeout (Clocks.Guillotine 10)
         let newShogi = Shogi (Closed White ShogiX.Shogi.Timeout)
                              (Positions (newPosition <| position :| []))
-                             Updates.empty
+                             (Updates [(ConsumeTime, 10)])
         it "将棋データを更新" $ update ConsumeTime 10 shogi `shouldBe` Just newShogi
     describe "持将棋" $ do
       let newPosition = Position Black board stands
             $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
       let newShogi = Shogi (Draw Impasse)
                            (Positions (newPosition <| position :| []))
-                           Updates.empty
+                           (Updates [(CloseImpasse, 3)])
       it "将棋データを更新" $ update CloseImpasse 3 shogi `shouldBe` Just newShogi
     describe "千日手" $ do
       let board = Board.fromList
@@ -168,6 +168,24 @@ spec_Test_ShogiX_Shogi = do
         length . unPositions . shogiPositions <$> newShogi `shouldBe` pure
           (length moves + 1)
         shogiStatus <$> newShogi `shouldBe` pure (Draw Repetition)
+        shogiUpdates <$> newShogi `shouldBe` pure
+          (Updates
+            (reverse
+              [ (Move (F5, R9) False (F5, R8), 1)
+              , (Move (F5, R1) False (F5, R2), 1)
+              , (Move (F5, R8) False (F5, R9), 1)
+              , (Move (F5, R2) False (F5, R1), 1)
+              , (Move (F5, R9) False (F5, R8), 1)
+              , (Move (F5, R1) False (F5, R2), 1)
+              , (Move (F5, R8) False (F5, R9), 1)
+              , (Move (F5, R2) False (F5, R1), 1)
+              , (Move (F5, R9) False (F5, R8), 1)
+              , (Move (F5, R1) False (F5, R2), 1)
+              , (Move (F5, R8) False (F5, R9), 1)
+              , (Move (F5, R2) False (F5, R1), 1)
+              ]
+            )
+          )
     describe "連続王手の千日手" $ do
       let board = Board.fromList
             [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
@@ -197,6 +215,25 @@ spec_Test_ShogiX_Shogi = do
           (length moves + 1)
         shogiStatus <$> newShogi `shouldBe` pure
           (Closed White (Illegal PerpetualCheck))
+        shogiUpdates <$> newShogi `shouldBe` pure
+          (Updates
+            (reverse
+              [ (Drop Rook (F5, R5)          , 1)
+              , (Move (F5, R1) False (F4, R1), 1)
+              , (Move (F5, R5) False (F4, R5), 1)
+              , (Move (F4, R1) False (F5, R1), 1)
+              , (Move (F4, R5) False (F5, R5), 1)
+              , (Move (F5, R1) False (F4, R1), 1)
+              , (Move (F5, R5) False (F4, R5), 1)
+              , (Move (F4, R1) False (F5, R1), 1)
+              , (Move (F4, R5) False (F5, R5), 1)
+              , (Move (F5, R1) False (F4, R1), 1)
+              , (Move (F5, R5) False (F4, R5), 1)
+              , (Move (F4, R1) False (F5, R1), 1)
+              , (Move (F4, R5) False (F5, R5), 1)
+              ]
+            )
+          )
   describe "movables" $ it "連続王手の千日手を返さない" $ do
     let board = Board.fromList
           [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]

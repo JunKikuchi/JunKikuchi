@@ -31,7 +31,9 @@ module ShogiX.Shogi.Types
 where
 
 import           RIO
-import           ShogiX.Clocks.Types            ( Clocks )
+import           ShogiX.Clocks.Types            ( Clocks
+                                                , Sec
+                                                )
 
 -- | 将棋作成
 --
@@ -109,7 +111,7 @@ data Position
   } deriving (Show, Eq)
 
 -- | 更新履歴
-newtype Updates = Updates { unUpdates :: [Update] } deriving (Show, Eq)
+newtype Updates = Updates { unUpdates :: [(Update, Sec)] } deriving (Show, Eq)
 
 -- | 手番
 type Turn = Color

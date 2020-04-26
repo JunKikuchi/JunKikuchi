@@ -38,19 +38,28 @@ hirate = undefined
 -- >>> let shogi = Shogi Open (Positions (position :| [])) Updates.empty
 -- >>>
 -- >>> update (Move (F5, R9) False (F5, R8)) 3 shogi
--- Just (Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}, shogiUpdates = Updates {unUpdates = []}})
+-- Just (Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}, shogiUpdates = Updates {unUpdates = [(Move (F5,R9) False (F5,R8),3)]}})
 -- >>>
 -- >>> update (Drop Pawn (F5, R8)) 3 shogi
--- Just (Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = Pawn}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}, shogiUpdates = Updates {unUpdates = []}})
+-- Just (Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = Pawn}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}, shogiUpdates = Updates {unUpdates = [(Drop Pawn (F5,R8),3)]}})
 update :: Update -> Sec -> Shogi -> Maybe Shogi
 update u sec shogi
   | shogiStatus shogi /= Open = Nothing
-  | otherwise = pure . (\f -> repetition $ f sec shogi) $ case u of
+  | otherwise = common $ case u of
     (Move s p d) -> updateShogi (Position.move s p d)
     (Drop pt d ) -> updateShogi (Position.drop pt d)
     CloseResign  -> closeResign
     CloseImpasse -> closeImpasse
     ConsumeTime  -> consumeTime
+  where common = pure . appendUpdate u sec . (\f -> repetition $ f sec shogi)
+
+-- | 更新履歴追記
+appendUpdate :: Update -> Sec -> Shogi -> Shogi
+appendUpdate u sec shogi | u == ConsumeTime && open = shogi
+                         | otherwise = shogi { shogiUpdates = newUpdates }
+ where
+  open       = shogiStatus shogi == Open
+  newUpdates = Updates . ((u, sec) :) . unUpdates . shogiUpdates $ shogi
 
 -- | 千日手
 repetition :: Shogi -> Shogi
