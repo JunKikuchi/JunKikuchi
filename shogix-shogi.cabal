@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5b1706609272697f24b168497413697d4010b2a30d93b72b37075a5a6d35ab8a
+-- hash: 47c57baf3bb9cb6b26706e08fd63609d44f56d22e5840b2dad48178e8fa99bc4
 
 name:           shogix-shogi
 version:        0.1.0.0
@@ -41,6 +41,7 @@ library
       ShogiX.Shogi.Stand
       ShogiX.Shogi.Stands
       ShogiX.Shogi.Types
+      ShogiX.Shogi.Updates
   other-modules:
       Paths_shogix_shogi
   hs-source-dirs:

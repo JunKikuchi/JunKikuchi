@@ -8,6 +8,7 @@ module ShogiX.Shogi.Types
   , IllegalStatus(..)
   , Positions(..)
   , Position(..)
+  , Updates(..)
   , Turn
   , Board(..)
   , Square
@@ -37,15 +38,16 @@ import           ShogiX.Clocks.Types            ( Clocks )
 -- >>> import RIO
 -- >>> import qualified ShogiX.Shogi.Board as Board
 -- >>> import qualified ShogiX.Shogi.Stand as Stand
+-- >>> import qualified ShogiX.Shogi.Updates as Updates
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
 -- >>> let board = Board.empty
 -- >>> let stands = Stands Stand.empty Stand.empty
 -- >>> let position = Position Black board stands Clocks.infinity
--- >>> let shogi = Shogi Open (Positions (position :|[]))
+-- >>> let shogi = Shogi Open (Positions (position :|[])) Updates.empty
 -- >>>
 -- >>> shogi
--- Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList []}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}}
+-- Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = Black, positionBoard = Board {unBoard = fromList []}, positionStands = Stands {blackStand = Stand {unStand = fromList []}, whiteStand = Stand {unStand = fromList []}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| []}, shogiUpdates = Updates {unUpdates = []}}
 
 -- | 先手|後手
 data Color
@@ -57,7 +59,8 @@ data Color
 data Shogi
   = Shogi
   { shogiStatus    :: Status    -- ^ 対局状態
-  , shogiPositions :: Positions -- ^ 局面
+  , shogiPositions :: Positions -- ^ 局面履歴
+  , shogiUpdates   :: Updates   -- ^ 更新履歴
   } deriving (Show, Eq)
 
 -- | 対局状態
@@ -93,7 +96,7 @@ data IllegalStatus
   | AbandonCheck    -- ^ 王手放置
   deriving (Show, Eq)
 
--- | 局面ログ
+-- | 局面履歴
 newtype Positions = Positions { unPositions :: NonEmpty Position } deriving (Show, Eq)
 
 -- | 局面
@@ -104,6 +107,9 @@ data Position
   , positionStands :: Stands -- ^ 駒台
   , positionClocks :: Clocks -- ^ 時計
   } deriving (Show, Eq)
+
+-- | 更新履歴
+newtype Updates = Updates { unUpdates :: [Update] } deriving (Show, Eq)
 
 -- | 手番
 type Turn = Color
@@ -162,7 +168,7 @@ data Update
   | CloseResign                         -- ^投了
   | CloseImpasse                        -- ^持将棋
   | ConsumeTime                         -- ^対局時計を進める
-  deriving Show
+  deriving (Show, Eq)
 
 -- | 移動元のマス目
 type DestSquare = Square
