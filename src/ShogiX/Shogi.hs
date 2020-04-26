@@ -146,6 +146,7 @@ movables shogi | status == Open = msf shogi $ Position.movables pos
   status = shogiStatus shogi
   pos    = shogiPosition shogi
 
+-- | 駒の移動先から負けになるものを削除
 msf :: Shogi -> Movables -> Movables
 msf shogi =
   Movables
@@ -153,9 +154,11 @@ msf shogi =
     . Map.mapWithKey (mf shogi)
     . unMovables
 
+-- | 駒の移動先から負けになるものを削除
 mf :: Shogi -> SrcSquare -> Movable -> Movable
 mf shogi src = Movable . Map.mapMaybeWithKey (mv shogi src) . unMovable
 
+-- | 駒の移動先から負けになるものを削除
 mv :: Shogi -> SrcSquare -> DestSquare -> Promotable -> Maybe Promotable
 mv shogi src dest promo = case ts of
   [False]       -> pure No
