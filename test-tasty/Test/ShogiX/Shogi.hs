@@ -186,6 +186,57 @@ spec_Test_ShogiX_Shogi = do
           (length moves + 1)
         shogiStatus <$> newShogi `shouldBe` pure
           (Closed White (Illegal PerpetualCheck))
+  describe "movables" $ it "連続王手の千日手を返さない" $ do
+    let board = Board.fromList
+          [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
+    let stands = Stands.fromList [(Rook, 1), (Gold, 1)] [(Gold, 1)]
+    let position = Position Black board stands $ Clocks.guillotine 10
+    let positions = position :| []
+    let initShogi = Shogi Open (Positions positions)
+    let moves =
+          [ Drop Rook (F5, R5)
+          , Move (F5, R1) False (F4, R1)
+          , Move (F5, R5) False (F4, R5)
+          , Move (F4, R1) False (F5, R1)
+          , Move (F4, R5) False (F5, R5)
+          , Move (F5, R1) False (F4, R1)
+          , Move (F5, R5) False (F4, R5)
+          , Move (F4, R1) False (F5, R1)
+          , Move (F4, R5) False (F5, R5)
+          , Move (F5, R1) False (F4, R1)
+          , Move (F5, R5) False (F4, R5)
+          , Move (F4, R1) False (F5, R1)
+          ]
+    let shogi = foldl' (\s u -> s >>= update u 1) (Just initShogi) moves
+    let ms = Movables.fromList
+          [ ( (F5, R9)
+            , [ ((F6, R8), No)
+              , ((F6, R9), No)
+              , ((F5, R8), No)
+              , ((F4, R8), No)
+              , ((F4, R9), No)
+              ]
+            )
+          , ( (F4, R5)
+            , [ ((F9, R5), No)
+              , ((F8, R5), No)
+              , ((F7, R5), No)
+              , ((F6, R5), No)
+              , ((F4, R1), Option)
+              , ((F4, R2), Option)
+              , ((F4, R3), Option)
+              , ((F4, R4), No)
+              , ((F4, R6), No)
+              , ((F4, R7), No)
+              , ((F4, R8), No)
+              , ((F4, R9), No)
+              , ((F3, R5), No)
+              , ((F2, R5), No)
+              , ((F1, R5), No)
+              ]
+            )
+          ]
+    movables <$> shogi `shouldBe` Just ms
   describe "droppables" $ it "打ち歩詰めを返さない" $ do
     let board = Board.fromList
           [ ((F2, R1), Piece Black PromotedBishop)

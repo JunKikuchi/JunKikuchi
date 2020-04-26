@@ -9,10 +9,12 @@ module ShogiX.Shogi
 where
 
 import           RIO
+import qualified RIO.Map                       as Map
 import qualified RIO.NonEmpty                  as NE
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Color            as Color
 import qualified ShogiX.Shogi.Position         as Position
+import qualified ShogiX.Shogi.Movable          as Movable
 import qualified ShogiX.Shogi.Movables         as Movables
 import qualified ShogiX.Shogi.Droppables       as Droppables
 import           ShogiX.Clocks                  ( Sec )
@@ -138,11 +140,37 @@ shogiConsumeTime sec shogi | clock == Clocks.Timeout = Left closed
 -- >>> movables shogi
 -- Movables {unMovables = fromList [((F5,R5),Movable {unMovable = fromList [((F5,R4),No)]})]}
 movables :: Shogi -> Movables
-movables shogi | status == Open = Position.movables pos
+movables shogi | status == Open = msf shogi $ Position.movables pos
                | otherwise      = Movables.empty
  where
   status = shogiStatus shogi
   pos    = shogiPosition shogi
+
+msf :: Shogi -> Movables -> Movables
+msf shogi =
+  Movables
+    . Map.filter (/= Movable.empty)
+    . Map.mapWithKey (mf shogi)
+    . unMovables
+
+mf :: Shogi -> SrcSquare -> Movable -> Movable
+mf shogi src = Movable . Map.mapMaybeWithKey (mv shogi src) . unMovable
+
+mv :: Shogi -> SrcSquare -> DestSquare -> Promotable -> Maybe Promotable
+mv shogi src dest promo = case ts of
+  [False]       -> pure No
+  [False, True] -> pure Option
+  [True]        -> pure Must
+  _             -> Nothing
+ where
+  ts =
+    [ p
+    | p <- pm promo
+    , (shogiStatus <$> update (Move src p dest) 0 shogi) == Just Open
+    ]
+  pm No     = [False]
+  pm Option = [False, True]
+  pm Must   = [True]
 
 -- | 持ち駒の打ち先範囲を取得
 --
