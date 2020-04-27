@@ -44,7 +44,7 @@ spec_Test_ShogiX_Shogi = do
               , ((F4, R3), Piece Black Silver)
               ]
         let newPosition = Position White newBoard stands
-              $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
+              $ Clocks (Clocks.Countdown 7 0) (Clocks.Countdown 10 0)
         let newShogi = Shogi
               Open
               (Positions.cons newPosition (Positions.singleton position))
@@ -62,7 +62,7 @@ spec_Test_ShogiX_Shogi = do
               , ((F5, R2), Piece Black PromotedSilver) -- 移動
               ]
         let newPosition = Position White newBoard stands
-              $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
+              $ Clocks (Clocks.Countdown 7 0) (Clocks.Countdown 10 0)
         let newShogi = Shogi
               (Closed Black Mate)
               (Positions.cons newPosition (Positions.singleton position))
@@ -83,7 +83,7 @@ spec_Test_ShogiX_Shogi = do
               ]
         let newStands = Stands.fromTuple ([], [(Gold, 1)])
         let newPosition = Position White newBoard newStands
-              $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
+              $ Clocks (Clocks.Countdown 7 0) (Clocks.Countdown 10 0)
         let newShogi = Shogi
               Open
               (Positions.cons newPosition (Positions.singleton position))
@@ -103,7 +103,7 @@ spec_Test_ShogiX_Shogi = do
               ]
         let newStands = Stands.fromTuple ([], [(Gold, 1)])
         let newPosition = Position White newBoard' newStands
-              $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
+              $ Clocks (Clocks.Countdown 7 0) (Clocks.Countdown 10 0)
         let newShogi = Shogi
               (Closed Black Mate)
               (Positions.cons newPosition (Positions.singleton position))
@@ -113,7 +113,7 @@ spec_Test_ShogiX_Shogi = do
           `shouldBe` Just newShogi
     describe "時間切れ" $ do
       let newPosition = Position Black board stands
-            $ Clocks Clocks.Timeout (Clocks.Guillotine 10)
+            $ Clocks Clocks.Timeout (Clocks.Countdown 10 0)
       let newShogi = Shogi
             (Closed White ShogiX.Shogi.Timeout)
             (Positions.cons newPosition (Positions.singleton position))
@@ -123,7 +123,7 @@ spec_Test_ShogiX_Shogi = do
         `shouldBe` Just newShogi
     describe "投了" $ do
       let newPosition = Position Black board stands
-            $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
+            $ Clocks (Clocks.Countdown 7 0) (Clocks.Countdown 10 0)
       let newShogi = Shogi
             (Closed White Resign)
             (Positions.cons newPosition (Positions.singleton position))
@@ -136,7 +136,7 @@ spec_Test_ShogiX_Shogi = do
         `shouldBe` Just shogi
       describe "時間切れ" $ do
         let newPosition = Position Black board stands
-              $ Clocks Clocks.Timeout (Clocks.Guillotine 10)
+              $ Clocks Clocks.Timeout (Clocks.Countdown 10 0)
         let newShogi = Shogi
               (Closed White ShogiX.Shogi.Timeout)
               (Positions.cons newPosition (Positions.singleton position))
@@ -144,7 +144,7 @@ spec_Test_ShogiX_Shogi = do
         it "将棋データを更新" $ update ConsumeTime 10 shogi `shouldBe` Just newShogi
     describe "持将棋" $ do
       let newPosition = Position Black board stands
-            $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
+            $ Clocks (Clocks.Countdown 7 0) (Clocks.Countdown 10 0)
       let newShogi = Shogi
             (Draw Impasse)
             (Positions.cons newPosition (Positions.singleton position))

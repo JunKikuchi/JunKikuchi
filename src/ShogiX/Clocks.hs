@@ -22,7 +22,7 @@ infinity = Clocks Infinity Infinity
 
 -- | 差し切り
 guillotine :: Sec -> Clocks
-guillotine sec = Clocks (Guillotine sec) (Guillotine sec)
+guillotine sec = countdown sec 0
 
 -- | 秒読み
 countdown :: Sec -> Sec -> Clocks
@@ -40,7 +40,7 @@ fischer allot inc = Clocks (Fischer allot inc) (Fischer allot inc)
 --
 -- >>> let clocks = guillotine 60
 -- >>> consume 10 Black clocks
--- Clocks {blackClock = Guillotine 50, whiteClock = Guillotine 60}
+-- Clocks {blackClock = Countdown 50 0, whiteClock = Countdown 60 0}
 consume :: Sec -> Color -> Clocks -> Clocks
 consume sec color clocks = newClocks
  where
@@ -50,7 +50,7 @@ consume sec color clocks = newClocks
 
 -- | 手番の時計取得
 --
--- >>> let clocks = Clocks Infinity (Guillotine 60)
+-- >>> let clocks = Clocks Infinity (Countdown 60 0)
 -- >>> getClock Black clocks
 -- Infinity
 getClock :: Color -> Clocks -> Clock
@@ -59,19 +59,19 @@ getClock White = whiteClock
 
 -- | 手番の時計設定
 --
--- >>> let clocks = Clocks (Guillotine 60) (Guillotine 60)
--- >>> setClock Black (Guillotine 50) clocks
--- Clocks {blackClock = Guillotine 50, whiteClock = Guillotine 60}
+-- >>> let clocks = Clocks (Countdown 60 0) (Countdown 60 0)
+-- >>> setClock Black (Countdown 50 0) clocks
+-- Clocks {blackClock = Countdown 50 0, whiteClock = Countdown 60 0}
 setClock :: Color -> Clock -> Clocks -> Clocks
 setClock Black clock clocks = clocks { blackClock = clock }
 setClock White clock clocks = clocks { whiteClock = clock }
 
 -- | 時計の時間を消費
 --
--- >>> consumeClockSec 10 (Guillotine 60)
--- Guillotine 50
+-- >>> consumeClockSec 10 (Countdown 60 0)
+-- Countdown 50 0
 --
--- >>> consumeClockSec 65 (Guillotine 60)
+-- >>> consumeClockSec 65 (Countdown 60 0)
 -- Timeout
 --
 -- >>> consumeClockSec 10 (Countdown 60 10)
@@ -96,9 +96,6 @@ setClock White clock clocks = clocks { whiteClock = clock }
 -- Timeout
 consumeClockSec :: Sec -> Clock -> Clock
 consumeClockSec _ Infinity = Infinity
-consumeClockSec sec (Guillotine allot) | a > 0     = Guillotine a
-                                       | otherwise = Timeout
-  where a = allot - sec
 consumeClockSec sec (Countdown allot cdown) | a > 0 || c > 0 = Countdown a cdown
                                             | otherwise      = Timeout
  where
