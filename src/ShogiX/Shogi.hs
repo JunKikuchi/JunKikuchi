@@ -10,7 +10,6 @@ where
 
 import           RIO
 import qualified RIO.Map                       as Map
-import qualified RIO.NonEmpty                  as NE
 import           ShogiX.Shogi.Types
 import qualified ShogiX.Shogi.Color            as Color
 import qualified ShogiX.Shogi.Position         as Position
@@ -81,8 +80,7 @@ perpetualCheck shogi = if t then p else r
   r = shogi { shogiStatus = Draw Repetition }
   poss =
     filter ((== turn) . positionTurn)
-      . NE.take 7
-      . unPositions
+      . Positions.take 7
       . shogiPositions
       $ shogi
   turn = positionTurn $ shogiPosition shogi
@@ -214,19 +212,13 @@ droppables shogi | status == Open = Position.droppables pos
 
 -- | 最新の局面取得
 shogiPosition :: Shogi -> Position
-shogiPosition = NE.head . unPositions . shogiPositions
+shogiPosition = Positions.head . shogiPositions
 
 -- | 局面を追加
 consPosition :: Position -> Shogi -> Shogi
-consPosition pos shogi = shogi
-  { shogiPositions = Positions
-                     . (pos NE.<|)
-                     . unPositions
-                     . shogiPositions
-                     $ shogi
-  }
+consPosition pos shogi =
+  shogi { shogiPositions = Positions.cons pos . shogiPositions $ shogi }
 
 -- | 局面抽出
 filterPositions :: Position -> Shogi -> [Position]
-filterPositions pos =
-  NE.filter (Position.positionEq pos) . unPositions . shogiPositions
+filterPositions pos = Positions.filter pos . shogiPositions
