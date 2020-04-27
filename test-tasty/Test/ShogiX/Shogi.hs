@@ -27,7 +27,7 @@ spec_Test_ShogiX_Shogi = do
           , ((F5, R3), Piece Black Pawn)
           , ((F4, R3), Piece Black Silver)
           ]
-    let stands   = Stands.fromList [(Gold, 1)] [(Gold, 1)]
+    let stands   = Stands.fromTuple ([(Gold, 1)], [(Gold, 1)])
     let position = Position Black board stands $ Clocks.guillotine 10
     let shogi    = Shogi Open (Positions (position :| [])) Updates.empty
     describe "駒を移動" $ do
@@ -78,7 +78,7 @@ spec_Test_ShogiX_Shogi = do
               , ((F4, R3), Piece Black Silver)
               , ((F4, R9), Piece Black Gold) -- 打ち込み
               ]
-        let newStands = Stands.fromList [] [(Gold, 1)]
+        let newStands = Stands.fromTuple ([], [(Gold, 1)])
         let newPosition = Position White newBoard newStands
               $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
         let newShogi = Shogi Open
@@ -97,7 +97,7 @@ spec_Test_ShogiX_Shogi = do
               , ((F4, R3), Piece Black Silver)
               , ((F5, R2), Piece Black Gold) -- 打ち込み
               ]
-        let newStands = Stands.fromList [] [(Gold, 1)]
+        let newStands = Stands.fromTuple ([], [(Gold, 1)])
         let newPosition = Position White newBoard' newStands
               $ Clocks (Clocks.Guillotine 7) (Clocks.Guillotine 10)
         let newShogi = Shogi (Closed Black Mate)
@@ -144,7 +144,7 @@ spec_Test_ShogiX_Shogi = do
     describe "千日手" $ do
       let board = Board.fromList
             [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
-      let stands    = Stands.fromList [(Gold, 1)] [(Gold, 1)]
+      let stands    = Stands.fromTuple ([(Gold, 1)], [(Gold, 1)])
       let position = Position Black board stands $ Clocks.guillotine 10
       let positions = position :| []
       let shogi = Shogi Open (Positions positions) Updates.empty
@@ -189,7 +189,7 @@ spec_Test_ShogiX_Shogi = do
     describe "連続王手の千日手" $ do
       let board = Board.fromList
             [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
-      let stands = Stands.fromList [(Rook, 1), (Gold, 1)] [(Gold, 1)]
+      let stands = Stands.fromTuple ([(Rook, 1), (Gold, 1)], [(Gold, 1)])
       let position = Position Black board stands $ Clocks.guillotine 10
       let positions = position :| []
       let shogi = Shogi Open (Positions positions) Updates.empty
@@ -237,7 +237,7 @@ spec_Test_ShogiX_Shogi = do
   describe "movables" $ it "連続王手の千日手を返さない" $ do
     let board = Board.fromList
           [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
-    let stands = Stands.fromList [(Rook, 1), (Gold, 1)] [(Gold, 1)]
+    let stands = Stands.fromTuple ([(Rook, 1), (Gold, 1)], [(Gold, 1)])
     let position = Position Black board stands $ Clocks.guillotine 10
     let positions = position :| []
     let initShogi = Shogi Open (Positions positions) Updates.empty
@@ -292,7 +292,7 @@ spec_Test_ShogiX_Shogi = do
           , ((F2, R3), Piece White Pawn)
           , ((F1, R3), Piece White King)
           ]
-    let stands    = Stands.fromList [(Pawn, 1)] []
+    let stands    = Stands.fromTuple ([(Pawn, 1)], [])
     let position  = Position Black board stands Clocks.infinity
     let positions = position :| []
     let shogi = Shogi Open (Positions positions) Updates.empty

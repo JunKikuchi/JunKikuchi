@@ -27,7 +27,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          , ((F5, R7), Piece White Pawn)
                          ]
                        )
-                       (Stands.fromList [(Pawn, 1)] [(Pawn, 1)])
+                       (Stands.fromTuple ([(Pawn, 1)], [(Pawn, 1)]))
                        Clocks.infinity
                      )
         `shouldBe` True
@@ -42,7 +42,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          , ((F5, R3), Piece Black Pawn)
                          ]
                        )
-                       (Stands.fromList [(Pawn, 1)] [(Pawn, 1)])
+                       (Stands.fromTuple ([(Pawn, 1)], [(Pawn, 1)]))
                        Clocks.infinity
                      )
         `shouldBe` True
@@ -118,7 +118,7 @@ spec_Test_ShogiX_Shogi_Position = do
                            , ((F4, R7), Piece White Lance)
                            ]
                          )
-                         (Stands.fromList [(Pawn, 1)] [])
+                         (Stands.fromTuple ([(Pawn, 1)], []))
                          Clocks.infinity
                        )
           `shouldBe` False
@@ -134,7 +134,7 @@ spec_Test_ShogiX_Shogi_Position = do
                            , ((F4, R3), Piece Black Lance)
                            ]
                          )
-                         (Stands.fromList [] [(Pawn, 1)])
+                         (Stands.fromTuple ([], [(Pawn, 1)]))
                          Clocks.infinity
                        )
           `shouldBe` False
@@ -193,7 +193,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (Position
                          White
                          (Board.fromList [((F5, R4), Piece Black Pawn)])
-                         (Stands.fromList [(Pawn, 1)] [])
+                         (Stands.fromTuple ([(Pawn, 1)], []))
                          Clocks.infinity
                        )
         describe "後手"
@@ -214,7 +214,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (Position
                          Black
                          (Board.fromList [((F5, R6), Piece White Pawn)])
-                         (Stands.fromList [] [(Pawn, 1)])
+                         (Stands.fromTuple ([], [(Pawn, 1)]))
                          Clocks.infinity
                        )
     describe "駒の移動が出来ない場合" $ do
@@ -320,7 +320,7 @@ spec_Test_ShogiX_Shogi_Position = do
                      (F4, R5)
                      (Position Black
                                (Board.fromList [((F5, R5), Piece Black Pawn)])
-                               (Stands.fromList [(Pawn, 1)] [])
+                               (Stands.fromTuple ([(Pawn, 1)], []))
                                (Clocks.guillotine 10)
                      )
         `shouldBe` Right
@@ -341,7 +341,7 @@ spec_Test_ShogiX_Shogi_Position = do
                      (F6, R5)
                      (Position White
                                (Board.fromList [((F5, R5), Piece White Pawn)])
-                               (Stands.fromList [] [(Pawn, 1)])
+                               (Stands.fromTuple ([], [(Pawn, 1)]))
                                (Clocks.guillotine 10)
                      )
         `shouldBe` Right
@@ -369,7 +369,7 @@ spec_Test_ShogiX_Shogi_Position = do
                            , ((F6, R3), Piece Black Lance)
                            ]
                          )
-                         (Stands.fromList [(Pawn, 1)] [])
+                         (Stands.fromTuple ([(Pawn, 1)], []))
                          Clocks.infinity
                        )
           `shouldBe` Right
@@ -398,7 +398,7 @@ spec_Test_ShogiX_Shogi_Position = do
                            , ((F6, R7), Piece White Lance)
                            ]
                          )
-                         (Stands.fromList [] [(Pawn, 1)])
+                         (Stands.fromTuple ([], [(Pawn, 1)]))
                          Clocks.infinity
                        )
           `shouldBe` Right
@@ -423,7 +423,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F4, R5)
                        (Position Black
                                  (Board.fromList [((F5, R5), Piece Black Pawn)])
-                                 (Stands.fromList [] [])
+                                 (Stands.fromTuple ([], []))
                                  (Clocks.guillotine 10)
                        )
           `shouldBe` Left (Illegal IllegalDrop)
@@ -434,7 +434,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F6, R5)
                        (Position White
                                  (Board.fromList [((F5, R5), Piece White Pawn)])
-                                 (Stands.fromList [] [])
+                                 (Stands.fromTuple ([], []))
                                  (Clocks.guillotine 10)
                        )
           `shouldBe` Left (Illegal IllegalDrop)
@@ -446,7 +446,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F4, R5)
                        (Position Black
                                  (Board.fromList [((F5, R5), Piece Black Pawn)])
-                                 (Stands.fromList [(Gold, 1)] [(Gold, 1)])
+                                 (Stands.fromTuple ([(Gold, 1)], [(Gold, 1)]))
                                  (Clocks.guillotine 10)
                        )
           `shouldBe` Left (Illegal IllegalDrop)
@@ -457,7 +457,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F6, R5)
                        (Position White
                                  (Board.fromList [((F5, R5), Piece White Pawn)])
-                                 (Stands.fromList [(Gold, 1)] [(Gold, 1)])
+                                 (Stands.fromTuple ([(Gold, 1)], [(Gold, 1)]))
                                  (Clocks.guillotine 10)
                        )
           `shouldBe` Left (Illegal IllegalDrop)
@@ -469,7 +469,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R1)
                        (Position Black
                                  (Board.fromList [])
-                                 (Stands.fromList [(Pawn, 1)] [])
+                                 (Stands.fromTuple ([(Pawn, 1)], []))
                                  (Clocks.guillotine 10)
                        )
           `shouldBe` Left (Illegal IllegalDrop)
@@ -480,7 +480,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R9)
                        (Position White
                                  (Board.fromList [])
-                                 (Stands.fromList [] [(Pawn, 1)])
+                                 (Stands.fromTuple ([], [(Pawn, 1)]))
                                  (Clocks.guillotine 10)
                        )
           `shouldBe` Left (Illegal IllegalDrop)
@@ -492,7 +492,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        (Position Black
                                  (Board.fromList [((F5, R9), Piece Black Pawn)])
-                                 (Stands.fromList [(Pawn, 1)] [])
+                                 (Stands.fromTuple ([(Pawn, 1)], []))
                                  Clocks.infinity
                        )
           `shouldBe` Left (Illegal IllegalDrop)
@@ -503,7 +503,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (F5, R5)
                        (Position White
                                  (Board.fromList [((F5, R1), Piece White Pawn)])
-                                 (Stands.fromList [] [(Pawn, 1)])
+                                 (Stands.fromTuple ([], [(Pawn, 1)]))
                                  Clocks.infinity
                        )
           `shouldBe` Left (Illegal IllegalDrop)
@@ -518,7 +518,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          (Board.fromList
                            [((F5, R9), Piece Black King), ((F5, R1), Piece White Lance)]
                          )
-                         (Stands.fromList [(Pawn, 1)] [(Pawn, 1)])
+                         (Stands.fromTuple ([(Pawn, 1)], [(Pawn, 1)]))
                          Clocks.infinity
                        )
           `shouldBe` Left (Illegal AbandonCheck)
@@ -532,7 +532,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          (Board.fromList
                            [((F5, R1), Piece White King), ((F5, R9), Piece Black Lance)]
                          )
-                         (Stands.fromList [(Pawn, 1)] [(Pawn, 1)])
+                         (Stands.fromTuple ([(Pawn, 1)], [(Pawn, 1)]))
                          Clocks.infinity
                        )
           `shouldBe` Left (Illegal AbandonCheck)
@@ -551,7 +551,7 @@ spec_Test_ShogiX_Shogi_Position = do
                            , ((F1, R3), Piece White King)
                            ]
                          )
-                         (Stands.fromList [(Pawn, 1)] [])
+                         (Stands.fromTuple ([(Pawn, 1)], []))
                          Clocks.infinity
                        )
           `shouldBe` Left (Illegal DroppedPawnMate)
@@ -569,7 +569,7 @@ spec_Test_ShogiX_Shogi_Position = do
                            , ((F2, R5), Piece White Silver)
                            ]
                          )
-                         (Stands.fromList [] [(Pawn, 1)])
+                         (Stands.fromTuple ([], [(Pawn, 1)]))
                          Clocks.infinity
                        )
           `shouldBe` Left (Illegal DroppedPawnMate)
@@ -678,7 +678,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (Board.fromList
                          [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                        )
-                       (Stands.fromList [(Pawn, 1)] [])
+                       (Stands.fromTuple ([(Pawn, 1)], []))
                        Clocks.infinity
                      )
         `shouldBe` Droppables.fromList
@@ -698,7 +698,7 @@ spec_Test_ShogiX_Shogi_Position = do
                        (Board.fromList
                          [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
                        )
-                       (Stands.fromList [] [(Pawn, 1)])
+                       (Stands.fromTuple ([], [(Pawn, 1)]))
                        Clocks.infinity
                      )
         `shouldBe` Droppables.fromList
@@ -722,7 +722,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          , ((F5, R1), Piece White King)
                          ]
                        )
-                       (Stands.fromList [(Pawn, 1)] [])
+                       (Stands.fromTuple ([(Pawn, 1)], []))
                        Clocks.infinity
                      )
         `shouldBe` Droppables.fromList
@@ -738,7 +738,7 @@ spec_Test_ShogiX_Shogi_Position = do
                          , ((F5, R1), Piece White King)
                          ]
                        )
-                       (Stands.fromList [] [(Pawn, 1)])
+                       (Stands.fromTuple ([], [(Pawn, 1)]))
                        Clocks.infinity
                      )
         `shouldBe` Droppables.fromList

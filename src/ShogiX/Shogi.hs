@@ -36,7 +36,7 @@ hirate clocks = Shogi Open (Positions.hirate clocks) Updates.empty
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
 -- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
--- >>> let stands = Stands.fromList [(Pawn, 1)] [(Pawn, 1)]
+-- >>> let stands = Stands.fromTuple ([(Pawn, 1)], [(Pawn, 1)])
 -- >>> let position = Position Black board stands Clocks.infinity
 -- >>> let shogi = Shogi Open (Positions (position :| [])) Updates.empty
 -- >>>
@@ -197,7 +197,7 @@ mv shogi src dest promo = case ts of
 -- >>> import qualified ShogiX.Clocks as Clocks
 -- >>>
 -- >>> let board = Board.fromList [((file, R3), Piece Black Pawn) | file <- [F9 .. F2]]
--- >>> let stands = Stands.fromList [(Pawn, 1)] []
+-- >>> let stands = Stands.fromTuple ([(Pawn, 1)], [])
 -- >>> let position = Position Black board stands Clocks.infinity
 -- >>> let shogi = Shogi Open (Positions (position :| [])) Updates.empty
 -- >>>

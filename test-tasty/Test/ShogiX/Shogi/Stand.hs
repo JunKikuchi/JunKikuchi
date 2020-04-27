@@ -21,7 +21,7 @@ spec_Test_ShogiX_Shogi_Stand = describe "droppables" $ do
     $          it "駒ごとの打ち込み先を返す"
     $          Stands.droppables Black
                                  (Board Map.empty)
-                                 (Stands.fromList [(Pawn, 1), (Gold, 1)] [])
+                                 (Stands.fromTuple ([(Pawn, 1), (Gold, 1)], []))
     `shouldBe` Droppables.fromList
                  [ ( Pawn
                    , [ (file, rank) | file <- [F9 .. F1], rank <- [R2 .. R9] ]
@@ -38,7 +38,7 @@ spec_Test_ShogiX_Shogi_Stand = describe "droppables" $ do
                    (Board.fromList
                      [((F5, R9), Piece Black King), ((F5, R5), Piece White Lance)]
                    )
-                   (Stands.fromList [(Pawn, 1)] [])
+                   (Stands.fromTuple ([(Pawn, 1)], []))
       `shouldBe` Droppables.fromList
                    [ ( Pawn
                      , [ (file, rank)
@@ -55,7 +55,7 @@ spec_Test_ShogiX_Shogi_Stand = describe "droppables" $ do
                    (Board.fromList
                      [((F5, R1), Piece White King), ((F5, R5), Piece Black Lance)]
                    )
-                   (Stands.fromList [] [(Pawn, 1)])
+                   (Stands.fromTuple ([], [(Pawn, 1)]))
       `shouldBe` Droppables.fromList
                    [ ( Pawn
                      , [ (file, rank)

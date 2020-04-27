@@ -1,6 +1,6 @@
 module ShogiX.Shogi.Stands
   ( empty
-  , fromList
+  , fromTuple
   , add
   , ShogiX.Shogi.Stands.drop
   , droppables
@@ -17,9 +17,9 @@ import qualified ShogiX.Shogi.Stand            as Stand
 empty :: Stands
 empty = Stands Stand.empty Stand.empty
 
--- | リストから駒台を作成
-fromList :: [(PieceType, Int)] -> [(PieceType, Int)] -> Stands
-fromList b w = Stands (Stand.fromList b) (Stand.fromList w)
+-- | タプルから駒台を作成
+fromTuple :: ([(PieceType, Int)], [(PieceType, Int)]) -> Stands
+fromTuple (b, w) = Stands (Stand.fromList b) (Stand.fromList w)
 
 -- | 駒台に駒を追加
 add :: Color -> Maybe PieceType -> Stands -> Stands
