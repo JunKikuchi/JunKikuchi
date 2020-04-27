@@ -1,6 +1,7 @@
 module ShogiX.Shogi.Stands
   ( empty
   , fromTuple
+  , toTuple
   , add
   , ShogiX.Shogi.Stands.drop
   , droppables
@@ -20,6 +21,13 @@ empty = Stands Stand.empty Stand.empty
 -- | タプルから駒台を作成
 fromTuple :: ([(PieceType, Int)], [(PieceType, Int)]) -> Stands
 fromTuple (b, w) = Stands (Stand.fromList b) (Stand.fromList w)
+
+-- | 駒台をタプルに変換
+toTuple :: Stands -> ([(PieceType, Int)], [(PieceType, Int)])
+toTuple stands = (b, w)
+ where
+  b = Map.toList $ unStand $ getStand Black stands
+  w = Map.toList $ unStand $ getStand White stands
 
 -- | 駒台に駒を追加
 add :: Color -> Maybe PieceType -> Stands -> Stands

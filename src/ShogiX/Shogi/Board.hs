@@ -2,6 +2,7 @@ module ShogiX.Shogi.Board
   ( empty
   , hirate
   , fromList
+  , ShogiX.Shogi.Board.toList
   , move
   , ShogiX.Shogi.Board.drop
   , checked
@@ -70,6 +71,10 @@ hirate = fromList
 -- | リストから将棋盤を作成
 fromList :: [(Square, Piece)] -> Board
 fromList = Board . Map.fromList
+
+-- | 将棋盤をリストに変換
+toList :: Board -> [(Square, Piece)]
+toList = Map.toList . unBoard
 
 -- | 駒の移動
 move

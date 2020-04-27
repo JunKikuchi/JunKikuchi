@@ -5,6 +5,7 @@ module ShogiX.Shogi
   , droppables
   , shogiPosition
   , module ShogiX.Shogi.Types
+  , module ShogiX.Shogi.Codec
   )
 where
 
@@ -22,6 +23,7 @@ import           ShogiX.Clocks                  ( Clocks
                                                 , Sec
                                                 )
 import qualified ShogiX.Clocks                 as Clocks
+import           ShogiX.Shogi.Codec
 
 -- | 平手の将棋開始
 hirate :: Clocks -> Shogi
