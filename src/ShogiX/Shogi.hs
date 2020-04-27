@@ -54,15 +54,15 @@ update u sec shogi
     CloseResign  -> closeResign
     CloseImpasse -> closeImpasse
     ConsumeTime  -> consumeTime
-  where common = pure . appendUpdate u sec . (\f -> repetition $ f sec shogi)
+  where common = pure . consUpdate u sec . (\f -> repetition $ f sec shogi)
 
 -- | 更新履歴追記
-appendUpdate :: Update -> Sec -> Shogi -> Shogi
-appendUpdate u sec shogi | u == ConsumeTime && open = shogi
-                         | otherwise = shogi { shogiUpdates = newUpdates }
+consUpdate :: Update -> Sec -> Shogi -> Shogi
+consUpdate u sec shogi | t         = shogi
+                       | otherwise = shogi { shogiUpdates = newUpdates }
  where
-  open       = shogiStatus shogi == Open
-  newUpdates = Updates . ((u, sec) :) . unUpdates . shogiUpdates $ shogi
+  t          = u == ConsumeTime && shogiStatus shogi == Open
+  newUpdates = Updates.cons (u, sec) . shogiUpdates $ shogi
 
 -- | 千日手
 repetition :: Shogi -> Shogi
