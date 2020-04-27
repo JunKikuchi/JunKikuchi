@@ -40,10 +40,11 @@ loadUpdates = foldr Updates.cons Updates.empty
 --
 -- >>> import RIO.NonEmpty ((<|))
 -- >>> import qualified ShogiX.Clocks as Clocks
+-- >>> import qualified ShogiX.Shogi.Positions as Positions
 -- >>>
 -- >>> let position1 = Position White (Board.fromList [((F5, R1), Piece White King), ((F5, R8), Piece Black King)]) (Stands.fromTuple ([], [])) Clocks.infinity
 -- >>> let position2 = Position Black (Board.fromList [((F5, R1), Piece White King), ((F5, R9), Piece Black King)]) (Stands.fromTuple ([], [])) Clocks.infinity
--- >>> let positions = Positions (position1 <| position2 :| [])
+-- >>> let positions = Positions.cons position1 (Positions.singleton position2)
 -- >>> let updates = Updates [(Move (F5,R9) False (F5,R8),3)]
 -- >>> let shogi = Shogi Open positions updates
 -- >>> dump shogi

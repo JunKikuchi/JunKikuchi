@@ -40,7 +40,7 @@ hirate clocks = Shogi Open (Positions.hirate clocks) Updates.empty
 -- >>> let board = Board.fromList [((F5, R9), Piece Black King), ((F5, R1), Piece White King)]
 -- >>> let stands = Stands.fromTuple ([(Pawn, 1)], [(Pawn, 1)])
 -- >>> let position = Position Black board stands Clocks.infinity
--- >>> let shogi = Shogi Open (Positions (position :| [])) Updates.empty
+-- >>> let shogi = Shogi Open (Positions.singleton position) Updates.empty
 -- >>>
 -- >>> update (Move (F5, R9) False (F5, R8)) 3 shogi
 -- Just (Shogi {shogiStatus = Open, shogiPositions = Positions {unPositions = Position {positionTurn = White, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R8),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}} :| [Position {positionTurn = Black, positionBoard = Board {unBoard = fromList [((F5,R1),Piece {pieceColor = White, pieceType = King}),((F5,R9),Piece {pieceColor = Black, pieceType = King})]}, positionStands = Stands {blackStand = Stand {unStand = fromList [(Pawn,1)]}, whiteStand = Stand {unStand = fromList [(Pawn,1)]}}, positionClocks = Clocks {blackClock = Infinity, whiteClock = Infinity}}]}, shogiUpdates = Updates {unUpdates = [(Move (F5,R9) False (F5,R8),3)]}})
@@ -150,7 +150,7 @@ shogiConsumeTime sec shogi | clock == Clocks.Timeout = Left closed
 -- >>>
 -- >>> let board = Board.fromList [((F5, R5), Piece Black Pawn)]
 -- >>> let position = Position Black board Stands.empty Clocks.infinity
--- >>> let shogi = Shogi Open (Positions (position :| [])) Updates.empty
+-- >>> let shogi = Shogi Open (Positions.singleton position) Updates.empty
 -- >>>
 -- >>> movables shogi
 -- Movables {unMovables = fromList [((F5,R5),Movable {unMovable = fromList [((F5,R4),No)]})]}
@@ -201,7 +201,7 @@ mv shogi src dest promo = case ts of
 -- >>> let board = Board.fromList [((file, R3), Piece Black Pawn) | file <- [F9 .. F2]]
 -- >>> let stands = Stands.fromTuple ([(Pawn, 1)], [])
 -- >>> let position = Position Black board stands Clocks.infinity
--- >>> let shogi = Shogi Open (Positions (position :| [])) Updates.empty
+-- >>> let shogi = Shogi Open (Positions.singleton position) Updates.empty
 -- >>>
 -- >>> droppables shogi
 -- Droppables {unDroppables = fromList [(Pawn,Droppable {unDroppable = fromList [(F1,R2),(F1,R3),(F1,R4),(F1,R5),(F1,R6),(F1,R7),(F1,R8),(F1,R9)]})]}
