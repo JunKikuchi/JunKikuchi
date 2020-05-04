@@ -2,4 +2,4 @@ import           RIO
 import           Test.DocTest                   ( doctest )
 
 main :: IO ()
-main = doctest ["src"]
+main = doctest ["-XNoImplicitPrelude", "src"]
