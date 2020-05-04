@@ -35,7 +35,10 @@ movable :: Piece -> SrcSquare -> Map Square Color -> Movable
 movable (Piece color pt) src sc = Movable mv
  where
   mv = Map.fromList
-    [ (m, promoExam color pt m) | ms <- mss, m <- takeMovables color sc ms ]
+    [ (dest, promoExam color pt src dest)
+    | ms   <- mss
+    , dest <- takeMovables color sc ms
+    ]
   mss            = pieceMovements color src
   pieceMovements = case pt of
     Pawn           -> pawn
@@ -73,27 +76,33 @@ takeMovables c sc (s : ss) = case Map.lookup s sc of
   Nothing    -> s : takeMovables c sc ss
 
 -- | 成り不成判定
-promoExam :: Color -> PieceType -> Square -> Promotable
-promoExam _     King           _       = No
-promoExam _     Gold           _       = No
-promoExam _     PromotedRook   _       = No
-promoExam _     PromotedBishop _       = No
-promoExam _     PromotedSilver _       = No
-promoExam _     PromotedLance  _       = No
-promoExam _     PromotedKnight _       = No
-promoExam _     PromotedPawn   _       = No
-promoExam Black Rook           (_, R1) = Option
-promoExam Black Bishop         (_, R1) = Option
-promoExam Black _              (_, R1) = Must
-promoExam Black _              (_, R2) = Option
-promoExam Black _              (_, R3) = Option
-promoExam Black _              _       = No
-promoExam White Rook           (_, R9) = Option
-promoExam White Bishop         (_, R9) = Option
-promoExam White _              (_, R9) = Must
-promoExam White _              (_, R8) = Option
-promoExam White _              (_, R7) = Option
-promoExam White _              _       = No
+promoExam :: Color -> PieceType -> SrcSquare -> DestSquare -> Promotable
+promoExam _     King           _       _       = No
+promoExam _     Gold           _       _       = No
+promoExam _     PromotedRook   _       _       = No
+promoExam _     PromotedBishop _       _       = No
+promoExam _     PromotedSilver _       _       = No
+promoExam _     PromotedLance  _       _       = No
+promoExam _     PromotedKnight _       _       = No
+promoExam _     PromotedPawn   _       _       = No
+promoExam Black Rook           _       (_, R1) = Option
+promoExam Black Bishop         _       (_, R1) = Option
+promoExam Black _              _       (_, R1) = Must
+promoExam Black _              _       (_, R2) = Option
+promoExam Black _              _       (_, R3) = Option
+promoExam Black _              (_, R1) _       = Option
+promoExam Black _              (_, R2) _       = Option
+promoExam Black _              (_, R3) _       = Option
+promoExam Black _              _       _       = No
+promoExam White Rook           _       (_, R9) = Option
+promoExam White Bishop         _       (_, R9) = Option
+promoExam White _              _       (_, R9) = Must
+promoExam White _              _       (_, R8) = Option
+promoExam White _              _       (_, R7) = Option
+promoExam White _              (_, R9) _       = Option
+promoExam White _              (_, R8) _       = Option
+promoExam White _              (_, R7) _       = Option
+promoExam White _              _       _       = No
 
 -- | 駒の可動範囲
 type PieceMovements = Color -> SrcSquare -> Movements

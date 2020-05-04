@@ -65,6 +65,25 @@ spec_Test_ShogiX_Shogi_Piece = do
                      , ((F4, R4), No)
                      , ((F6, R4), No)
                      ]
+      describe "駒成り" $ do
+        it "先手"
+          $          Piece.movable (Piece Black Silver) (F5, R3) Map.empty
+          `shouldBe` Movable.fromList
+                       [ ((F6, R2), Option)
+                       , ((F5, R2), Option)
+                       , ((F4, R2), Option)
+                       , ((F6, R4), Option)
+                       , ((F4, R4), Option)
+                       ]
+        it "後手"
+          $          Piece.movable (Piece White Silver) (F5, R7) Map.empty
+          `shouldBe` Movable.fromList
+                       [ ((F6, R8), Option)
+                       , ((F5, R8), Option)
+                       , ((F4, R8), Option)
+                       , ((F4, R6), Option)
+                       , ((F6, R6), Option)
+                       ]
     describe "金将" $ do
       it "先手"
         $          Piece.movable (Piece Black Gold) (F5, R5) Map.empty
