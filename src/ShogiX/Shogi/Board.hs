@@ -98,7 +98,7 @@ move src promo dest board = do
  where
   b       = unBoard board
   ss      = Map.map pieceColor b
-  capture = pieceType <$> Map.lookup dest b
+  capture = pieceType . Piece.demote <$> Map.lookup dest b
 
 -- | 駒の打ち込み
 drop :: Color -> PieceType -> DestSquare -> Board -> Maybe Board

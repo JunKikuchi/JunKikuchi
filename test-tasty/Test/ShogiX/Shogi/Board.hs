@@ -39,36 +39,64 @@ spec_Test_ShogiX_Shogi_Board = do
                                , Nothing
                                )
               describe "移動先に相手の駒がある" $ do
-                describe "先手"
-                  $          it "相手の駒をとって駒を移動する"
-                  $          Board.move
-                               (F5, R5)
-                               False
-                               (F5, R4)
-                               (Board.fromList
-                                 [ ((F5, R5), Piece Black Pawn)
-                                 , ((F5, R4), Piece White Gold)
-                                 ]
-                               )
-                  `shouldBe` Just
-                               ( Board.fromList [((F5, R4), Piece Black Pawn)]
-                               , Just Gold
-                               )
-                describe "後手"
-                  $          it "相手の駒をとって駒を移動する"
-                  $          Board.move
-                               (F5, R5)
-                               False
-                               (F5, R6)
-                               (Board.fromList
-                                 [ ((F5, R5), Piece White Pawn)
-                                 , ((F5, R6), Piece Black Gold)
-                                 ]
-                               )
-                  `shouldBe` Just
-                               ( Board.fromList [((F5, R6), Piece White Pawn)]
-                               , Just Gold
-                               )
+                describe "先手" $ do
+                  it "相手の駒をとって駒を移動する"
+                    $          Board.move
+                                 (F5, R5)
+                                 False
+                                 (F5, R4)
+                                 (Board.fromList
+                                   [ ((F5, R5), Piece Black Pawn)
+                                   , ((F5, R4), Piece White Gold)
+                                   ]
+                                 )
+                    `shouldBe` Just
+                                 ( Board.fromList [((F5, R4), Piece Black Pawn)]
+                                 , Just Gold
+                                 )
+                  it "相手の成り駒をとって駒を移動する"
+                    $          Board.move
+                                 (F5, R5)
+                                 False
+                                 (F5, R4)
+                                 (Board.fromList
+                                   [ ((F5, R5), Piece Black Pawn)
+                                   , ((F5, R4), Piece White PromotedSilver)
+                                   ]
+                                 )
+                    `shouldBe` Just
+                                 ( Board.fromList [((F5, R4), Piece Black Pawn)]
+                                 , Just Silver
+                                 )
+                describe "後手" $ do
+                  it "相手の駒をとって駒を移動する"
+                    $          Board.move
+                                 (F5, R5)
+                                 False
+                                 (F5, R6)
+                                 (Board.fromList
+                                   [ ((F5, R5), Piece White Pawn)
+                                   , ((F5, R6), Piece Black Gold)
+                                   ]
+                                 )
+                    `shouldBe` Just
+                                 ( Board.fromList [((F5, R6), Piece White Pawn)]
+                                 , Just Gold
+                                 )
+                  it "相手の成り駒をとって駒を移動する"
+                    $          Board.move
+                                 (F5, R5)
+                                 False
+                                 (F5, R6)
+                                 (Board.fromList
+                                   [ ((F5, R5), Piece White Pawn)
+                                   , ((F5, R6), Piece Black PromotedSilver)
+                                   ]
+                                 )
+                    `shouldBe` Just
+                                 ( Board.fromList [((F5, R6), Piece White Pawn)]
+                                 , Just Silver
+                                 )
               describe "移動先に味方の駒がある" $ do
                 describe "先手"
                   $          it "Nothing"

@@ -3,6 +3,7 @@ module ShogiX.Shogi.Piece
   ( movable
   , droppable
   , promote
+  , demote
   , pawn
   , lance
   , knight
@@ -410,6 +411,14 @@ promote promo piece = Piece color ppt
   ppt   = promotePieceType promo pt
   pt    = pieceType piece
 
+-- | 駒成りを戻す
+demote :: Piece -> Piece
+demote piece = Piece color dpt
+ where
+  color = pieceColor piece
+  dpt   = demotePieceType pt
+  pt    = pieceType piece
+
 -- | 成り駒の種類
 promotePieceType :: Promotion -> PieceType -> PieceType
 promotePieceType True Pawn   = PromotedPawn
@@ -418,4 +427,14 @@ promotePieceType True Knight = PromotedKnight
 promotePieceType True Silver = PromotedSilver
 promotePieceType True Bishop = PromotedBishop
 promotePieceType True Rook   = PromotedRook
-promotePieceType _    piece  = piece
+promotePieceType _    pt     = pt
+
+-- | 成り駒がなる前の駒の種類
+demotePieceType :: PieceType -> PieceType
+demotePieceType PromotedPawn   = Pawn
+demotePieceType PromotedLance  = Lance
+demotePieceType PromotedKnight = Knight
+demotePieceType PromotedSilver = Silver
+demotePieceType PromotedBishop = Bishop
+demotePieceType PromotedRook   = Rook
+demotePieceType pt             = pt
